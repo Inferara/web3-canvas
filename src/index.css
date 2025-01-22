@@ -10,3 +10,53 @@ body {
   width: 100vw;
   height: 100vh;
 }
+
+.w3cflow {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.w3cflow .reactflow-wrapper {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.w3cflow aside {
+  border-right: 1px solid #eee;
+  padding: 15px 10px;
+  font-size: 12px;
+  background: #fcfcfc;
+}
+
+.w3cflow .w3cflownode {
+  height: 20px;
+  padding: 4px;
+  border: 1px solid #1a192b;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+}
+
+.w3cflow .selectall {
+  margin-top: 10px;
+}
+
+.w3cflow aside .description {
+  margin-bottom: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .w3cflow {
+    flex-direction: row;
+  }
+ 
+  .w3cflow aside {
+    width: 20%;
+    max-width: 250px;
+  }
+}

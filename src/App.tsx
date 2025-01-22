@@ -1,83 +1,108 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   ReactFlow,
   Controls,
   Background,
-  applyNodeChanges,
-  applyEdgeChanges,
   addEdge,
-  NodeChange,
-  EdgeChange,
   Connection,
-  Edge, Node 
+  Edge, Node, 
+  useReactFlow,
+  useNodesState,
+  useEdgesState,
+  ReactFlowProvider
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import TextInputNode from './nodes/TextInput';
 import TextViewNode from './nodes/TextView';
-import HashNode from './nodes/HashNode';
+import Hash from './nodes/Hash';
+import Compound from './nodes/Compound';
+import Sidebar from './Sidebar';
+import { W3CProvider, useW3C } from './W3CContext';
 
-const initialNodes: Node[] = [
-  {
-    id: 'node-1',
-    type: 'textInput',
-    position: { x: 0, y: 0 },
-    data: { in: "123", out: "" },
-  },
-  {
-    id: 'node-2',
-    type: 'textView',
-    position: { x: 150, y: 0 },
-    data: { in: "", out: "" },
-  },
-  {
-    id: 'node-3',
-    type: 'hash',
-    position: { x: 300, y: 0 },
-    data: { in: "", out: "" },
-  },
-];
 
-const initialEdges: Edge[] = [];
 const nodeTypes = {
   textInput: TextInputNode,
   textView: TextViewNode,
-  hash: HashNode,
+  hash: Hash,
+  compound: Compound,
 };
 
-const Flow: React.FC = () => {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+let id = 0;
+const getId = () => `w3cnode_${id++}`;
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [],
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [],
-  );
-
+const W3CFlow: React.FC = () => {
+  const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const { screenToFlowPosition } = useReactFlow();
+  const [type] = useW3C();
+ 
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [],
+    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  );
+ 
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+ 
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+ 
+      // check if the dropped element is valid
+      if (!type) {
+        return;
+      }
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      const newNode: Node = {
+        id: getId(),
+        type,
+        position,
+        data: { in: '', out: '' },
+      };
+ 
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [screenToFlowPosition, setNodes, type],
   );
 
-  return (
-    <div style={{ height: '100%' }}>
+  
+return (
+  <div className="w3cflow">
+    <div className="reactflow-wrapper" ref={reactFlowWrapper}>
       <ReactFlow
+        nodeTypes={nodeTypes}
         nodes={nodes}
-        onNodesChange={onNodesChange}
         edges={edges}
+        onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        nodeTypes={nodeTypes}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
         fitView
+        style={{ backgroundColor: "#F7F9FB" }}
       >
-        <Background />
         <Controls />
+        <Background />
       </ReactFlow>
     </div>
-  );
+    <Sidebar />
+  </div>
+);
 };
+ 
+const App: React.FC = () => (
+  <ReactFlowProvider>
+    <W3CProvider>
+      <W3CFlow />
+    </W3CProvider>
+  </ReactFlowProvider>
+);
 
-export default Flow;
+export default App;

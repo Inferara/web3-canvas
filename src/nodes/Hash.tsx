@@ -2,7 +2,7 @@ import { Handle, NodeProps, Position, useHandleConnections, useNodesData, useRea
 import { useEffect, useState } from 'react';
 import web3 from 'web3';
 
-interface HashNodeNodeProps extends NodeProps {
+interface HashNodeProps extends NodeProps {
     id: string;
     data: {
         in: string;
@@ -10,7 +10,7 @@ interface HashNodeNodeProps extends NodeProps {
     };
 }
 
-const HashNode: React.FC<HashNodeNodeProps> = ({ id }) => {
+const Hash: React.FC<HashNodeProps> = ({ id }) => {
     const connections = useHandleConnections({ type: 'target' });
     const { updateNodeData } = useReactFlow();
 
@@ -40,4 +40,4 @@ const HashNode: React.FC<HashNodeNodeProps> = ({ id }) => {
     );
 };
 
-export default HashNode;
+export default Hash;
