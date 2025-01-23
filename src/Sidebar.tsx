@@ -25,6 +25,12 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                 Compound
             </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "qr")} draggable>
+                QR Code
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "substring")} draggable>
+                Substring
+            </div>
         </aside>
     )
 }

@@ -12,19 +12,23 @@ import {
   ReactFlowProvider
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { W3CProvider, useW3C } from './W3CContext';
+
 import TextInputNode from './nodes/TextInput';
 import TextViewNode from './nodes/TextView';
 import Hash from './nodes/Hash';
 import Compound from './nodes/Compound';
+import QRCode from './nodes/QRCode';
 import Sidebar from './Sidebar';
-import { W3CProvider, useW3C } from './W3CContext';
-
+import Substring from './nodes/Substring';
 
 const nodeTypes = {
   textInput: TextInputNode,
   textView: TextViewNode,
   hash: Hash,
   compound: Compound,
+  qr: QRCode,
+  substring: Substring
 };
 
 let id = 0;

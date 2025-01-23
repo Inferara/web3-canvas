@@ -5,28 +5,36 @@ import { Handle, NodeProps, Position, useReactFlow } from '@xyflow/react';
 interface TextInputNodeProps extends NodeProps {
     id: string;
     data: {
-        in: string;
-        out: string;
+        in?: string;
+        out?: string;
     }
 }
 
 const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
-        setText(evt.target.value);
-        updateNodeData(id, { in: data.in, out: evt.target.value });
+        const newValue = evt.target.value;
+        setText(newValue);
+        updateNodeData(id, { ...data, out: newValue });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const { updateNodeData } = useReactFlow();
-    const [text, setText] = useState(data.out);
+    const [text, setText] = useState<string>(data.out ?? "");
 
     return (
-        <>
-            <div>
-                <input id={`text-input-${id}`} name="text" value={text} onChange={onChange} className="nodrag" />
-            </div>
-            <Handle type="source" position={Position.Bottom} />
-        </>
-    );
-};
+        <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
+          <div>Text Input Node</div>
+          <input
+            type="text"
+            value={text}
+            onChange={onChange}
+            style={{ marginTop: 8 }}
+            className="nodrag"
+          />
+          {/* This node doesn’t consume input, so only a source handle */}
+          <Handle type="source" position={Position.Bottom} id="output" />
+        </div>
+      );
+    };
+    
 
 export default TextInputNode;

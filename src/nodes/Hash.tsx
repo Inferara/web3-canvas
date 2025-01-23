@@ -1,43 +1,73 @@
-import { Handle, NodeProps, Position, useHandleConnections, useNodesData, useReactFlow } from '@xyflow/react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Handle,
+  NodeProps,
+  Position,
+  useEdges,
+  useNodes,
+  useReactFlow,
+} from '@xyflow/react';
 import web3 from 'web3';
 
 interface HashNodeProps extends NodeProps {
-    id: string;
-    data: {
-        in: string;
-        out: string;
-    };
+  id: string;
+  data: {
+    in?: string;
+    out?: string;
+  };
 }
 
 const Hash: React.FC<HashNodeProps> = ({ id }) => {
-    const connections = useHandleConnections({ type: 'target' });
-    const { updateNodeData } = useReactFlow();
+  // Access all nodes and edges in the flow
+  const nodes = useNodes();
+  const edges = useEdges();
+  // Function to update this node's 'out'
+  const { updateNodeData } = useReactFlow();
 
-    const source = connections?.[0]?.source;
-    const nodeData = useNodesData(source ?? id);
+  // Local state to keep track of the computed hash
+  const [computedHash, setComputedHash] = useState("");
 
-    const [computedHash, setComputedHash] = useState("");
-
-    useEffect(() => {
-        if (source && nodeData) {
-            const newText = web3.utils.keccak256Wrapper(nodeData.data.out as string);
-            if (newText !== computedHash) {
-                setComputedHash(newText); // Update local state only if the value changes
-                updateNodeData(id, { out: newText }); // Update node data in React Flow
-            }
-        }
-    }, [source, nodeData, id, computedHash, updateNodeData]);
-
-    return (
-        <>
-            <div>
-                <span>{computedHash}</span>
-            </div>
-            <Handle type="target" position={Position.Left} />
-            <Handle type="source" position={Position.Right} />
-        </>
+  useEffect(() => {
+    // 1) Find all edges that connect into this node's target handle "input"
+    const incomingEdges = edges.filter(
+      (edge) => edge.target === id && edge.targetHandle === "input"
     );
+
+    // 2) Gather 'out' data from each connected source node
+    const combinedInput = incomingEdges
+      .map((edge) => {
+        const sourceNode = nodes.find((n) => n.id === edge.source);
+        return sourceNode?.data?.out ?? "";
+      })
+      .join(""); // Concatenate all source outputs
+
+    // 3) If there's no input, reset hash
+    if (!combinedInput) {
+      if (computedHash !== "") {
+        setComputedHash("");
+        updateNodeData(id, { out: "" });
+      }
+      return;
+    }
+
+    // 4) Compute the keccak256 hash of the combined input
+    const newHash = web3.utils.keccak256Wrapper(combinedInput);
+    if (newHash !== computedHash) {
+      setComputedHash(newHash);
+      // Also update React Flow's node data so other nodes can read this hash
+      updateNodeData(id, { out: newHash });
+    }
+  }, [id, nodes, edges, computedHash, updateNodeData]);
+
+  return (
+    <div style={{ padding: 8, border: "1px solid #ccc" }}>
+      <div>Hash: {computedHash}</div>
+      {/* Single target handle that can accept multiple connections */}
+      <Handle type="target" position={Position.Left} id="input" />
+      {/* Source handle to expose the computed hash */}
+      <Handle type="source" position={Position.Right} id="output" />
+    </div>
+  );
 };
 
 export default Hash;
