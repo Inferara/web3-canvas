@@ -31,10 +31,15 @@ body {
 }
 
 .w3cflow .w3cflownode {
+  width: 7rem;
   height: 20px;
   padding: 4px;
-  border: 1px solid #1a192b;
-  border-radius: 2px;
+  border: 1px solid #EDEDED;
+  border-color: #C5C5C5;
+  border-radius: 8px;
+  box-shadow: 3.54px 4.55px 0px #00000005, 
+      0px 3.54px 4.55px 0px #0000000D, 
+      0px 0.51px 1.01px 0px #0000001A;
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
@@ -48,6 +53,10 @@ body {
 
 .w3cflow aside .description {
   margin-bottom: 10px;
+}
+
+.broken {
+  background-color: rgb(236, 69, 69);
 }
 
 @media screen and (min-width: 768px) {

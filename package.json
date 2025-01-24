@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@xyflow/react": "^12.4.2",
+    "random-words": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.15",

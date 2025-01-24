@@ -11,7 +11,7 @@ interface TextViewNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: string;
+    out?: number[];
   };
 }
 
@@ -28,11 +28,14 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({ id }) => {
   // 2) Gather the 'out' data from each connected source node
   const textOutputs = incomingEdges.map((edge) => {
     const sourceNode = nodes.find((n) => n.id === edge.source);
-    return sourceNode?.data?.out ?? "";
+    const utf8Decoder = new TextDecoder();
+    const bytes = sourceNode?.data?.out ?? "";
+    const encodedText = utf8Decoder.decode(bytes as Uint8Array);
+    return encodedText;
   });
 
   // 3) Concatenate or otherwise combine the incoming text
-  const combinedText = textOutputs.join(" ");
+  const combinedText = textOutputs.join("");
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>

@@ -12,7 +12,7 @@ interface SubstringNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: string; // substring output
+    out?: number[]; // substring output
   };
 }
 
@@ -26,7 +26,7 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   const [lengthValue, setLengthValue] = useState<number>(5);
 
   // Local state to store this node’s current output (the substring).
-  const [substringOutput, setSubstringOutput] = useState<string>(data.out ?? "");
+  const [substringOutput, setSubstringOutput] = useState<string>(data.out ? new TextDecoder().decode(new Uint8Array(data.out)) : "");
 
   useEffect(() => {
     // 1) Identify any edges whose target is this node at handle "input"
@@ -38,7 +38,8 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
     const combinedInput = incomingEdges
       .map((edge) => {
         const sourceNode = nodes.find((n) => n.id === edge.source);
-        return sourceNode?.data?.out || "";
+        const out = sourceNode?.data?.out as number[];
+        return out ? new TextDecoder().decode(new Uint8Array(out)) : "";
       })
       .join("");
 
@@ -48,7 +49,9 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
     // 4) Update local state and React Flow node data *only* if changed
     if (newSubstring !== substringOutput) {
       setSubstringOutput(newSubstring);
-      updateNodeData(id, { ...data, out: newSubstring });
+      const utf8Encoder = new TextEncoder();
+      const newOut = utf8Encoder.encode(newSubstring);
+      updateNodeData(id, { ...data, out: newOut });
     }
   }, [id, data, edges, nodes, lengthValue, substringOutput, updateNodeData]);
 

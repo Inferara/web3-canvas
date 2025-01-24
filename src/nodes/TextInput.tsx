@@ -6,7 +6,7 @@ interface TextInputNodeProps extends NodeProps {
     id: string;
     data: {
         in?: string;
-        out?: string;
+        out?: number[];
     }
 }
 
@@ -14,11 +14,13 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = evt.target.value;
         setText(newValue);
-        updateNodeData(id, { ...data, out: newValue });
+        const utf8Encoder = new TextEncoder();
+        const newOut = utf8Encoder.encode(newValue);
+        updateNodeData(id, { ...data, out: newOut });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const { updateNodeData } = useReactFlow();
-    const [text, setText] = useState<string>(data.out ?? "");
+    const [text, setText] = useState<string>(data.out ? new TextDecoder().decode(new Uint8Array(data.out)) : "");
 
     return (
         <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>

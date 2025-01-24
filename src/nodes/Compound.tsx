@@ -11,7 +11,8 @@ import {
 interface CompoundNodeProps extends NodeProps {
   id: string;
   data: {
-    out?: string;
+    in?: string;
+    out?: number[];
   };
 }
 
@@ -33,16 +34,18 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
     // 2) Gather 'out' data from each source node
     const outputs = incomingEdges.map((edge) => {
       const sourceNode = nodes.find((n) => n.id === edge.source);
-      return sourceNode?.data?.out ?? "";
+      return (sourceNode?.data?.out as number[]) ?? [];
     });
 
     // 3) Combine all outputs (customize the join logic as you wish)
-    const newData = outputs.join(" + ");
+    const newData = outputs.join();
 
     // 4) Update the local state and also update this node's out data in React Flow
     if (newData !== combinedData) {
       setCombinedData(newData);
-      updateNodeData(id, { out: newData });
+      const utf8Encoder = new TextEncoder();
+      const newOut = utf8Encoder.encode(newData);
+      updateNodeData(id, { out: newOut });
     }
   }, [edges, nodes, id, combinedData, updateNodeData]);
 

@@ -15,20 +15,36 @@ import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
 
 import TextInputNode from './nodes/TextInput';
+import NumberInputNode from './nodes/NumberInput';
 import TextViewNode from './nodes/TextView';
+import FileInputNode from './nodes/FileInput';
 import Hash from './nodes/Hash';
 import Compound from './nodes/Compound';
 import QRCode from './nodes/QRCode';
 import Sidebar from './Sidebar';
 import Substring from './nodes/Substring';
+import LengthViewNode from './nodes/LengthView';
+import ColorViewNode from './nodes/ColorView';
+import SeedPhraseNode from './nodes/SeedPhrase';
+import KeyPairNode from './nodes/KeyPair';
+import SignMessageNode from './nodes/SignMessage';
+import VerifySignatureNode from './nodes/VerifySignature';
 
 const nodeTypes = {
   textInput: TextInputNode,
+  numberInput: NumberInputNode,
+  fileInput: FileInputNode,
   textView: TextViewNode,
   hash: Hash,
   compound: Compound,
   qr: QRCode,
-  substring: Substring
+  substring: Substring,
+  length: LengthViewNode,
+  color: ColorViewNode,
+  seed: SeedPhraseNode,
+  keypair: KeyPairNode,
+  signMessage: SignMessageNode,
+  verifySignature: VerifySignatureNode,
 };
 
 let id = 0;

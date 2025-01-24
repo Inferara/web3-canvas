@@ -13,7 +13,7 @@ interface HashNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: string;
+    out?: number[];
   };
 }
 
@@ -37,7 +37,7 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     const combinedInput = incomingEdges
       .map((edge) => {
         const sourceNode = nodes.find((n) => n.id === edge.source);
-        return sourceNode?.data?.out ?? "";
+        return sourceNode?.data?.out ?? [];
       })
       .join(""); // Concatenate all source outputs
 
@@ -54,14 +54,15 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     const newHash = web3.utils.keccak256Wrapper(combinedInput);
     if (newHash !== computedHash) {
       setComputedHash(newHash);
-      // Also update React Flow's node data so other nodes can read this hash
-      updateNodeData(id, { out: newHash });
+      const utf8Encoder = new TextEncoder();
+      const newOut = utf8Encoder.encode(newHash);
+      updateNodeData(id, { out: newOut });
     }
   }, [id, nodes, edges, computedHash, updateNodeData]);
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc" }}>
-      <div>Hash: {computedHash}</div>
+      <div>keccak256</div>
       {/* Single target handle that can accept multiple connections */}
       <Handle type="target" position={Position.Left} id="input" />
       {/* Source handle to expose the computed hash */}
