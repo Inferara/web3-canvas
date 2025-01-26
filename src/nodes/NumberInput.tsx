@@ -1,41 +1,31 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, {  useState,  useCallback } from "react";
 import {
   NodeProps,
   Handle,
   Position,
   useReactFlow,
 } from "@xyflow/react";
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
 
 interface NumberInputNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;   // Not used here, but present for consistency
-    out?: number[];  // We'll store the numeric value as a string in out
+    out?: string;  // We'll store the numeric value as a string in out
   };
 }
 
 const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
-  const { updateNodeData } = useReactFlow();
+    const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = parseInt(evt.target.value);
+        setNumber(newValue);
+        const newData = Utf8DataTransfer.encodeNumber(newValue);
+        updateNodeData(id, { ...data, out: newData });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    const { updateNodeData } = useReactFlow();
+    const [numberValue, setNumber] = useState<number>(data.out ? Utf8DataTransfer.decodeNumber(data.out?.[0]) : 5);
 
-  // Local state for the numeric input; default to data.out or "0"
-  const [numberValue, setNumberValue] = useState<number>(data.out?.[0] ?? 0);
-
-  // Sync local state if data.out changes externally (load, undo/redo, etc.)
-  useEffect(() => {
-    if (data.out !== undefined && data.out[0] !== numberValue) {
-      setNumberValue(data.out[0] ?? 0);
-    }
-  }, [data.out, numberValue]);
-
-  // Update local state + node data in one step
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVal = parseFloat(e.target.value);
-    setNumberValue(newVal);
-    // Update node data if there's an actual change
-    if (newVal !== data.out?.[0]) {
-      updateNodeData(id, { ...data, out: newVal });
-    }
-  };
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
@@ -43,7 +33,7 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
       <input
         type="number"
         value={numberValue}
-        onChange={handleChange}
+        onChange={onChange}
         style={{ marginTop: 8 }}
         className="nodrag"
       />

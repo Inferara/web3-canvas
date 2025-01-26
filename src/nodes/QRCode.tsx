@@ -12,7 +12,7 @@ interface QrCodeNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[]; // not used, but present for consistency
+    out?: string; // not used, but present for consistency
   };
 }
 

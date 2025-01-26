@@ -13,6 +13,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
+import { Utf8DataTransfer } from "./Utf8DataTransfer";
 
 import TextInputNode from './nodes/TextInput';
 import NumberInputNode from './nodes/NumberInput';
@@ -50,6 +51,11 @@ const nodeTypes = {
 let id = 0;
 const getId = () => `w3cnode_${id++}`;
 
+const defaultData = {
+  'textInput': { in: '', out: Utf8DataTransfer.encodeString('Web3 キャンバス') },
+  'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(5) },
+}
+
 const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -66,7 +72,7 @@ const W3CFlow: React.FC = () => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
- 
+
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
@@ -76,6 +82,8 @@ const W3CFlow: React.FC = () => {
         return;
       }
 
+      const data = type in defaultData ? defaultData[type] : { in: '', out: '' };
+
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -84,7 +92,7 @@ const W3CFlow: React.FC = () => {
         id: getId(),
         type,
         position,
-        data: { in: '', out: '' },
+        data: data,
       };
  
       setNodes((nds) => nds.concat(newNode));

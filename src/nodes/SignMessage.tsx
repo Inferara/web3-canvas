@@ -41,9 +41,9 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     const sourceOut = sourceNode?.data?.out ?? "";
 
     if (handleId === "msg") {
-      messageInput = sourceOut;
+      messageInput = sourceOut as string;
     } else if (handleId === "privKey") {
-      privateKeyInput = sourceOut;
+      privateKeyInput = sourceOut as string;
     }
   });
 

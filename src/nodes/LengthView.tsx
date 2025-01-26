@@ -7,11 +7,14 @@ import {
   useEdges,
 } from "@xyflow/react";
 
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
+
+
 interface LengthViewNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[]; // Not used here, but included for consistency
+    out?: string; // Not used here, but included for consistency
   };
 }
 
@@ -29,7 +32,7 @@ const LengthViewNode: React.FC<LengthViewNodeProps> = ({ id }) => {
   const lengthValue = incomingEdges
     .map((edge) => {
       const sourceNode = nodes.find((n) => n.id === edge.source);
-      return ((sourceNode?.data?.out as number[]) ?? []).length;
+      return (Utf8DataTransfer.decodeString(sourceNode?.data?.out as string) ?? []).length;
     }).reduce((acc, curr) => acc + curr, 0);
 
   return (

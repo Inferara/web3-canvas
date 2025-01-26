@@ -12,7 +12,7 @@ interface CompoundNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[];
+    out?: string;
   };
 }
 

@@ -9,11 +9,13 @@ import {
 } from '@xyflow/react';
 import web3 from 'web3';
 
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
+
 interface HashNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[];
+    out?: string;
   };
 }
 
@@ -37,7 +39,7 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     const combinedInput = incomingEdges
       .map((edge) => {
         const sourceNode = nodes.find((n) => n.id === edge.source);
-        return sourceNode?.data?.out ?? [];
+        return sourceNode?.data?.out ? Utf8DataTransfer.unpack(sourceNode.data.out as string) : "";
       })
       .join(""); // Concatenate all source outputs
 
@@ -61,8 +63,11 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
   }, [id, nodes, edges, computedHash, updateNodeData]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc" }}>
+    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
       <div>keccak256</div>
+      <div style={{ marginTop: 8 }}>
+        {computedHash.substring(0, 30) + "..." || "No input connected"}
+      </div>
       {/* Single target handle that can accept multiple connections */}
       <Handle type="target" position={Position.Left} id="input" />
       {/* Source handle to expose the computed hash */}

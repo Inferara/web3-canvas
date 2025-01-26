@@ -8,11 +8,13 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
+
 interface SubstringNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[]; // substring output
+    out?: string; // substring output
   };
 }
 
@@ -26,7 +28,7 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   const [lengthValue, setLengthValue] = useState<number>(5);
 
   // Local state to store this node’s current output (the substring).
-  const [substringOutput, setSubstringOutput] = useState<string>(data.out ? new TextDecoder().decode(new Uint8Array(data.out)) : "");
+  const [substringOutput, setSubstringOutput] = useState<string>(data.out ? Utf8DataTransfer.decodeString(data.out) : "");
 
   useEffect(() => {
     // 1) Identify any edges whose target is this node at handle "input"

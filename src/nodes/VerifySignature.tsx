@@ -36,11 +36,11 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id, data }) =
     const sourceOut = sourceNode?.data?.out ?? "";
 
     if (handleId === "msg") {
-      messageInput = sourceOut;
+      messageInput = sourceOut as string;
     } else if (handleId === "sig") {
-      signatureInput = sourceOut;
+      signatureInput = sourceOut as string;
     } else if (handleId === "addr") {
-      addressInput = sourceOut;
+      addressInput = sourceOut as string;
     }
   });
 

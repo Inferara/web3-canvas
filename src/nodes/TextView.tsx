@@ -6,12 +6,13 @@ import {
   useNodes,
   useEdges,
 } from "@xyflow/react";
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
 
 interface TextViewNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
-    out?: number[];
+    out?: string;
   };
 }
 
@@ -28,9 +29,8 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({ id }) => {
   // 2) Gather the 'out' data from each connected source node
   const textOutputs = incomingEdges.map((edge) => {
     const sourceNode = nodes.find((n) => n.id === edge.source);
-    const utf8Decoder = new TextDecoder();
-    const bytes = sourceNode?.data?.out ?? "";
-    const encodedText = utf8Decoder.decode(bytes as Uint8Array);
+    const raw = sourceNode?.data?.out ?? "";
+    const encodedText = Utf8DataTransfer.unpack(raw as string);
     return encodedText;
   });
 

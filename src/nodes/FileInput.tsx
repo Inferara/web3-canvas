@@ -6,26 +6,19 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
+
 interface FileInputNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;   // Not used here, but present for consistency
-    out?: number[];  // We'll store base64 or file name in out
+    out?: string;  // We'll store base64 or file name in out
   };
 }
 
 const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
-
-  // Local state for storing either the file's name or base64 content
-  const [fileData, setFileData] = useState<number[]>(data.out ?? []);
-
-  // Sync local state if data.out changes externally
-  useEffect(() => {
-    if (data.out !== undefined && data.out !== fileData) {
-      setFileData(data.out);
-    }
-  }, [data.out, fileData]);
+  const [fileData, setFileData] = useState<Uint8Array>(data.out ? Utf8DataTransfer.unpack(data.out) : new Uint8Array());
 
   // Handler for file selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,14 +28,14 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
     // Read file as base64
     const reader = new FileReader();
     reader.onload = () => {
-      const base64 = reader.result;
+      let base64 = reader.result;
       if (typeof base64 === 'string') {
-        const byteArray = Uint8Array.from(atob(base64.split(',')[1]), c => c.charCodeAt(0));
-        setFileData(Array.from(byteArray));
+        base64 = base64.split(",")[1];
+        const byteArray = Utf8DataTransfer.decodeByteArray('B' + base64);
+        setFileData(byteArray);
         // Persist in node data
-        if (Array.from(byteArray) !== data.out) {
-            updateNodeData(id, { ...data, out: base64 });
-        }
+        const dataOut = 'B' + base64;
+        updateNodeData(id, { ...data, out: dataOut });
       }
     };
     reader.readAsDataURL(file);

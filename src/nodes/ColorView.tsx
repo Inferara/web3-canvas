@@ -11,7 +11,7 @@ interface ColorViewNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;   // Not used, but present for consistency
-    out?: number[];  // Not used here, as this node doesn't produce output
+    out?: string;  // Not used here, as this node doesn't produce output
   };
 }
 

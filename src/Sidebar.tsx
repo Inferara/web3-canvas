@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "textInput")} draggable>
                 Text Input
             </div>
-            <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "numberInput")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "numberInput")} draggable>
                 Number Input
             </div>
             <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "fileInput")} draggable>
@@ -34,7 +34,7 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "qr")} draggable>
                 QR Code
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "color")} draggable>
+            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "color")} draggable>
                 Color
             </div>
 
