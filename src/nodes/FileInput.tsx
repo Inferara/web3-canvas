@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
   NodeProps,
   Handle,
@@ -18,7 +18,10 @@ interface FileInputNodeProps extends NodeProps {
 
 const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
-  const [fileData, setFileData] = useState<Uint8Array>(data.out ? Utf8DataTransfer.unpack(data.out) : new Uint8Array());
+  const [fileData, setFileData] = useState<Uint8Array>(() => {
+    const unpacked = data.out ? Utf8DataTransfer.unpack(data.out) : new Uint8Array();
+    return unpacked instanceof Uint8Array ? unpacked : new Uint8Array();
+  });
 
   // Handler for file selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

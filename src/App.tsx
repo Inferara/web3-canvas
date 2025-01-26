@@ -51,7 +51,7 @@ const nodeTypes = {
 let id = 0;
 const getId = () => `w3cnode_${id++}`;
 
-const defaultData = {
+const defaultData: { [key: string]: { in: string; out: string } } = {
   'textInput': { in: '', out: Utf8DataTransfer.encodeString('Web3 キャンバス') },
   'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(5) },
 }

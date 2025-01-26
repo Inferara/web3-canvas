@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "numberInput")} draggable>
                 Number Input
             </div>
-            <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "fileInput")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "fileInput")} draggable>
                 File Input
             </div>
 

@@ -44,20 +44,19 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
       .join(""); // Concatenate all source outputs
 
     // 3) If there's no input, reset hash
-    if (!combinedInput) {
-      if (computedHash !== "") {
-        setComputedHash("");
-        updateNodeData(id, { out: "" });
-      }
-      return;
-    }
+    // if (!combinedInput) {
+    //   if (computedHash !== "") {
+    //     setComputedHash("");
+    //     updateNodeData(id, { out: "" });
+    //   }
+    //   return;
+    // }
 
     // 4) Compute the keccak256 hash of the combined input
     const newHash = web3.utils.keccak256Wrapper(combinedInput);
     if (newHash !== computedHash) {
       setComputedHash(newHash);
-      const utf8Encoder = new TextEncoder();
-      const newOut = utf8Encoder.encode(newHash);
+      const newOut = Utf8DataTransfer.encodeString(newHash); 
       updateNodeData(id, { out: newOut });
     }
   }, [id, nodes, edges, computedHash, updateNodeData]);
