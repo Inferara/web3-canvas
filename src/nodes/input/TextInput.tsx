@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position, useReactFlow } from '@xyflow/react';
 
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface TextInputNodeProps extends NodeProps {
     id: string;
@@ -24,12 +24,11 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     
     return (
         <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-          <div>Text Input Node</div>
           <input
             type="text"
             value={text}
             onChange={onChange}
-            style={{ marginTop: 8 }}
+            // style={{ marginTop: 8 }}
             className="nodrag"
           />
           {/* This node doesn’t consume input, so only a source handle */}

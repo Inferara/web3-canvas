@@ -34,13 +34,13 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "qr")} draggable>
                 QR Code
             </div>
-            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "color")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "color")} draggable>
                 Color
             </div>
 
             <div className='description'>Crypto</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "hash")} draggable>
+            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "hash")} draggable>
                 Hash
             </div>
             <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
@@ -55,13 +55,13 @@ const Sidebar: React.FC = () => {
 
             <div className='description'>Utils</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "compound")} draggable>
+            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                 Compound
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "substring")} draggable>
+            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "substring")} draggable>
                 Substring
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "length")} draggable>
+            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "length")} draggable>
                 Length
             </div>
             <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "seed")} draggable>

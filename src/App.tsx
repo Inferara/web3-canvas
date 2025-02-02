@@ -13,19 +13,23 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
+import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 
-import TextInputNode from './nodes/TextInput';
-import NumberInputNode from './nodes/NumberInput';
-import TextViewNode from './nodes/TextView';
-import FileInputNode from './nodes/FileInput';
-import Hash from './nodes/Hash';
+import TextInputNode from './nodes/input/TextInput';
+import NumberInputNode from './nodes/input/NumberInput';
+import FileInputNode from './nodes/input/FileInput';
+
+import TextViewNode from './nodes/view/TextView';
+import QRCode from './nodes/view/QRCode';
+import ColorViewNode from './nodes/view/ColorView';
+
+import Hash from './nodes/web3/Hash';
+
+
 import Compound from './nodes/Compound';
-import QRCode from './nodes/QRCode';
-import Sidebar from './Sidebar';
 import Substring from './nodes/Substring';
 import LengthViewNode from './nodes/LengthView';
-import ColorViewNode from './nodes/ColorView';
 import SeedPhraseNode from './nodes/SeedPhrase';
 import KeyPairNode from './nodes/KeyPair';
 import SignMessageNode from './nodes/SignMessage';

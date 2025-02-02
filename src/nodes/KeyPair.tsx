@@ -65,12 +65,9 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
         publicKey: publicKey,
         privateKey: account.privateKey,
       });
-      setPrivateKey(account.privateKey);
-      setPublicKey(publicKey);
-      setAddress(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, nodes, edges, privateKey,publicKey, address, updateNodeData]);
+  }, [nodes, privateKey, publicKey, address, updateNodeData]);
 
 
   return (

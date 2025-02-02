@@ -5,7 +5,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface NumberInputNodeProps extends NodeProps {
   id: string;

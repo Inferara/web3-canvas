@@ -1,12 +1,12 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   NodeProps,
   Handle,
   Position,
   useReactFlow,
 } from "@xyflow/react";
-
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import Web3 from "web3";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface FileInputNodeProps extends NodeProps {
   id: string;
@@ -17,13 +17,7 @@ interface FileInputNodeProps extends NodeProps {
 }
 
 const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
-  const { updateNodeData } = useReactFlow();
-  const [fileData, setFileData] = useState<Uint8Array>(() => {
-    const unpacked = data.out ? Utf8DataTransfer.unpack(data.out) : new Uint8Array();
-    return unpacked instanceof Uint8Array ? unpacked : new Uint8Array();
-  });
-
-  // Handler for file selection
+  
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -31,22 +25,21 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
     // Read file as base64
     const reader = new FileReader();
     reader.onload = () => {
-      let base64 = reader.result;
-      if (typeof base64 === 'string') {
-        base64 = base64.split(",")[1];
-        const byteArray = Utf8DataTransfer.decodeByteArray('B' + base64);
-        setFileData(byteArray);
-        // Persist in node data
-        const dataOut = 'B' + base64;
+      const base64 = reader.result?.toString();
+      if (base64) {
+        setFileSize(base64.length);
+        const hash = Web3.utils.keccak256Wrapper(base64 as string);
+        const dataOut = Utf8DataTransfer.encodeString(hash);
         updateNodeData(id, { ...data, out: dataOut });
       }
     };
     reader.readAsDataURL(file);
   };
+  const { updateNodeData } = useReactFlow();
+  const [fileSize, setFileSize] = useState<number>(0);
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-      <div>File Input Node</div>
       <input
         type="file"
         onChange={handleFileChange}
@@ -55,8 +48,8 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
       />
       {/* Show some info about the current file data */}
       <div style={{ marginTop: 8 }}>
-        {fileData
-          ? <small>{fileData.slice(0, 30)}...</small>
+        {(fileSize > 0)
+          ? <small>{fileSize} bytes</small>
           : "No file selected."}
       </div>
       {/* Source handle so other nodes can read the file content */}
@@ -66,3 +59,4 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
 };
 
 export default FileInputNode;
+
