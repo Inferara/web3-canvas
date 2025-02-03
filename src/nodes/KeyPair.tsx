@@ -14,41 +14,54 @@ import { Utf8DataTransfer } from "../Utf8DataTransfer";
 interface KeyPairNodeProps extends NodeProps {
   id: string;
   data: {
-    // Not used in this example, but included for consistency
-    in?: string;
     out?: {
       publicKey?: string;
       privateKey?: string;
       address?: string;
-    }
+    };
   };
 }
 
-const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
+const KeyPairNode: React.FC<KeyPairNodeProps> = ({ data }) => {
   const { updateNodeData } = useReactFlow();
-  const inputConnections = useNodeConnections({
-    handleType: 'target',
-  });
+  
+  // Detect input connections (e.g., receiving a private key from another node)
+  const inputConnections = useNodeConnections({ handleType: 'target' });
   const nodesData = useNodesData(inputConnections[0]?.source);
+  
+  // Detect output connections (which nodes are connected to which handles)
+  const outputConnections = useNodeConnections({ handleType: 'source' });
+
+  // Web3 setup
   const web3 = new Web3();
   const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
   const account = privateKey ? web3.eth.accounts.privateKeyToAccount(privateKey) : null;
-  const publicKey = privateKey && account ? web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false): "";
+  const publicKey = privateKey && account ? web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false) : "";
   const address = privateKey && account ? account.address : "";
 
+  // Update data for each connected handle separately
   useEffect(() => {
     if (privateKey) {
-      updateNodeData(id, {
-        ...data,
-          out: {
-            privateKey: Utf8DataTransfer.encodeString(account?.privateKey as string),
-            publicKey: Utf8DataTransfer.encodeString(publicKey),
-            address: Utf8DataTransfer.encodeString(address)
-          }
+      outputConnections.forEach((conn) => {
+        let outputData = "";
+
+        switch (conn.sourceHandle) {
+          case "publicKey":
+            outputData = publicKey;
+            break;
+          case "privateKey":
+            outputData = account?.privateKey as string;
+            break;
+          case "address":
+            outputData = address;
+            break;
+        }
+
+        // Update only the connected node's data
+        updateNodeData(conn.target, { ...data, in: Utf8DataTransfer.encodeString(outputData as string) });
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [privateKey]);
+  }, [privateKey, outputConnections.length]);
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
@@ -63,10 +76,9 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
         <br />
         <span>{privateKey || "Generating..."}</span>
       </p>
-      {/* One target handle for optional upstream data (e.g. a seed), if needed */}
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
 
-      {/* Two source handles for publicKey and privateKey */}
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+
       <Handle
         type="source"
         position={Position.Right}

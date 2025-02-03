@@ -16,12 +16,17 @@ interface TextViewNodeProps extends NodeProps {
   };
 }
 
-const TextViewNode: React.FC<TextViewNodeProps> = () => {
+const TextViewNode: React.FC<TextViewNodeProps> = ({data}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
   const nodesData = useNodesData(inputConnections[0]?.source);
-  const text = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+  let text = "";
+  if (data.in) {
+    text = Utf8DataTransfer.decodeString(data.in);
+  } else {
+    text = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+  }
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
