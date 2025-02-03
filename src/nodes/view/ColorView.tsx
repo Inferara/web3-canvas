@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import {
   NodeProps,
   Handle,
@@ -20,41 +20,26 @@ const ColorViewNode: React.FC<ColorViewNodeProps> = () => {
     handleType: 'target',
   });
 
-  const ids: string[] = [];
-  if (inputConnections.length > 0) {
-    inputConnections.forEach((connection) => {
-      ids.push(connection.source);
-    });
+  const nodesData = useNodesData(inputConnections[0]?.source);
+  const data = nodesData ? nodesData?.data.out as string : "#ccc";
+  const dataBytes = data.split('').map(char => char.charCodeAt(0));
+  while (dataBytes.length < 3) {
+    dataBytes.push(0);
   }
-  const nodesData = useNodesData(ids);
-  let color = "#ccc";
-  if (nodesData.length > 0) {
-    let data: string = nodesData[0].data.out as string;
-    for (let i = 1; i < nodesData.length; i++) {
-      data += nodesData[i].data.out as string;
-      const dataBytes = data.split('').map(char => char.charCodeAt(0));
-      const nextDataBytes = (nodesData[i].data.out as string).split('').map(char => char.charCodeAt(0));
-      for (let j = 0; j < dataBytes.length; j++) {
-        dataBytes[j] ^= nextDataBytes[j % nextDataBytes.length];
-      }
-      data = String.fromCharCode(...dataBytes);
-    }
-    const dataBytes = data.split('').map(char => char.charCodeAt(0));
-    const segmentLength = Math.ceil(dataBytes.length / 3);
-    const segments = [
-      dataBytes.slice(0, segmentLength),
-      dataBytes.slice(segmentLength, segmentLength * 2),
-      dataBytes.slice(segmentLength * 2, segmentLength * 3),
-    ];
-    color = segments
-      .map((segment) => {
-        const sum = segment.reduce((acc, byte) => acc + byte, 0);
-        const normalized = Math.floor((sum / segment.length) % 256);
-        return normalized.toString(16).padStart(2, "0");
-      })
-      .join("");
-    color = `#${color}`;
-  }
+  const segmentLength = Math.ceil(dataBytes.length / 3);
+  const segments = [
+    dataBytes.slice(0, segmentLength),
+    dataBytes.slice(segmentLength, segmentLength * 2),
+    dataBytes.slice(segmentLength * 2, segmentLength * 3),
+  ];
+  let color = segments
+    .map((segment) => {
+      const sum = segment.reduce((acc, byte) => acc + byte, 0);
+      const normalized = Math.floor((sum / segment.length) % 256);
+      return normalized.toString(16).padStart(2, "0");
+    })
+    .join("");
+  color = `#${color}`;
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150, backgroundColor: color }}>
@@ -62,10 +47,10 @@ const ColorViewNode: React.FC<ColorViewNodeProps> = () => {
         {color}
       </div>
       {/* One handle for input, no output handle since it just displays data */}
-      <Handle type="target" position={Position.Left} id="input" />
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
     </div>
   );
 };
 
-const MemoizedColorViewNode = memo(ColorViewNode);
+const MemoizedColorViewNode = React.memo(ColorViewNode);
 export default MemoizedColorViewNode;

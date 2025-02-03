@@ -21,42 +21,8 @@ const QrCodeNode: React.FC<QrCodeNodeProps> = () => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
-
-  const ids: string[] = [];
-  if (inputConnections.length > 0) {
-    inputConnections.forEach((connection) => {
-      ids.push(connection.source);
-    });
-  }
-
-  const nodesData = useNodesData(ids);
-  let qrValue = "";
-  if (nodesData.length > 0) {
-    qrValue = nodesData
-      .map((nodeData) => Utf8DataTransfer.decodeString(nodeData.data.out as string))
-      .join("");
-  }
-
-  // // This node doesn't store or update an 'out' value; it only *consumes* data.
-
-  // useEffect(() => {
-  //   // 1) Identify edges that connect *to* this node's handle "input"
-  //   const incomingEdges = edges.filter(
-  //     (edge) => edge.target === id && edge.targetHandle === "input"
-  //   );
-
-  //   // 2) Concatenate all 'out' values from the connected source nodes
-  //   const combinedInput = incomingEdges
-  //     .map((edge) => {
-  //       const sourceNode = nodes.find((n) => n.id === edge.source);
-  //       // Fallback to empty string if source node or out is undefined
-  //       return sourceNode?.data?.out ?? "";
-  //     })
-  //     .join("");
-
-  //   // 3) Update local state with the new input
-  //   setQrValue(combinedInput);
-  // }, [id, nodes, edges]);
+  const nodesData = useNodesData(inputConnections[0]?.source);
+  const qrValue = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc" }}>
@@ -67,9 +33,10 @@ const QrCodeNode: React.FC<QrCodeNodeProps> = () => {
       )}
 
       {/* Single handle to accept connections, no source handle since it has no output */}
-      <Handle type="target" position={Position.Left} id="input" />
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
     </div>
   );
 };
 
-export default QrCodeNode;
+const MemoizedQrCodeNode = React.memo(QrCodeNode);
+export default MemoizedQrCodeNode;

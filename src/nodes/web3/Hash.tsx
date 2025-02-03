@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Handle,
   NodeProps,
@@ -19,43 +19,26 @@ interface HashNodeProps extends NodeProps {
   };
 }
 
-const Hash: React.FC<HashNodeProps> = ({id, data}) => {
- const [computedHash, setComputedHash] = useState<string>("");
- const { updateNodeData } = useReactFlow();
-
- const inputConnections = useNodeConnections({
+const Hash: React.FC<HashNodeProps> = ({ id }) => {
+  const { updateNodeData } = useReactFlow();
+  const inputConnections = useNodeConnections({
     handleType: 'target',
   });
-
-  const ids: string[] = [];
-  if (inputConnections.length > 0) {
-    inputConnections.forEach((connection) => {
-      ids.push(connection.source);
-    });
-  }
-
-  const nodesData = useNodesData(ids);
-  if (nodesData.length > 0) {
-    const combinedInput = nodesData.map((nodeData) => 
-      Utf8DataTransfer.unpack(nodeData.data.out as string)
-    ).join("");
-    const newHash = web3.utils.keccak256Wrapper(combinedInput);
-    setComputedHash(newHash);
-    const newOut = Utf8DataTransfer.encodeString(newHash);
-    if (newOut !== data.out) {
-      updateNodeData(id, { out: newOut });
-    }
-  }
-
-
+  const nodesData = useNodesData(inputConnections[0]?.source);
+  const computedHash = nodesData ? web3.utils.keccak256Wrapper(nodesData?.data.out as string) : "";
+  useEffect(() => {
+    const newOut = Utf8DataTransfer.encodeString(computedHash);
+    updateNodeData(id, { out: newOut });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [computedHash]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-      <div style={{ marginTop: 8 }}>
+    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
+      <div style={{ marginTop: 8, width: "100%"}}>
         {computedHash.substring(0, 30) + "..." || "No input connected"}
       </div>
       {/* Single target handle that can accept multiple connections */}
-      <Handle type="target" position={Position.Left} id="input" />
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       {/* Source handle to expose the computed hash */}
       <Handle type="source" position={Position.Right} id="output" />
     </div>

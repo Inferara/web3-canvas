@@ -58,5 +58,6 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   );
 };
 
-export default FileInputNode;
+const MemoizedFileInputNode = React.memo(FileInputNode);
+export default MemoizedFileInputNode;
 

@@ -38,4 +38,5 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     };
     
 
-export default TextInputNode;
+const MemoizedTextInputNode = React.memo(TextInputNode);
+export default MemoizedTextInputNode;

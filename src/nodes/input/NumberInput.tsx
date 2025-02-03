@@ -43,4 +43,5 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
   );
 };
 
-export default NumberInputNode;
+const MemoizedNumberInputNode = React.memo(NumberInputNode);
+export default MemoizedNumberInputNode;
