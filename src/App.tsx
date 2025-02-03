@@ -26,13 +26,13 @@ import QRCode from './nodes/view/QRCode';
 import ColorViewNode from './nodes/view/ColorView';
 
 import Hash from './nodes/web3/Hash';
+import KeyPairNode from './nodes/web3/KeyPair';
 
 
 import Compound from './nodes/Compound';
 import Substring from './nodes/Substring';
 import LengthViewNode from './nodes/LengthView';
 import SeedPhraseNode from './nodes/SeedPhrase';
-import KeyPairNode from './nodes/KeyPair';
 import SignMessageNode from './nodes/SignMessage';
 import VerifySignatureNode from './nodes/VerifySignature';
 
@@ -112,31 +112,36 @@ const W3CFlow: React.FC = () => {
         const { clientX, clientY } =
           "changedTouches" in event ? event.changedTouches[0] : event;
   
-        // Create a new node that binds its `in` field to the source node's `out`
+        // Ensure the handle is a string.
+        // If connectionState.fromHandle is an object, extract its 'id' property.
+        const sourceHandle =
+          typeof connectionState.fromHandle === "object"
+            ? connectionState.fromHandle?.id
+            : connectionState.fromHandle;
+  
+        // Create a new node that binds its input to the output of the source node.
         const newNode: Node = {
           id,
           type: "textView",
           position: screenToFlowPosition({ x: clientX, y: clientY }),
           data: {
-            // Instead of copying the value, store a binding reference so that
-            // your textView component knows to subscribe to updates on the source.
             binding: {
               sourceId: connectionState.fromNode?.id,
-              sourceField: "out",
+              sourceField: sourceHandle, // e.g., "publicKey", "privateKey", or "address"
             },
-            // Optionally initialize `in` as empty. The textView component can check
-            // for the presence of a binding and subscribe to changes.
             in: "",
             out: "",
           },
         };
   
-        // Create an edge that connects the two nodes.
-        // Optionally, mark this edge as a binding edge.
+        // Create the edge with the properly extracted source handle.
         const newEdge: Edge = {
           id,
           source: connectionState.fromNode?.id as string,
+          sourceHandle: sourceHandle, // now a string
           target: id,
+          targetHandle: "input", // adjust if your target handle differs
+          // binding: true,
         };
   
         setNodes((nds) => nds.concat(newNode));
@@ -146,6 +151,7 @@ const W3CFlow: React.FC = () => {
     },
     [screenToFlowPosition]
   );
+  
 
 
   return (

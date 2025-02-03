@@ -1,77 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   NodeProps,
   Handle,
   Position,
-  useEdges,
-  useNodes,
   useReactFlow,
+  useNodeConnections,
+  useNodesData,
 } from "@xyflow/react";
 import Web3 from "web3";
+import { Utf8DataTransfer } from "../Utf8DataTransfer";
 
 interface SignMessageNodeProps extends NodeProps {
   id: string;
   data: {
-    // We'll store the generated signature in out
+    in?: string;
     out?: string;
-
-    // (Optional) saved inputs or metadata
-    message?: string;
-    privateKey?: string;
   };
 }
 
 const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
-  const edges = useEdges();
-  const nodes = useNodes();
   const { updateNodeData } = useReactFlow();
+  const inputConnections = useNodeConnections({ handleType: 'target' });
+  let signature = "";
+  const nd1 = useNodesData(inputConnections[0]?.source);
+  const nd2 = useNodesData(inputConnections[1]?.source);
 
-  const [signature, setSignature] = useState(data.out ?? "");
-
-  // 1) Filter edges to find connections into this node, on specific handle IDs
-  const incomingEdges = edges.filter((edge) => edge.target === id);
-
-  // 2) For each handle, see if we have a message or a private key
-  let messageInput = "";
-  let privateKeyInput = "";
-
-  incomingEdges.forEach((edge) => {
-    const handleId = edge.targetHandle; // e.g. "msg" or "privKey"
-    const sourceNode = nodes.find((n) => n.id === edge.source);
-    const sourceOut = sourceNode?.data?.out ?? "";
-
-    if (handleId === "msg") {
-      messageInput = sourceOut as string;
-    } else if (handleId === "privKey") {
-      privateKeyInput = sourceOut as string;
-    }
-  });
+  if (nd1 && nd2) {
+    const message = Utf8DataTransfer.decodeString((inputConnections[0].targetHandle === "msg" ? nd1.data.out : nd2.data.out) as string);
+    const privateKey = Utf8DataTransfer.decodeString(data.in as string);
+    const web3 = new Web3();
+    const signResult = web3.eth.accounts.sign(message, privateKey);
+    signature = signResult.signature;
+  }
 
   useEffect(() => {
-    // If we have both a message and privateKey, sign
-    if (messageInput && privateKeyInput) {
-      try {
-        const web3 = new Web3();
-        const account = web3.eth.accounts.privateKeyToAccount(privateKeyInput);
-        // Sign the message
-        const { signature: newSignature } = account.sign(messageInput);
-        if (newSignature !== signature) {
-          setSignature(newSignature);
-          // Update node data so other nodes can read the signature
-          updateNodeData(id, { ...data, out: newSignature });
-        }
-      } catch (err) {
-        console.error("Error signing message:", err);
-      }
-    } else {
-      // If either input is missing, clear the signature
-      if (signature) {
-        setSignature("");
-        updateNodeData(id, { ...data, out: "" });
-      }
-    }
+    updateNodeData(id, { ...data, out: Utf8DataTransfer.encodeString(signature) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageInput, privateKeyInput]);
+  }, [signature]);
+
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
@@ -86,8 +52,8 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
       </p>
 
       {/* Two target handles: one for the message, one for the private key */}
-      <Handle type="target" position={Position.Left} id="msg" style={{ top: "30%" }} />
-      <Handle type="target" position={Position.Left} id="privKey" style={{ top: "60%" }} />
+      <Handle type="target" position={Position.Left} id="msg" style={{ top: "30%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
+      <Handle type="target" position={Position.Left} id="privKey" style={{ top: "60%" }} isConnectable={inputConnections.filter((conn) => { conn.targetHandle === "privKey" }).length === 0} />
 
       {/* Single source handle to output the signature */}
       <Handle type="source" position={Position.Right} id="output" />

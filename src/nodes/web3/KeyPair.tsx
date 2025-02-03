@@ -9,11 +9,12 @@ import {
 } from "@xyflow/react";
 import Web3 from "web3";
 
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface KeyPairNodeProps extends NodeProps {
   id: string;
   data: {
+    in?: string;
     out?: {
       publicKey?: string;
       privateKey?: string;
@@ -102,4 +103,5 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ data }) => {
   );
 };
 
-export default KeyPairNode;
+const MemoizedKeyPairNode = React.memo(KeyPairNode);
+export default MemoizedKeyPairNode;
