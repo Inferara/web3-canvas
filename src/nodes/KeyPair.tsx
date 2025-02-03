@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   NodeProps,
   Handle,
   Position,
   useReactFlow,
-  useNodes,
-  useEdges,
+  useNodeConnections,
+  useNodesData,
 } from "@xyflow/react";
 import Web3 from "web3";
 
@@ -25,50 +25,30 @@ interface KeyPairNodeProps extends NodeProps {
 }
 
 const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
-  const nodes = useNodes();
-  const edges = useEdges();
   const { updateNodeData } = useReactFlow();
-
-  // Local states for address (publicKey) and privateKey
-  const [privateKey, setPrivateKey] = useState<string>(data.out?.privateKey ?? "");
-  const [publicKey, setPublicKey] = useState<string>(data.out?.publicKey ?? "");
-  const [address, setAddress] = useState<string>(data.out?.address ?? "");
-
-  // We'll create a local web3 instance. (No provider needed for account creation)
+  const inputConnections = useNodeConnections({
+    handleType: 'target',
+  });
+  const nodesData = useNodesData(inputConnections[0]?.source);
   const web3 = new Web3();
+  const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
+  const account = privateKey ? web3.eth.accounts.privateKeyToAccount(privateKey) : null;
+  const publicKey = privateKey && account ? web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false): "";
+  const address = privateKey && account ? account.address : "";
 
-  // Generate an Ethereum-style account if none exists in data
   useEffect(() => {
-    const incomingEdges = edges.filter(
-      (edge) => edge.target === id && edge.targetHandle === "input"
-    );
-    
-    let privateKey = "";
-    if (incomingEdges.length == 1) {
-      const edge = incomingEdges[0];
-      const sourceNode = nodes.find((n) => n.id === edge.source);
-      if (sourceNode?.data?.out) {
-        privateKey = Utf8DataTransfer.unpack(sourceNode.data.out as string) as string;
-      }
-    }
-
     if (privateKey) {
-      const account = web3.eth.accounts.privateKeyToAccount(privateKey);
-      const publicKey = web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false);
-      setPublicKey(publicKey);
-      setPrivateKey(account.privateKey);
-      setAddress(account.address);
-
-      // Update in React Flow data so other nodes can consume them
       updateNodeData(id, {
         ...data,
-        publicKey: publicKey,
-        privateKey: account.privateKey,
+          out: {
+            privateKey: Utf8DataTransfer.encodeString(account?.privateKey as string),
+            publicKey: Utf8DataTransfer.encodeString(publicKey),
+            address: Utf8DataTransfer.encodeString(address)
+          }
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, privateKey, publicKey, address, updateNodeData]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [privateKey]);
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
@@ -84,7 +64,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
         <span>{privateKey || "Generating..."}</span>
       </p>
       {/* One target handle for optional upstream data (e.g. a seed), if needed */}
-      <Handle type="target" position={Position.Left} id="input" />
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
 
       {/* Two source handles for publicKey and privateKey */}
       <Handle

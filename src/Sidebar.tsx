@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
 
             <div className='description'>Crypto</div>
             <hr />
-            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "hash")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "hash")} draggable>
                 Hash
             </div>
             <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
