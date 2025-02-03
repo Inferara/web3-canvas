@@ -61,6 +61,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ data }) => {
         updateNodeData(conn.target, { ...data, in: Utf8DataTransfer.encodeString(outputData as string) });
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, outputConnections.length]);
 
   return (

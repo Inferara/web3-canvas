@@ -5,11 +5,12 @@ import {
   Background,
   addEdge,
   Connection,
-  Edge, Node, 
+  Edge, Node,
   useReactFlow,
   useNodesState,
   useEdgesState,
-  ReactFlowProvider
+  ReactFlowProvider,
+  FinalConnectionState
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
@@ -66,12 +67,12 @@ const W3CFlow: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useW3C();
- 
+
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
- 
+
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -80,7 +81,7 @@ const W3CFlow: React.FC = () => {
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
- 
+
       // check if the dropped element is valid
       if (!type) {
         return;
@@ -98,37 +99,80 @@ const W3CFlow: React.FC = () => {
         position,
         data: data,
       };
- 
+
       setNodes((nds) => nds.concat(newNode));
     },
     [screenToFlowPosition, setNodes, type],
   );
 
+  const onConnectEnd = useCallback(
+    (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
+      if (!connectionState.isValid) {
+        const id = getId();
+        const { clientX, clientY } =
+          "changedTouches" in event ? event.changedTouches[0] : event;
   
-return (
-  <div className="w3cflow">
-    <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-      <ReactFlow
-        nodeTypes={nodeTypes}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        fitView
-        style={{ backgroundColor: "#F7F9FB" }}
-      >
-        <Controls />
-        <Background />
-      </ReactFlow>
+        // Create a new node that binds its `in` field to the source node's `out`
+        const newNode: Node = {
+          id,
+          type: "textView",
+          position: screenToFlowPosition({ x: clientX, y: clientY }),
+          data: {
+            // Instead of copying the value, store a binding reference so that
+            // your textView component knows to subscribe to updates on the source.
+            binding: {
+              sourceId: connectionState.fromNode?.id,
+              sourceField: "out",
+            },
+            // Optionally initialize `in` as empty. The textView component can check
+            // for the presence of a binding and subscribe to changes.
+            in: "",
+            out: "",
+          },
+        };
+  
+        // Create an edge that connects the two nodes.
+        // Optionally, mark this edge as a binding edge.
+        const newEdge: Edge = {
+          id,
+          source: connectionState.fromNode?.id as string,
+          target: id,
+        };
+  
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) => eds.concat(newEdge));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [screenToFlowPosition]
+  );
+
+
+  return (
+    <div className="w3cflow">
+      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <ReactFlow
+          nodeTypes={nodeTypes}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onConnectEnd={onConnectEnd}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          fitView
+          style={{ backgroundColor: "#F7F9FB" }}
+        >
+          <Controls />
+          <Background />
+        </ReactFlow>
+      </div>
+      <Sidebar />
     </div>
-    <Sidebar />
-  </div>
-);
+  );
 };
- 
+
 const App: React.FC = () => (
   <ReactFlowProvider>
     <W3CProvider>
