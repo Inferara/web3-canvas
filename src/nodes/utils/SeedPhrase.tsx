@@ -9,6 +9,7 @@ import {
 // If you haven't already, install random-words:
 // npm install random-words
 import { generate } from "random-words";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface SeedPhraseNodeProps extends NodeProps {
   id: string;
@@ -20,32 +21,21 @@ interface SeedPhraseNodeProps extends NodeProps {
 
 const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
+  const [seedPhrase, setSeedPhrase] = useState<string>("");
 
-  // Local state for the generated seed phrase
-  const [seedPhrase, setSeedPhrase] = useState<string>(data.out ?? "");
-
-  // Sync local state if `data.out` changes externally (e.g. loaded from a saved flow)
   useEffect(() => {
-    if (data.out !== undefined && data.out !== seedPhrase) {
-      setSeedPhrase(data.out);
-    }
-  }, [data.out, seedPhrase]);
+    const outData = Utf8DataTransfer.decodeString(seedPhrase as string);
+    updateNodeData(id, { ...data, out: outData });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seedPhrase]);
 
-  // Generate a new 20-word phrase when user clicks the button
   const handleGenerate = () => {
-    // Generate 20 random words and join them with spaces
-    const newPhrase = generate({ exactly: 20, join: " " });
-    setSeedPhrase(newPhrase);
-
-    // Update node data so other nodes can read the new phrase
-    if (newPhrase !== data.out) {
-      updateNodeData(id, { ...data, out: newPhrase });
-    }
+    setSeedPhrase(generate({ exactly: 20, join: " " }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 200 }}>
-      <div>Seed Phrase Node</div>
       <button onClick={handleGenerate} style={{ marginTop: 8 }}>
         Generate Seed
       </button>

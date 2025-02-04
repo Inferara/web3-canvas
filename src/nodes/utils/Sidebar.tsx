@@ -1,5 +1,5 @@
 import React from 'react';
-import { useW3C } from './W3CContext';
+import { useW3C } from '../../W3CContext';
 
 const Sidebar: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,16 +55,16 @@ const Sidebar: React.FC = () => {
 
             <div className='description'>Utils</div>
             <hr />
-            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "compound")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                 Compound
             </div>
-            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "substring")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "substring")} draggable>
                 Substring
             </div>
-            <div className='w3cflownode need-improve' onDragStart={(event) => onDragStart(event, "length")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "length")} draggable>
                 Length
             </div>
-            <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "seed")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "seed")} draggable>
                 Seed Phrase
             </div>
 

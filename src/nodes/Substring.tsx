@@ -1,14 +1,15 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   NodeProps,
   Handle,
   Position,
-  useNodes,
-  useEdges,
   useReactFlow,
+  useNodeConnections,
+  useNodesData,
 } from "@xyflow/react";
 
 import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { KeyPairNodeProps } from "./web3/KeyPair";
 
 interface SubstringNodeProps extends NodeProps {
   id: string;
@@ -19,75 +20,78 @@ interface SubstringNodeProps extends NodeProps {
 }
 
 const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
-  const nodes = useNodes();
-  const edges = useEdges();
   const { updateNodeData } = useReactFlow();
+  const [startPos, setStartPos] = useState<number>(0);
+  const [endPos, setEndPos] = useState<number>(0);
+  
+  const inputConnections = useNodeConnections({ handleType: 'target' });
+  const nodeData = useNodesData(inputConnections[0]?.source);
+  let inputStr = "";
+  if (nodeData) {
+    if (nodeData?.type === "keypair") {
+      const sourceHandle = inputConnections[0]?.sourceHandle;
+      if (sourceHandle === "publicKey") {
+        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.publicKey as string) : "";
+      } else if (sourceHandle === "privateKey") {
+        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.privateKey as string) : "";
+      } else if (sourceHandle === "address") {
+        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.address as string) : "";
+      }
+    } else {
+      inputStr = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
+    }
+  }
 
-  // Local numeric state for the substring length (defaults to 5).
-  // No immediate writing into `data` to avoid infinite re-renders.
-  const [lengthValue, setLengthValue] = useState<number>(5);
+  const onStartPosChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(evt.target.value, 10);
+    setStartPos(newValue);
+    const newOut = Utf8DataTransfer.encodeString(evt.target.value);
+    updateNodeData(id, { ...data, out: newOut });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Local state to store this node’s current output (the substring).
-  const [substringOutput, setSubstringOutput] = useState<string>(data.out ? Utf8DataTransfer.decodeString(data.out) : "");
+  const onEndPosChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(evt.target.value, 10);
+    setEndPos(newValue);
+    const newOut = Utf8DataTransfer.encodeString(evt.target.value);
+    updateNodeData(id, { ...data, out: newOut });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    // 1) Identify any edges whose target is this node at handle "input"
-    const incomingEdges = edges.filter(
-      (edge) => edge.target === id && edge.targetHandle === "input"
-    );
+    const res = inputStr.substring(startPos, endPos);
+    const newOut = Utf8DataTransfer.encodeString(res);
+    updateNodeData(id, { out: newOut });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputStr, startPos, endPos]);
 
-    // 2) Gather and concatenate the 'out' of each source node
-    const combinedInput = incomingEdges
-      .map((edge) => {
-        const sourceNode = nodes.find((n) => n.id === edge.source);
-        const out = sourceNode?.data?.out as number[];
-        return out ? new TextDecoder().decode(new Uint8Array(out)) : "";
-      })
-      .join("");
-
-    // 3) Slice the combined input to lengthValue
-    const newSubstring = combinedInput.slice(0, lengthValue);
-
-    // 4) Update local state and React Flow node data *only* if changed
-    if (newSubstring !== substringOutput) {
-      setSubstringOutput(newSubstring);
-      const utf8Encoder = new TextEncoder();
-      const newOut = utf8Encoder.encode(newSubstring);
-      updateNodeData(id, { ...data, out: newOut });
-    }
-  }, [id, data, edges, nodes, lengthValue, substringOutput, updateNodeData]);
-
-  // Handle numeric input changes locally
-  const handleLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // parseInt safely, default to 0
-    const newLen = parseInt(e.target.value, 10) || 0;
-    setLengthValue(newLen);
-  };
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
       <div>Substring Node</div>
 
-      <div style={{ marginTop: 8 }}>
-        <label>
-          Length:
-          <input
-            type="number"
-            min={0}
-            value={lengthValue}
-            onChange={handleLengthChange}
-            style={{ width: 60, marginLeft: 8 }}
-            className="nodrag"
-          />
-        </label>
-      </div>
+      <input
+        type="number"
+        min={0}
+        value={startPos}
+        onChange={onStartPosChange}
+        style={{ marginTop: 8 }}
+        className="nodrag"
+        id="start"
+      />
 
-      <div style={{ marginTop: 8 }}>
-        Output: <strong>{substringOutput}</strong>
-      </div>
+      <input
+        type="number"
+        value={endPos}
+        max={inputStr ? inputStr.length : 0}
+        onChange={onEndPosChange}
+        style={{ marginTop: 8 }}
+        className="nodrag"
+        id="end"
+      />
 
       {/* One input handle (target), one output handle (source) */}
-      <Handle type="target" position={Position.Left} id="input" />
+      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       <Handle type="source" position={Position.Right} id="output" />
     </div>
   );

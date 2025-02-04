@@ -7,8 +7,8 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import Web3 from "web3";
-import { KeyPairNodeProps } from "./web3/KeyPair";
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { KeyPairNodeProps } from "./KeyPair";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface VerifySignatureNodeProps extends NodeProps {
   id: string;
@@ -72,9 +72,9 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = () => {
       </p>
 
       {/* Three target handles: message, signature, address */}
-      <Handle type="target" position={Position.Left} id="msg" style={{ top: "25%" }} />
-      <Handle type="target" position={Position.Left} id="sig" style={{ top: "50%" }} />
-      <Handle type="target" position={Position.Left} id="addr" style={{ top: "75%" }} />
+      <Handle type="target" position={Position.Left} id="msg" style={{ top: "25%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
+      <Handle type="target" position={Position.Left} id="sig" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "sig").length === 0}/>
+      <Handle type="target" position={Position.Left} id="addr" style={{ top: "75%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0}/>
     </div>
   );
 };

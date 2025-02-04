@@ -14,7 +14,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
-import Sidebar from './Sidebar';
+import Sidebar from './nodes/utils/Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 
 import TextInputNode from './nodes/input/TextInput';
@@ -30,11 +30,11 @@ import KeyPairNode from './nodes/web3/KeyPair';
 import SignMessageNode from './nodes/web3/SignMessage';
 
 
-import Compound from './nodes/Compound';
+import Compound from './nodes/utils/Compound';
 import Substring from './nodes/Substring';
-import LengthViewNode from './nodes/LengthView';
-import SeedPhraseNode from './nodes/SeedPhrase';
-import VerifySignatureNode from './nodes/VerifySignature';
+import StrLengthNode from './nodes/utils/StrLength';
+import SeedPhraseNode from './nodes/utils/SeedPhrase';
+import VerifySignatureNode from './nodes/web3/VerifySignature';
 
 const nodeTypes = {
   textInput: TextInputNode,
@@ -45,7 +45,7 @@ const nodeTypes = {
   compound: Compound,
   qr: QRCode,
   substring: Substring,
-  length: LengthViewNode,
+  length: StrLengthNode,
   color: ColorViewNode,
   seed: SeedPhraseNode,
   keypair: KeyPairNode,
@@ -58,7 +58,7 @@ const getId = () => `w3cnode_${id++}`;
 
 const defaultData: { [key: string]: { in: string; out: string } } = {
   'textInput': { in: '', out: Utf8DataTransfer.encodeString('Web3 キャンバス') },
-  'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(5) },
+  'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(0) },
 }
 
 const W3CFlow: React.FC = () => {
@@ -149,10 +149,9 @@ const W3CFlow: React.FC = () => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition]
   );
-  
-
 
   return (
     <div className="w3cflow">
