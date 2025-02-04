@@ -27,13 +27,13 @@ import ColorViewNode from './nodes/view/ColorView';
 
 import Hash from './nodes/web3/Hash';
 import KeyPairNode from './nodes/web3/KeyPair';
+import SignMessageNode from './nodes/web3/SignMessage';
 
 
 import Compound from './nodes/Compound';
 import Substring from './nodes/Substring';
 import LengthViewNode from './nodes/LengthView';
 import SeedPhraseNode from './nodes/SeedPhrase';
-import SignMessageNode from './nodes/SignMessage';
 import VerifySignatureNode from './nodes/VerifySignature';
 
 const nodeTypes = {

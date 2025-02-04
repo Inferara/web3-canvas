@@ -8,7 +8,7 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import Web3 from "web3";
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface SignMessageNodeProps extends NodeProps {
   id: string;
