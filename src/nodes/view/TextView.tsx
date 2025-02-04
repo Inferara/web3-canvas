@@ -7,6 +7,7 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { KeyPairNodeProps } from "../web3/KeyPair";
 
 interface TextViewNodeProps extends NodeProps {
   id: string;
@@ -16,16 +17,26 @@ interface TextViewNodeProps extends NodeProps {
   };
 }
 
-const TextViewNode: React.FC<TextViewNodeProps> = ({data}) => {
+const TextViewNode: React.FC<TextViewNodeProps> = () => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
   const nodesData = useNodesData(inputConnections[0]?.source);
   let text = "";
-  if (data.in) {
-    text = Utf8DataTransfer.decodeString(data.in);
-  } else {
-    text = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+  if (inputConnections) {
+    if (nodesData?.type === "keypair") {
+      const handleType = inputConnections[0]?.targetHandle;
+      if (handleType === "publicKey") {
+        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.publicKey as string) : "";
+      } else if (handleType === "privateKey") {
+        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.privateKey as string) : "";
+      } else if (handleType === "address") {
+        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.address as string) : "";
+      }
+
+    } else {
+      text = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+    }
   }
 
   return (
