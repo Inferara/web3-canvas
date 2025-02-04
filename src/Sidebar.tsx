@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
                 Sign Message
             </div>
-            <div className='w3cflownode broken' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
                 Verify Signature
             </div>
 

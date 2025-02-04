@@ -9,11 +9,12 @@ import {
 } from "@xyflow/react";
 import Web3 from "web3";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { KeyPairNodeProps } from "./KeyPair";
 
 interface SignMessageNodeProps extends NodeProps {
   id: string;
   data: {
-    in?: string;
+    in?: object;
     out?: string;
   };
 }
@@ -26,8 +27,20 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
   const nd2 = useNodesData(inputConnections[1]?.source);
 
   if (nd1 && nd2) {
-    const message = Utf8DataTransfer.decodeString((inputConnections[0].targetHandle === "msg" ? nd1.data.out : nd2.data.out) as string);
-    const privateKey = Utf8DataTransfer.decodeString(data.in as string);
+    const nodesData = [nd1, nd2];
+    const msgConnection = inputConnections.find((conn) => conn.targetHandle === "msg");
+    const message = Utf8DataTransfer.decodeString(msgConnection ? nodesData.find((nd) => nd.id === msgConnection.source)?.data?.out as string : "");
+    const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
+    const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
+    let privateKey = "";
+    if (privKeyConnection) {
+      if (privKeyNodeData?.type === "keypair") {
+        privateKey = Utf8DataTransfer.decodeString((privKeyNodeData as KeyPairNodeProps).data.out?.privateKey as string) as string;
+      } else {
+        privateKey = Utf8DataTransfer.decodeString(privKeyNodeData?.data.out as string);
+      }
+    }
+    
     const web3 = new Web3();
     const signResult = web3.eth.accounts.sign(message, privateKey);
     signature = signResult.signature;

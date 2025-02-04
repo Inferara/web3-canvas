@@ -11,10 +11,10 @@ import Web3 from "web3";
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
-interface KeyPairNodeProps extends NodeProps {
+export interface KeyPairNodeProps extends NodeProps {
   id: string;
   data: {
-    in?: string;
+    in?: object;
     out?: {
       publicKey?: string;
       privateKey?: string;
@@ -23,7 +23,7 @@ interface KeyPairNodeProps extends NodeProps {
   };
 }
 
-const KeyPairNode: React.FC<KeyPairNodeProps> = ({ data }) => {
+const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   
   // Detect input connections (e.g., receiving a private key from another node)
@@ -40,28 +40,11 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ data }) => {
   const publicKey = privateKey && account ? web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false) : "";
   const address = privateKey && account ? account.address : "";
 
-  // Update data for each connected handle separately
   useEffect(() => {
-    if (privateKey) {
-      outputConnections.forEach((conn) => {
-        let outputData = "";
-
-        switch (conn.sourceHandle) {
-          case "publicKey":
-            outputData = publicKey;
-            break;
-          case "privateKey":
-            outputData = account?.privateKey as string;
-            break;
-          case "address":
-            outputData = address;
-            break;
-        }
-
-        // Update only the connected node's data
-        updateNodeData(conn.target, { ...data, in: Utf8DataTransfer.encodeString(outputData as string) });
-      });
-    }
+    const pkOut = Utf8DataTransfer.encodeString(privateKey);
+    const pubOut = Utf8DataTransfer.encodeString(publicKey);
+    const addrOut = Utf8DataTransfer.encodeString(address);
+    updateNodeData(id, { ...data, out: { privateKey: pkOut, publicKey: pubOut, address: addrOut } });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, outputConnections.length]);
 
