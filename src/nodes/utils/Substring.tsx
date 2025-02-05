@@ -8,8 +8,8 @@ import {
   useNodesData,
 } from "@xyflow/react";
 
-import { Utf8DataTransfer } from "../Utf8DataTransfer";
-import { KeyPairNodeProps } from "./web3/KeyPair";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { KeyPairNodeProps } from "../web3/KeyPair";
 
 interface SubstringNodeProps extends NodeProps {
   id: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useW3C } from '../../W3CContext';
+import { useW3C } from './W3CContext';
 
 const Sidebar: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,6 +51,12 @@ const Sidebar: React.FC = () => {
             </div>
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
                 Verify Signature
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "balance")} draggable>
+                Balance
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "ethToUsd")} draggable>
+                ETH to USD
             </div>
 
             <div className='description'>Utils</div>

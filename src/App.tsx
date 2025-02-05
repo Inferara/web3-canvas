@@ -14,7 +14,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
-import Sidebar from './nodes/utils/Sidebar';
+import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 
 import TextInputNode from './nodes/input/TextInput';
@@ -28,13 +28,14 @@ import ColorViewNode from './nodes/view/ColorView';
 import Hash from './nodes/web3/Hash';
 import KeyPairNode from './nodes/web3/KeyPair';
 import SignMessageNode from './nodes/web3/SignMessage';
-
+import VerifySignatureNode from './nodes/web3/VerifySignature';
+import EthBalanceNode from './nodes/web3/Balance';
+import EthToUsdNode from './nodes/web3/EthToUsd';
 
 import Compound from './nodes/utils/Compound';
-import Substring from './nodes/Substring';
+import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
-import VerifySignatureNode from './nodes/web3/VerifySignature';
 
 const nodeTypes = {
   textInput: TextInputNode,
@@ -51,6 +52,8 @@ const nodeTypes = {
   keypair: KeyPairNode,
   signMessage: SignMessageNode,
   verifySignature: VerifySignatureNode,
+  balance: EthBalanceNode,
+  ethToUsd: EthToUsdNode,
 };
 
 let id = 0;
