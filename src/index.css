@@ -73,3 +73,11 @@ body {
     max-width: 250px;
   }
 }
+
+.handleLabel {
+  /* position: relative; */
+  /* width: 200px; */
+  transform: translate(10px, -35%);
+  /* font-size: 12px; */
+  pointer-events: none;
+}

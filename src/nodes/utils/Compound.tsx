@@ -32,18 +32,7 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
 
   for (let i = 0; i < nodesData.length; i++) {
     const nodeData = nodesData[i];
-    if (nodeData.type === "keypair") {
-      const sourceHandle = inputConnections[0]?.sourceHandle;
-      if (sourceHandle === "publicKey") {
-        combinedData += nodesData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.publicKey as string) : "";
-      } else if (sourceHandle === "privateKey") {
-        combinedData += nodesData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.privateKey as string) : "";
-      } else if (sourceHandle === "address") {
-        combinedData += nodesData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.address as string) : "";
-      }
-    } else {
-      combinedData += nodesData ? Utf8DataTransfer.decodeString(nodeData.data.out as string) : "";
-    }
+    combinedData += Utf8DataTransfer.readStringFromMaybeKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[i]?.sourceHandle as string);
     combinedData = combinedData.replace(/\s/g, '');
   }
 

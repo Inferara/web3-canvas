@@ -25,21 +25,14 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
-  const nodesData = useNodesData(inputConnections[0]?.source);
+  const nodeData = useNodesData(inputConnections[0]?.source);
   let computedHash  = "";
-  if (nodesData) {
+  if (nodeData) {
     let hashInput = "";
-    if (nodesData?.type === "keypair") {
-      const sourceHandle = inputConnections[0]?.sourceHandle;
-      if (sourceHandle === "publicKey") {
-        hashInput = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.publicKey as string) : "";
-      } else if (sourceHandle === "privateKey") {
-        hashInput = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.privateKey as string) : "";
-      } else if (sourceHandle === "address") {
-        hashInput = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.address as string) : "";
-      }
+    if (nodeData?.type === "keypair") {
+      hashInput = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
     } else {
-      hashInput = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+      hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
     computedHash = web3.utils.keccak256Wrapper(hashInput);
   }

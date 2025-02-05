@@ -35,7 +35,7 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     let privateKey = "";
     if (privKeyConnection) {
       if (privKeyNodeData?.type === "keypair") {
-        privateKey = Utf8DataTransfer.decodeString((privKeyNodeData as KeyPairNodeProps).data.out?.privateKey as string) as string;
+        privateKey = Utf8DataTransfer.readStringFromKeyPairNode(privKeyNodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
       } else {
         privateKey = Utf8DataTransfer.decodeString(privKeyNodeData?.data.out as string);
       }

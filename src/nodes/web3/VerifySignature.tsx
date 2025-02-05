@@ -38,7 +38,7 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = () => {
     const addrNodeData = nodesData.find((nd) => nd.id === addrConnection?.source);
     if (addrConnection) {
       if (addrNodeData?.type === "keypair") {
-        addressInput = Utf8DataTransfer.decodeString((addrNodeData as KeyPairNodeProps).data.out?.address as string) as string;
+        addressInput = Utf8DataTransfer.readStringFromKeyPairNode(addrNodeData as KeyPairNodeProps,  addrConnection.sourceHandle as string);
       } else {
         addressInput = Utf8DataTransfer.decodeString(addrNodeData?.data.out as string);
       }

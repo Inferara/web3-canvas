@@ -1,3 +1,5 @@
+import { KeyPairNodeProps } from "./nodes/web3/KeyPair";
+
 export class Utf8DataTransfer {
     // Encode a string
     static encodeString(value: string): string {
@@ -54,5 +56,24 @@ export class Utf8DataTransfer {
             default:
                 return "";
         }
+    }
+
+    static readStringFromMaybeKeyPairNode(nodeData: KeyPairNodeProps | undefined, sourceHandle: string): string {
+        if (nodeData?.type === "keypair") {
+            return Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps, sourceHandle);
+        } else {
+            return nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
+        }
+    }
+
+    static readStringFromKeyPairNode(nodeData: KeyPairNodeProps, sourceHandle: string): string {
+        if (sourceHandle === "publicKey") {
+            return nodeData ? Utf8DataTransfer.decodeString((nodeData).data.out?.publicKey as string) : "";
+        } else if (sourceHandle === "privateKey") {
+            return nodeData ? Utf8DataTransfer.decodeString((nodeData).data.out?.privateKey as string) : "";
+        } else if (sourceHandle === "address") {
+            return nodeData ? Utf8DataTransfer.decodeString((nodeData).data.out?.address as string) : "";
+        }
+        return "";
     }
 }

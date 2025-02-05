@@ -24,7 +24,7 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   const [seedPhrase, setSeedPhrase] = useState<string>("");
 
   useEffect(() => {
-    const outData = Utf8DataTransfer.decodeString(seedPhrase as string);
+    const outData = Utf8DataTransfer.encodeString(seedPhrase as string);
     updateNodeData(id, { ...data, out: outData });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seedPhrase]);

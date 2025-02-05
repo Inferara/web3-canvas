@@ -31,6 +31,8 @@ import SignMessageNode from './nodes/web3/SignMessage';
 import VerifySignatureNode from './nodes/web3/VerifySignature';
 import EthBalanceNode from './nodes/web3/Balance';
 import EthToUsdNode from './nodes/web3/EthToUsd';
+import MakeTransactionNode from './nodes/web3/MakeTransaction';
+import BroadcastTransactionNode from './nodes/web3/BroadcastTransaction';
 
 import Compound from './nodes/utils/Compound';
 import Substring from './nodes/utils/Substring';
@@ -38,22 +40,28 @@ import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
 
 const nodeTypes = {
+  // input
   textInput: TextInputNode,
   numberInput: NumberInputNode,
   fileInput: FileInputNode,
+  // view
   textView: TextViewNode,
-  hash: Hash,
-  compound: Compound,
   qr: QRCode,
-  substring: Substring,
-  length: StrLengthNode,
   color: ColorViewNode,
-  seed: SeedPhraseNode,
+  // web3
+  hash: Hash,
   keypair: KeyPairNode,
   signMessage: SignMessageNode,
   verifySignature: VerifySignatureNode,
   balance: EthBalanceNode,
   ethToUsd: EthToUsdNode,
+  makeTransaction: MakeTransactionNode,
+  broadcastTrascation: BroadcastTransactionNode,
+  // utils
+  compound: Compound,
+  substring: Substring,
+  length: StrLengthNode,
+  seed: SeedPhraseNode,
 };
 
 let id = 0;

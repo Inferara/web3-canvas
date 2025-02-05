@@ -24,19 +24,12 @@ const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: 'target' });
   let lengthValue = 0;
-  const nodesData = useNodesData(inputConnections[0]?.source);
-  if (nodesData) {
-    if (nodesData?.type === "keypair") {
-      const sourceHandle = inputConnections[0]?.sourceHandle;
-      if (sourceHandle === "publicKey") {
-        lengthValue = (nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.publicKey as string) : "").length;
-      } else if (sourceHandle === "privateKey") {
-        lengthValue = (nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.privateKey as string) : "").length;
-      } else if (sourceHandle === "address") {
-        lengthValue = (nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.address as string) : "").length;
-      }
+  const nodeData = useNodesData(inputConnections[0]?.source);
+  if (nodeData) {
+    if (nodeData?.type === "keypair") {
+      lengthValue = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string).length;
     } else {
-      lengthValue = (nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "").length;
+      lengthValue = (nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "").length;
     }
   }
 

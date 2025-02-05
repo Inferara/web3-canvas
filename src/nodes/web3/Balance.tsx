@@ -28,7 +28,7 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
         (conn) => conn.targetHandle === "addr"
     );
     const urlConnection = inputConnections.find(
-        (conn) => conn.targetHandle === "url"
+        (conn) => conn.targetHandle === "url" //https://rpc.ankr.com/eth
     );
 
     // Get the connected nodes' data.

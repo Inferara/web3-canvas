@@ -58,6 +58,12 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "ethToUsd")} draggable>
                 ETH to USD
             </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "makeTransaction")} draggable>
+                Make Transaction
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "broadcastTrascation")} draggable>
+                Broadcast Transaction
+            </div>
 
             <div className='description'>Utils</div>
             <hr />
@@ -73,7 +79,6 @@ const Sidebar: React.FC = () => {
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "seed")} draggable>
                 Seed Phrase
             </div>
-
         </aside>
     )
 }

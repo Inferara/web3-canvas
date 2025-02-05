@@ -29,14 +29,7 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   let inputStr = "";
   if (nodeData) {
     if (nodeData?.type === "keypair") {
-      const sourceHandle = inputConnections[0]?.sourceHandle;
-      if (sourceHandle === "publicKey") {
-        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.publicKey as string) : "";
-      } else if (sourceHandle === "privateKey") {
-        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.privateKey as string) : "";
-      } else if (sourceHandle === "address") {
-        inputStr = nodeData ? Utf8DataTransfer.decodeString((nodeData as KeyPairNodeProps).data.out?.address as string) : "";
-      }
+      inputStr = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
     } else {
       inputStr = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }

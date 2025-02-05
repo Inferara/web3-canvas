@@ -21,21 +21,13 @@ const TextViewNode: React.FC<TextViewNodeProps> = () => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
-  const nodesData = useNodesData(inputConnections[0]?.source);
+  const nodeData = useNodesData(inputConnections[0]?.source);
   let text = "";
   if (inputConnections) {
-    if (nodesData?.type === "keypair") {
-      const sourceHandle = inputConnections[0]?.sourceHandle;
-      if (sourceHandle === "publicKey") {
-        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.publicKey as string) : "";
-      } else if (sourceHandle === "privateKey") {
-        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.privateKey as string) : "";
-      } else if (sourceHandle === "address") {
-        text = nodesData ? Utf8DataTransfer.decodeString((nodesData as KeyPairNodeProps).data.out?.address as string) : "";
-      }
-
+    if (nodeData?.type === "keypair") {
+      text = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
     } else {
-      text = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+      text = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
   }
 
