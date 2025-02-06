@@ -1,7 +1,10 @@
 import { createRoot } from 'react-dom/client';
+import { Buffer } from 'buffer';
 import App from './App';
 
 import './index.css';
+
+window.Buffer = Buffer;
 
 const container = document.querySelector('#app');
 if (container) {

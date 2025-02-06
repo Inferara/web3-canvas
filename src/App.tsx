@@ -17,6 +17,13 @@ import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 
+import Decrypt from './nodes/cryptography/Decrypt';
+import Encrypt from './nodes/cryptography/Encrypt';
+import Hash from './nodes/cryptography/Hash';
+import KeyPairNode from './nodes/cryptography/KeyPair';
+import SignMessageNode from './nodes/cryptography/SignMessage';
+import VerifySignatureNode from './nodes/cryptography/VerifySignature';
+
 import TextInputNode from './nodes/input/TextInput';
 import NumberInputNode from './nodes/input/NumberInput';
 import FileInputNode from './nodes/input/FileInput';
@@ -25,10 +32,6 @@ import TextViewNode from './nodes/view/TextView';
 import QRCode from './nodes/view/QRCode';
 import ColorViewNode from './nodes/view/ColorView';
 
-import Hash from './nodes/web3/Hash';
-import KeyPairNode from './nodes/web3/KeyPair';
-import SignMessageNode from './nodes/web3/SignMessage';
-import VerifySignatureNode from './nodes/web3/VerifySignature';
 import EthBalanceNode from './nodes/web3/Balance';
 import EthToUsdNode from './nodes/web3/EthToUsd';
 import MakeTransactionNode from './nodes/web3/MakeTransaction';
@@ -40,6 +43,13 @@ import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
 
 const nodeTypes = {
+  // cryptography
+  encrypt: Encrypt,
+  decrypt: Decrypt,
+  hash: Hash,
+  keypair: KeyPairNode,
+  signMessage: SignMessageNode,
+  verifySignature: VerifySignatureNode,
   // input
   textInput: TextInputNode,
   numberInput: NumberInputNode,
@@ -49,10 +59,6 @@ const nodeTypes = {
   qr: QRCode,
   color: ColorViewNode,
   // web3
-  hash: Hash,
-  keypair: KeyPairNode,
-  signMessage: SignMessageNode,
-  verifySignature: VerifySignatureNode,
   balance: EthBalanceNode,
   ethToUsd: EthToUsdNode,
   makeTransaction: MakeTransactionNode,

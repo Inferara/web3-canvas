@@ -9,6 +9,7 @@ import {
 } from "@xyflow/react";
 import Web3 from "web3";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import LabeledHandle from "../../LabeledHandle";
 
 interface BroadcastTransactionNodeProps extends NodeProps {
   id: string;
@@ -83,7 +84,8 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
       </button>
 
       {/* Target handle for the blockchain provider URL */}
-      <Handle
+      <LabeledHandle
+        title="Provider URL"
         type="target"
         position={Position.Left}
         id="provider"
@@ -91,7 +93,8 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
         isConnectable={inputConnections.filter((conn) => conn.targetHandle === "provider").length === 0}
       />
       {/* Target handle for the signed transaction */}
-      <Handle
+      <LabeledHandle
+        title="Transaction"
         type="target"
         position={Position.Left}
         id="tx"

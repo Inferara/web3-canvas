@@ -12,7 +12,28 @@ const Sidebar: React.FC = () => {
 
     return (
         <aside>
-            <div className='description'>You can drag these nodes to the pane on the right.</div>
+            <div className='appname'>Web3 キャンバス</div>
+
+            <div className='description'>Cryptography</div>
+            <hr />
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
+                Encrypt
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "decrypt")} draggable>
+                Decrypt
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "hash")} draggable>
+                Hash
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
+                Key Pair
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
+                Sign Message
+            </div>
+            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
+                Verify Signature
+            </div>
             
             <div className='description'>Inputs</div>
             <hr />
@@ -38,20 +59,8 @@ const Sidebar: React.FC = () => {
                 Color
             </div>
 
-            <div className='description'>Crypto</div>
+            <div className='description'>Web3</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "hash")} draggable>
-                Hash
-            </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
-                Key Pair
-            </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
-                Sign Message
-            </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
-                Verify Signature
-            </div>
             <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "balance")} draggable>
                 Balance
             </div>

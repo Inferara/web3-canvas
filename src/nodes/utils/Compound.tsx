@@ -8,7 +8,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { Utf8DataTransfer } from '../../Utf8DataTransfer';
-import { KeyPairNodeProps } from '../web3/KeyPair';
+import { KeyPairNodeProps } from '../cryptography/KeyPair';
 
 interface CompoundNodeProps extends NodeProps {
   id: string;

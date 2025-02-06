@@ -46,32 +46,37 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     // Local state to keep track of the fetched balance.
     const [balance, setBalance] = useState<string>("");
 
-    useEffect(() => {
-        async function fetchBalance() {
-            if (address && providerUrl) {
-                try {
-                    // Create a new Web3 instance with the provided URL.
-                    const web3 = new Web3(providerUrl);
-                    // Get the balance in Wei.
-                    const balanceWei = await web3.eth.getBalance(address);
-                    // Convert the balance from Wei to Ether.
-                    const balanceEther = web3.utils.fromWei(balanceWei, "ether");
-                    setBalance(balanceEther);
-                    // Update this node's data with the encoded balance.
-                    updateNodeData(id, {
-                        out: Utf8DataTransfer.encodeString(balanceEther),
-                    });
-                } catch (error) {
-                    console.error("Error fetching balance:", error);
-                    setBalance("Error");
-                    updateNodeData(id, { ...data, out: Utf8DataTransfer.encodeString("Error") });
-                }
+    async function fetchBalance() {
+        if (address && providerUrl) {
+            try {
+                // Create a new Web3 instance with the provided URL.
+                const web3 = new Web3(providerUrl);
+                // Get the balance in Wei.
+                const balanceWei = await web3.eth.getBalance(address);
+                // Convert the balance from Wei to Ether.
+                const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+                setBalance(balanceEther);
+                // Update this node's data with the encoded balance.
+                updateNodeData(id, {
+                    out: Utf8DataTransfer.encodeString(balanceEther),
+                });
+            } catch (error) {
+                console.error("Error fetching balance:", error);
+                setBalance("Error");
+                updateNodeData(id, { ...data, out: Utf8DataTransfer.encodeString("Error") });
             }
         }
+    }
+
+    useEffect(() => {
         fetchBalance();
         // The eslint rule is disabled similar to the other nodes.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address, providerUrl]);
+
+    const onRefreshButtonClick = () => {
+        fetchBalance();
+    };
 
     return (
         <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
@@ -80,6 +85,7 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
                 <strong>Balance:</strong>
                 <br />
                 <span>{balance || "No balance"}</span>
+                <button onClick={onRefreshButtonClick}>Refresh</button>
             </p>
 
             {/* Target handle for the blockchain address */}

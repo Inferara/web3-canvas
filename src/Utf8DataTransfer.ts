@@ -1,4 +1,4 @@
-import { KeyPairNodeProps } from "./nodes/web3/KeyPair";
+import { KeyPairNodeProps } from "./nodes/cryptography/KeyPair";
 
 export class Utf8DataTransfer {
     // Encode a string

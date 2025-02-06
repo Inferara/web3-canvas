@@ -9,7 +9,7 @@ import {
 } from "@xyflow/react";
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../web3/KeyPair";
+import { KeyPairNodeProps } from "../cryptography/KeyPair";
 
 interface SubstringNodeProps extends NodeProps {
   id: string;

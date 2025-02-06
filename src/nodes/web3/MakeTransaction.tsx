@@ -10,7 +10,7 @@ import {
 import Web3 from "web3";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
-import { KeyPairNodeProps } from "./KeyPair";
+import { KeyPairNodeProps } from "../cryptography/KeyPair";
 
 interface MakeTransactionNodeProps extends NodeProps {
     id: string;
