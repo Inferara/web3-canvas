@@ -40,10 +40,10 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
 
     // Decode the incoming plaintext and public key.
     const message = msgNodeData
-        ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(msgNodeData as KeyPairNodeProps, msgConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(msgNodeData as KeyPairNodeProps, msgConnection?.sourceHandle as string)
         : "";
     const publicKey = pubKeyNodeData
-        ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(pubKeyNodeData as KeyPairNodeProps, pubKeyConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(pubKeyNodeData as KeyPairNodeProps, pubKeyConnection?.sourceHandle as string)
         : "";
 
     const [ciphertext, setCiphertext] = useState<string>("");

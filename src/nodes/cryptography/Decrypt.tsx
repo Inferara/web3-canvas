@@ -39,10 +39,10 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
 
   // Decode the incoming ciphertext and private key.
   const ciphertext = cipherNodeData
-    ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(cipherNodeData as KeyPairNodeProps, cipherConnection?.sourceHandle as string)
+    ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(cipherNodeData as KeyPairNodeProps, cipherConnection?.sourceHandle as string)
     : "";
   const privateKey = privKeyNodeData
-    ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string)
+    ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string)
     : "";
 
   const [plaintext, setPlaintext] = useState<string>("");

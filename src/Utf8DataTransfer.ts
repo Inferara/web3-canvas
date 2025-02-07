@@ -58,7 +58,7 @@ export class Utf8DataTransfer {
         }
     }
 
-    static readStringFromMaybeKeyPairNode(nodeData: KeyPairNodeProps | undefined, sourceHandle: string): string {
+    static decodeStringFromMaybeKeyPairNode(nodeData: KeyPairNodeProps | undefined, sourceHandle: string): string {
         if (nodeData?.type === "keypair") {
             return Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps, sourceHandle);
         } else {

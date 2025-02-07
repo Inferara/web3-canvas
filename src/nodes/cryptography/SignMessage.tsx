@@ -29,18 +29,11 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
   if (nd1 && nd2) {
     const nodesData = [nd1, nd2];
     const msgConnection = inputConnections.find((conn) => conn.targetHandle === "msg");
-    const message = Utf8DataTransfer.decodeString(msgConnection ? nodesData.find((nd) => nd.id === msgConnection.source)?.data?.out as string : "");
+    const messageNodeData = nodesData.find((nd) => nd.id === msgConnection?.source);
+    const message = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(messageNodeData as KeyPairNodeProps, msgConnection?.sourceHandle as string);
     const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
     const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
-    let privateKey = "";
-    if (privKeyConnection) {
-      if (privKeyNodeData?.type === "keypair") {
-        privateKey = Utf8DataTransfer.readStringFromKeyPairNode(privKeyNodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
-      } else {
-        privateKey = Utf8DataTransfer.decodeString(privKeyNodeData?.data.out as string);
-      }
-    }
-    
+    const privateKey = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string);
     const web3 = new Web3();
     const signResult = web3.eth.accounts.sign(message, privateKey);
     signature = signResult.signature;

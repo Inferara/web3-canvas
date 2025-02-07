@@ -32,7 +32,7 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
 
   for (let i = 0; i < nodesData.length; i++) {
     const nodeData = nodesData[i];
-    combinedData += Utf8DataTransfer.readStringFromMaybeKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[i]?.sourceHandle as string);
+    combinedData += Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[i]?.sourceHandle as string);
     combinedData = combinedData.replace(/\s/g, '');
   }
 

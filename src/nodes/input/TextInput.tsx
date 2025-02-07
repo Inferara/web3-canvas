@@ -32,7 +32,7 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
             className="nodrag"
           />
           {/* This node doesn’t consume input, so only a source handle */}
-          <Handle type="source" position={Position.Bottom} id="output" />
+          <Handle type="source" position={Position.Right} id="output" />
         </div>
       );
     };

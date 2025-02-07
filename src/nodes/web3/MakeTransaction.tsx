@@ -36,10 +36,10 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
     const amtNodeData = useNodesData(amtConnection?.source as string);
 
     // Decode the inputs using Utf8DataTransfer.
-    const privateKey = privKeyNodeData ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string) : "";
-    const fromAddress = fromNodeData ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(fromNodeData as KeyPairNodeProps, fromConnection?.sourceHandle as string) : "";
-    const toAddress = toNodeData ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(toNodeData as KeyPairNodeProps, toConnection?.sourceHandle as string) : "";
-    const amtStr = amtNodeData ? Utf8DataTransfer.readStringFromMaybeKeyPairNode(amtNodeData as KeyPairNodeProps, amtConnection?.sourceHandle as string) : "";
+    const privateKey = privKeyNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string) : "";
+    const fromAddress = fromNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(fromNodeData as KeyPairNodeProps, fromConnection?.sourceHandle as string) : "";
+    const toAddress = toNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(toNodeData as KeyPairNodeProps, toConnection?.sourceHandle as string) : "";
+    const amtStr = amtNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(amtNodeData as KeyPairNodeProps, amtConnection?.sourceHandle as string) : "";
     const amount = parseFloat(amtStr);
 
     const [signedTx, setSignedTx] = useState<string>("");
