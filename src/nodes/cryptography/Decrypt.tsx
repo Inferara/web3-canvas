@@ -89,7 +89,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       {/* Target handle for ciphertext */}
       <LabeledHandle
         type="target"
-        title="Ciphertext"
+        label="Ciphertext"
         position={Position.Left}
         id="cipher"
         style={{ top: "30%" }}
@@ -99,7 +99,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       />
       {/* Target handle for private key */}
       <LabeledHandle
-        title="Private Key"
+        label="Private Key"
         type="target"
         position={Position.Left}
         id="privKey"

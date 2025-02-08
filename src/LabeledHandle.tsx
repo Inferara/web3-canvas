@@ -2,7 +2,7 @@ import { Handle, HandleType, Position } from '@xyflow/react';
 import React from 'react';
 
 interface LabeledHandleProps {
-    title: string;
+    label: string;
     type: HandleType;
     position: Position;
     id: string;
@@ -10,7 +10,7 @@ interface LabeledHandleProps {
     isConnectable: boolean;
 }
 
-const LabeledHandle: React.FC<LabeledHandleProps> = ({ title, type, position, id, style, isConnectable }) => {
+const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, type, position, id, style, isConnectable }) => {
 
     return (
         <Handle
@@ -19,7 +19,7 @@ const LabeledHandle: React.FC<LabeledHandleProps> = ({ title, type, position, id
             id={id}
             style={style}
             isConnectable={isConnectable}
-        ><div className="handleLabel">{title}</div></Handle>
+        ><div className="handleLabel">{label}</div></Handle>
     );
 };
 

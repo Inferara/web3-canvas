@@ -7,9 +7,9 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import Web3 from "web3";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { ethers } from "ethers";
 import LabeledHandle from "../../LabeledHandle";
+import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
 
 interface MakeTransactionNodeProps extends NodeProps {
@@ -29,11 +29,13 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
     const fromConnection = inputConnections.find((conn) => conn.targetHandle === "from");
     const toConnection = inputConnections.find((conn) => conn.targetHandle === "to");
     const amtConnection = inputConnections.find((conn) => conn.targetHandle === "amt");
+    const gasPriceConnection = inputConnections.find((conn) => conn.targetHandle === "gasPrice");
 
     const privKeyNodeData = useNodesData(privKeyConnection?.source as string);
     const fromNodeData = useNodesData(fromConnection?.source as string);
     const toNodeData = useNodesData(toConnection?.source as string);
     const amtNodeData = useNodesData(amtConnection?.source as string);
+    const gasPriceNodeData = useNodesData(gasPriceConnection?.source as string);
 
     // Decode the inputs using Utf8DataTransfer.
     const privateKey = privKeyNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string) : "";
@@ -41,6 +43,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
     const toAddress = toNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(toNodeData as KeyPairNodeProps, toConnection?.sourceHandle as string) : "";
     const amtStr = amtNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(amtNodeData as KeyPairNodeProps, amtConnection?.sourceHandle as string) : "";
     const amount = parseFloat(amtStr);
+    const gasPriceStr = gasPriceNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(gasPriceNodeData as KeyPairNodeProps, gasPriceConnection?.sourceHandle as string) : "0.07";
 
     const [signedTx, setSignedTx] = useState<string>("");
 
@@ -48,21 +51,21 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
         async function createSignedTransaction() {
             if (privateKey && fromAddress && toAddress && !isNaN(amount)) {
                 try {
-                    const web3 = new Web3();
-                    // Construct a minimal transaction object.
-                    // In production, you must supply the correct nonce, gasPrice, and chainId.
-                    const tx = {
+                    const provider = new ethers.providers.JsonRpcProvider("https://linea.drpc.org");
+                    const wallet = new ethers.Wallet(privateKey);
+                    const nonce = await provider.getTransactionCount(wallet.address);
+                    const transaction: ethers.providers.TransactionRequest = {
                         from: fromAddress,
                         to: toAddress,
-                        value: web3.utils.toWei(amtStr, "ether"),
-                        gas: 21000,
-                        gasPrice: web3.utils.toWei("10", "gwei"),
-                        nonce: 0,    // Dummy nonce; replace with the actual nonce in production.
-                        chainId: 1,  // Mainnet; adjust for your target network.
+                        value: ethers.utils.parseEther(amtStr),
+                        gasLimit: ethers.utils.hexlify(21000),
+                        gasPrice: ethers.utils.parseUnits(gasPriceStr, 'gwei'),
+                        nonce: nonce,
+                        chainId: 59144,  // Linea
                     };
-                    const signed = await web3.eth.accounts.signTransaction(tx, privateKey);
-                    setSignedTx(signed.rawTransaction || "");
-                    updateNodeData(id, { out: Utf8DataTransfer.encodeString(signed.rawTransaction || "") });
+                    const signed = await wallet.signTransaction(transaction);
+                    setSignedTx(signed || "");
+                    updateNodeData(id, { out: Utf8DataTransfer.encodeString(signed || "") });
                 } catch (error) {
                     console.error("Error signing transaction:", error);
                     setSignedTx("Error");
@@ -90,7 +93,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
             {/* Target handle for private key input */}
 
             <LabeledHandle
-                title="privKey"
+                label="privKey"
                 type="target"
                 position={Position.Left}
                 id="privKey"
@@ -99,7 +102,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
             />
             {/* Target handle for "from" address */}
             <LabeledHandle
-                title="From"
+                label="From"
                 type="target"
                 position={Position.Left}
                 id="from"
@@ -108,7 +111,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
             />
             {/* Target handle for "to" address */}
             <LabeledHandle
-                title="To"
+                label="To"
                 type="target"
                 position={Position.Left}
                 id="to"
@@ -117,12 +120,20 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
             />
             {/* Target handle for transfer amount (ETH) */}
             <LabeledHandle
-                title="Amount"
+                label="Amount"
                 type="target"
                 position={Position.Left}
                 id="amt"
                 style={{ top: "75%" }}
                 isConnectable={inputConnections.filter((conn) => conn.targetHandle === "amt").length === 0}
+            />
+            <LabeledHandle
+                label="gas price"
+                type="target"
+                position={Position.Left}
+                id="gasPrice"
+                style={{ top: "90%" }}
+                isConnectable={inputConnections.filter((conn) => conn.targetHandle === "gasPrice").length === 0}
             />
             {/* Source handle to output the signed transaction */}
             <Handle type="source" position={Position.Right} id="output" />

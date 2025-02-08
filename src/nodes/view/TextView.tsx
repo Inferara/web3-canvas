@@ -38,6 +38,7 @@ const TextViewNode: React.FC<TextViewNodeProps> = () => {
       </div>
       {/* Single handle for accepting input */}
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
+      <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
     </div>
   );
 };

@@ -7,8 +7,10 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import Web3 from "web3";
+import { ethers } from "ethers";
+import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { KeyPairNodeProps } from "../cryptography/KeyPair";
 
 interface EthBalanceNodeProps extends NodeProps {
     id: string;
@@ -28,7 +30,7 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
         (conn) => conn.targetHandle === "addr"
     );
     const urlConnection = inputConnections.find(
-        (conn) => conn.targetHandle === "url" //https://rpc.ankr.com/eth
+        (conn) => conn.targetHandle === "url" //https://rpc.ankr.com/eth https://eth-sepolia.api.onfinality.io/public
     );
 
     // Get the connected nodes' data.
@@ -37,11 +39,11 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
 
     // Decode the provided address and provider URL.
     const address = addrNodeData
-        ? Utf8DataTransfer.decodeString(addrNodeData.data.out as string)
+        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(addrNodeData as KeyPairNodeProps, addrConnection?.sourceHandle as string)
         : "";
     const providerUrl = urlNodeData
-        ? Utf8DataTransfer.decodeString(urlNodeData.data.out as string)
-        : "";
+        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(urlNodeData as KeyPairNodeProps, urlConnection?.sourceHandle as string)
+        : "https://1rpc.io/linea";
 
     // Local state to keep track of the fetched balance.
     const [balance, setBalance] = useState<string>("");
@@ -49,14 +51,10 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     async function fetchBalance() {
         if (address && providerUrl) {
             try {
-                // Create a new Web3 instance with the provided URL.
-                const web3 = new Web3(providerUrl);
-                // Get the balance in Wei.
-                const balanceWei = await web3.eth.getBalance(address);
-                // Convert the balance from Wei to Ether.
-                const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+                const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+                const balanceWei = await provider.getBalance(address);
+                const balanceEther = ethers.utils.formatEther(balanceWei);
                 setBalance(balanceEther);
-                // Update this node's data with the encoded balance.
                 updateNodeData(id, {
                     out: Utf8DataTransfer.encodeString(balanceEther),
                 });
@@ -89,7 +87,8 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
             </p>
 
             {/* Target handle for the blockchain address */}
-            <Handle
+            <LabeledHandle
+                label="address"
                 type="target"
                 position={Position.Left}
                 id="addr"
@@ -101,7 +100,8 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
             />
 
             {/* Target handle for the blockchain provider URL */}
-            <Handle
+            <LabeledHandle
+                label="provider utl"
                 type="target"
                 position={Position.Left}
                 id="url"

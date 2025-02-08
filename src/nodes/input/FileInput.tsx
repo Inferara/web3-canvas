@@ -5,7 +5,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import Web3 from "web3";
+import { ethers } from "ethers";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 interface FileInputNodeProps extends NodeProps {
@@ -28,7 +28,7 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
       const base64 = reader.result?.toString();
       if (base64) {
         setFileSize(base64.length);
-        const hash = Web3.utils.keccak256Wrapper(base64 as string);
+        const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(base64 as string));
         const dataOut = Utf8DataTransfer.encodeString(hash);
         updateNodeData(id, { ...data, out: dataOut });
       }

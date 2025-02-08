@@ -81,7 +81,7 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
             </p>
             {/* Target handle for plaintext message */}
             <LabeledHandle
-                title="Message"
+                label="Message"
                 type="target"
                 position={Position.Left}
                 id="msg"
@@ -92,7 +92,7 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
             />
             {/* Target handle for public key */}
             <LabeledHandle
-                title="Public Key"
+                label="Public Key"
                 type="target"
                 position={Position.Left}
                 id="pubKey"

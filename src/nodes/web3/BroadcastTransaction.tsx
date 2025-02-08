@@ -7,7 +7,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import Web3 from "web3";
+import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
 
@@ -48,21 +48,13 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
     }
     try {
       setBroadcasting(true);
-      const web3 = new Web3(providerUrl);
-      // Broadcast the signed transaction.
-      web3.eth
-        .sendSignedTransaction(signedTx)
-        .on("transactionHash", (hash) => {
-          setTxHash(hash);
-          updateNodeData(id, { out: Utf8DataTransfer.encodeString(hash) });
-          setBroadcasting(false);
-        })
-        .on("error", (error) => {
-          console.error("Error broadcasting transaction:", error);
-          setTxHash("Error");
-          updateNodeData(id, { out: Utf8DataTransfer.encodeString("Error") });
-          setBroadcasting(false);
-        });
+      const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+      const txResponse = await provider.sendTransaction(signedTx);
+      setTxHash(txResponse.hash);
+      updateNodeData(id, { out: Utf8DataTransfer.encodeString(txResponse.hash) });
+      const receipt = await txResponse.wait();
+      setTxHash("In block " + receipt.blockNumber);
+      updateNodeData(id, { out: Utf8DataTransfer.encodeString(receipt.blockHash) });
     } catch (error) {
       console.error("Broadcasting failed:", error);
       setTxHash("Error");
@@ -85,7 +77,7 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
 
       {/* Target handle for the blockchain provider URL */}
       <LabeledHandle
-        title="Provider URL"
+        label="Provider URL"
         type="target"
         position={Position.Left}
         id="provider"
@@ -94,7 +86,7 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
       />
       {/* Target handle for the signed transaction */}
       <LabeledHandle
-        title="Transaction"
+        label="Transaction"
         type="target"
         position={Position.Left}
         id="tx"

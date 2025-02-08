@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import {
-  Handle,
   NodeProps,
   Position,
   useNodeConnections,
   useNodesData,
   useReactFlow,
 } from '@xyflow/react';
-import web3 from 'web3';
+import { ethers } from 'ethers';
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from './KeyPair';
+import LabeledHandle from '../../LabeledHandle';
 
 interface HashNodeProps extends NodeProps {
   id: string;
@@ -34,7 +34,7 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     } else {
       hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
-    computedHash = web3.utils.keccak256Wrapper(hashInput);
+    computedHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashInput));
   }
   useEffect(() => {
     const newOut = Utf8DataTransfer.encodeString(computedHash);
@@ -48,9 +48,9 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
         {computedHash.substring(0, 30) + "..." || "No input connected"}
       </div>
       {/* Single target handle that can accept multiple connections */}
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+      <LabeledHandle label="in" style={{}} type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       {/* Source handle to expose the computed hash */}
-      <Handle type="source" position={Position.Right} id="output" />
+      <LabeledHandle label="out" style={{}} type="source" position={Position.Right} id="output" isConnectable={true}/>
     </div>
   );
 };

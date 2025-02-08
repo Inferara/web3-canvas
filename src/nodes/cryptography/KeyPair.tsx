@@ -7,8 +7,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import Web3 from "web3";
-
+import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
 export interface KeyPairNodeProps extends NodeProps {
@@ -33,12 +32,9 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   // Detect output connections (which nodes are connected to which handles)
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
-  // Web3 setup
-  const web3 = new Web3();
   const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
-  const account = privateKey ? web3.eth.accounts.privateKeyToAccount(privateKey) : null;
-  const publicKey = privateKey && account ? web3.eth.accounts.privateKeyToPublicKey(account.privateKey, false) : "";
-  const address = privateKey && account ? account.address : "";
+  const publicKey = privateKey ? ethers.utils.computePublicKey(privateKey, false) : "";
+  const address = publicKey ? ethers.utils.computeAddress(publicKey) : "";
 
   useEffect(() => {
     const pkOut = Utf8DataTransfer.encodeString(privateKey);
@@ -50,7 +46,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
-      <div>Ethereum KeyPair Node (Web3.js)</div>
+      <div>Ethereum KeyPair</div>
       <p style={{ marginTop: 8 }}>
         <strong>Public Address:</strong>
         <br />

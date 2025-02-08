@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   NodeProps,
   Handle,
@@ -7,7 +7,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import Web3 from "web3";
+import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 
@@ -22,7 +22,7 @@ interface SignMessageNodeProps extends NodeProps {
 const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: 'target' });
-  let signature = "";
+  const [signature, setSignature] = useState<string>("");
   const nd1 = useNodesData(inputConnections[0]?.source);
   const nd2 = useNodesData(inputConnections[1]?.source);
 
@@ -34,9 +34,10 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
     const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
     const privateKey = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string);
-    const web3 = new Web3();
-    const signResult = web3.eth.accounts.sign(message, privateKey);
-    signature = signResult.signature;
+    const wallet = new ethers.Wallet(privateKey);
+    wallet.signMessage(message).then((signResult) => {
+      if (signResult !== signature) setSignature(signResult);
+    });
   }
 
   useEffect(() => {

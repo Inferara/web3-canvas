@@ -44,8 +44,8 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc" }}>
-      <div>{combinedData || "No input"}</div>
-
+      <div>COMPOUND</div>
+      <div>{nodesData.length === 0 ? "No input" : ""}</div>
       {/* Single handle to accept multiple connections */}
       <Handle type="target" position={Position.Left} id="input" />
 
