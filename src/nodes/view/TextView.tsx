@@ -8,6 +8,7 @@ import {
 } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
+import W3CNode from "../../W3CNode";
 
 interface TextViewNodeProps extends NodeProps {
   id: string;
@@ -32,14 +33,16 @@ const TextViewNode: React.FC<TextViewNodeProps> = () => {
   }
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
+    <W3CNode label="Text" isRezieable={true} isGood={text.length > 0}>
       <div style={{ marginTop: 8 }}>
         {text || "No input connected"}
       </div>
       {/* Single handle for accepting input */}
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
-      <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
-    </div>
+      <div>
+        <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
+      </div>
+    </W3CNode>
   );
 };
 

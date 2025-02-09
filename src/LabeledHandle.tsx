@@ -3,6 +3,7 @@ import React from 'react';
 
 interface LabeledHandleProps {
     label: string;
+    side: string;
     type: HandleType;
     position: Position;
     id: string;
@@ -10,8 +11,8 @@ interface LabeledHandleProps {
     isConnectable: boolean;
 }
 
-const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, type, position, id, style, isConnectable }) => {
-
+const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, position, id, style, isConnectable }) => {
+    const className = `handleLabel-${side}`;
     return (
         <Handle
             type={type}
@@ -19,7 +20,7 @@ const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, type, position, id
             id={id}
             style={style}
             isConnectable={isConnectable}
-        ><div className="handleLabel">{label}</div></Handle>
+        ><div className={className}>{label}</div></Handle>
     );
 };
 

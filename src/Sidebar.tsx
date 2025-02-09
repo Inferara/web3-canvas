@@ -16,76 +16,76 @@ const Sidebar: React.FC = () => {
 
             <div className='description'>Cryptography</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
                 Encrypt
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "decrypt")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "decrypt")} draggable>
                 Decrypt
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "hash")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "hash")} draggable>
                 Hash
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
                 Key Pair
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
                 Sign Message
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "verifySignature")} draggable>
                 Verify Signature
             </div>
             
             <div className='description'>Inputs</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "textInput")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "textInput")} draggable>
                 Text Input
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "numberInput")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "numberInput")} draggable>
                 Number Input
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "fileInput")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "fileInput")} draggable>
                 File Input
             </div>
 
             <div className='description'>View</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "textView")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "textView")} draggable>
                 Text View
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "qr")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "qr")} draggable>
                 QR Code
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "color")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "color")} draggable>
                 Color
             </div>
 
             <div className='description'>Web3</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "balance")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "balance")} draggable>
                 Balance
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "ethToUsd")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "ethToUsd")} draggable>
                 ETH to USD
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "makeTransaction")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "makeTransaction")} draggable>
                 Make Transaction
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "broadcastTrascation")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "broadcastTrascation")} draggable>
                 Broadcast Transaction
             </div>
 
             <div className='description'>Utils</div>
             <hr />
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "compound")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                 Compound
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "substring")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "substring")} draggable>
                 Substring
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "length")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "length")} draggable>
                 Length
             </div>
-            <div className='w3cflownode' onDragStart={(event) => onDragStart(event, "seed")} draggable>
+            <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "seed")} draggable>
                 Seed Phrase
             </div>
         </aside>

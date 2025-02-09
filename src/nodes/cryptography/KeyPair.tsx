@@ -9,6 +9,7 @@ import {
 } from "@xyflow/react";
 import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import W3CNode from "../../W3CNode";
 
 export interface KeyPairNodeProps extends NodeProps {
   id: string;
@@ -45,8 +46,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   }, [privateKey, outputConnections.length]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
-      <div>Ethereum KeyPair</div>
+    <W3CNode label="KeyPair">
       <p style={{ marginTop: 8 }}>
         <strong>Public Address:</strong>
         <br />
@@ -78,7 +78,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
         id="address"
         style={{ top: "90%" }}
       />
-    </div>
+    </W3CNode>
   );
 };
 

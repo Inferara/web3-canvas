@@ -11,6 +11,7 @@ import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from './KeyPair';
 import LabeledHandle from '../../LabeledHandle';
+import W3CNode from '../../W3CNode';
 
 interface HashNodeProps extends NodeProps {
   id: string;
@@ -43,15 +44,14 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
   }, [computedHash]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-      <div style={{ marginTop: 8, width: "100%" }}>
-        {computedHash.substring(0, 30) + "..." || "No input connected"}
-      </div>
+    <W3CNode label="Hash" isGood={computedHash.length === 66}>
+      <div>{computedHash.substring(0, 25) + "..." || "..."}</div>
+      <div>{computedHash ? ("Hash length: " + computedHash.length) : ""}</div>
       {/* Single target handle that can accept multiple connections */}
-      <LabeledHandle label="in" style={{}} type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+      <LabeledHandle label="in" side="left" style={{}} type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       {/* Source handle to expose the computed hash */}
-      <LabeledHandle label="out" style={{}} type="source" position={Position.Right} id="output" isConnectable={true}/>
-    </div>
+      <LabeledHandle label="out" side="right" style={{}} type="source" position={Position.Right} id="output" isConnectable={true}/>
+    </W3CNode>
   );
 };
 

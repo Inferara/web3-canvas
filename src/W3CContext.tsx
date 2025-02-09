@@ -20,6 +20,7 @@ export const W3CProvider: React.FC<W3CProviderProps> = ({ children }) => {
 
 export default W3CContext;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useW3C = (): W3CContextType => {
     return useContext(W3CContext);
 }

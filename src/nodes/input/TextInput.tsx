@@ -23,7 +23,7 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     const [text, setText] = useState<string>(data.out ? Utf8DataTransfer.decodeString(data.out) : "");
     
     return (
-        <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
+        <div className="w3cflownode">
           <input
             type="text"
             value={text}

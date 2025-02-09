@@ -25,6 +25,37 @@ body {
   height: 100%;
 }
 
+
+.w3cflownodeheader {
+  position: absolute; /* Allow precise positioning at the top */
+  top: 0; /* Position it at the very top */
+  left: 0; /* Align it to the left edge */
+  right: 0; /* Stretch to fill the width */
+  height: 30px; /* Define a fixed height for the header (optional) */
+  line-height: 30px; /* Vertically center the text within the header */
+  text-align: center; /* Center-align the text */
+  font-weight: bold; /* Make the header text bold */
+  background-color: #f0f0f0; /* Optional background color for the header */
+  border-bottom: 1px solid #ddd; /* Optional separator between header and content */
+  z-index: 2; /* Ensure the header stays above other content */
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+.w3cflownodeheader.good {
+  background-color: #a4eda8;
+}
+
+.w3cflownode {
+  display: flex; /* Flexbox for centering content */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Keep hash and handles in a single line */
+  text-align: center;
+  max-width: -webkit-fill-available;
+  max-width: -moz-available;
+}
+
 .w3cflow .reactflow-wrapper {
   flex-grow: 1;
   height: 100%;
@@ -37,7 +68,7 @@ body {
   background: #fcfcfc;
 }
 
-.w3cflow .w3cflownode {
+.w3cflow .w3cflownodeMenuItem {
   width: 8rem;
   height: 20px;
   /* padding: 4px; */
@@ -62,6 +93,12 @@ body {
   margin-bottom: 10px;
 }
 
+.react-flow__node .w3cflownode {
+  overflow: hidden; /* Prevent overflow of content */
+  white-space: nowrap; /* Prevent text wrapping */
+  text-overflow: ellipsis; /* Add '...' for overflowing text */
+}
+
 .broken {
   background-color: rgb(236, 69, 69);
 }
@@ -81,10 +118,15 @@ body {
   }
 }
 
-.handleLabel {
+.handleLabel-left {
   /* position: relative; */
   /* width: 200px; */
   transform: translate(10px, -35%);
   /* font-size: 12px; */
+  pointer-events: none;
+}
+
+.handleLabel-right {
+  transform: translate(-20px, -35%);
   pointer-events: none;
 }

@@ -1,5 +1,4 @@
-/* xyflow theme files. Delete these to start from our base */
- 
+
 .react-flow {
     /* Custom Variables */
     --xy-theme-selected: #F57DBD;
@@ -41,11 +40,14 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 10px;
+    /* padding: 10px; */
     font-size: 12px;
     flex-direction: column;
     border: var(--xy-node-border-default);
     color: var(--xy-node-color, var(--xy-node-color-default));
+    overflow: visible;
+    min-width: 250px;
+    min-height: 100px;
 }
  
 .react-flow__node.selectable:focus {
@@ -79,6 +81,7 @@
 }
  
 .react-flow__handle {
+    overflow: visible;
     background-color: var(--xy-handle-background-color-default);
 }
  
@@ -105,4 +108,9 @@
     border-radius: 0;
     width: 5px;
     height: 5px;
+}
+
+.react-flow__resize-control.nodrag.bottom.right.handle {
+    background: transparent;
+    border: none;
 }
