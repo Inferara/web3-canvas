@@ -12,7 +12,10 @@ interface LabeledHandleProps {
 }
 
 const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, position, id, style = {}, isConnectable = true }) => {
-    const className = `handleLabel-${side}`;
+    let className = `handleLabel-${side}`;
+    if (side === "right") {
+        className += "-" + (label.length > 3 ? "45" : "20");
+    }
     return (
         <Handle
             type={type}
@@ -20,7 +23,9 @@ const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, positi
             id={id}
             style={style}
             isConnectable={isConnectable}
-        ><div className={className}>{label}</div></Handle>
+        >
+            <div className={className}>{label}</div>
+        </Handle>
     );
 };
 

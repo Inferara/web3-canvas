@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -10,7 +10,8 @@ import {
   useNodesState,
   useEdgesState,
   ReactFlowProvider,
-  FinalConnectionState
+  FinalConnectionState,
+  ReactFlowInstance
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
@@ -71,6 +72,7 @@ const nodeTypes = {
 };
 
 let id = 0;
+const flowKey = 'w3cflow';
 const getId = () => `w3cnode_${id++}`;
 
 const defaultData: { [key: string]: { in: string; out: string } } = {
@@ -83,6 +85,7 @@ const W3CFlow: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { screenToFlowPosition } = useReactFlow();
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
 
   const onConnect = useCallback(
@@ -170,6 +173,29 @@ const W3CFlow: React.FC = () => {
     [screenToFlowPosition]
   );
 
+  const onSave = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem(flowKey, JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+ 
+  const onRestore = useCallback(() => {
+    const restoreFlow = async () => {
+      const flow = localStorage.getItem(flowKey) ? JSON.parse(localStorage.getItem(flowKey) as string) : null;
+ 
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+        rfInstance?.setViewport({ x, y, zoom });
+      }
+    };
+ 
+    restoreFlow();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setNodes, screenToFlowPosition]);
+
   return (
     <div className="w3cflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -183,6 +209,7 @@ const W3CFlow: React.FC = () => {
           onConnectEnd={onConnectEnd}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          onInit={setRfInstance}
           fitView
           style={{ backgroundColor: "#F7F9FB" }}
         >
@@ -190,7 +217,7 @@ const W3CFlow: React.FC = () => {
           <Background />
         </ReactFlow>
       </div>
-      <Sidebar />
+      <Sidebar onSave={onSave} onRestore={onRestore} />
     </div>
   );
 };

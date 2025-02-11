@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
@@ -10,6 +9,8 @@ import {
 import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface SignMessageNodeProps extends NodeProps {
   id: string;
@@ -47,24 +48,34 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
 
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
-      <div>Sign Message Node</div>
-
-      <p style={{ marginTop: 8 }}>
-        <strong>Signature:</strong>
-        <br />
-        <span style={{ wordWrap: "break-word" }}>
-          {signature || "No signature"}
-        </span>
-      </p>
-
-      {/* Two target handles: one for the message, one for the private key */}
-      <Handle type="target" position={Position.Left} id="msg" style={{ top: "30%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
-      <Handle type="target" position={Position.Left} id="privKey" style={{ top: "60%" }} isConnectable={inputConnections.filter((conn) => { conn.targetHandle === "privKey" }).length === 0} />
-
-      {/* Single source handle to output the signature */}
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+    <W3CNode id={id} label="Sign Message" isGood={signature.length > 0}>
+      <div>{signature.substring(0, 25) + "..." || "..."}</div>
+      <LabeledHandle
+        label="msg"
+        type="target"
+        position={Position.Left}
+        side="left"
+        id="msg"
+        style={{ top: "50%" }}
+        isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0}
+      />
+      <LabeledHandle
+        label="priv key"
+        type="target"
+        position={Position.Left}
+        side="left"
+        id="privKey"
+        style={{ top: "80%" }}
+        isConnectable={inputConnections.filter((conn) => { conn.targetHandle === "privKey" }).length === 0}
+      />
+      <LabeledHandle
+        label="sig"
+        type="source"
+        position={Position.Right}
+        side="right"
+        id="output"
+      />
+    </W3CNode>
   );
 };
 

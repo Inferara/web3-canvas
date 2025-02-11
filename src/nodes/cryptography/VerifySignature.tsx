@@ -1,7 +1,6 @@
 import React from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useNodeConnections,
   useNodesData,
@@ -10,6 +9,7 @@ import { ethers } from 'ethers';
 import { KeyPairNodeProps } from "./KeyPair";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../W3CNode";
 
 interface VerifySignatureNodeProps extends NodeProps {
   id: string;
@@ -19,7 +19,7 @@ interface VerifySignatureNodeProps extends NodeProps {
   };
 }
 
-const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = () => {
+const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({id}) => {
   const inputConnections = useNodeConnections({ handleType: 'target' });
   let messageInput = "";
   let signatureInput = "";
@@ -62,20 +62,13 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = () => {
   }
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 220 }}>
-      <div>Verify Signature Node</div>
-
-      <p style={{ marginTop: 8 }}>
-        <strong>Verification:</strong>
-        <br />
-        <span>{verification || "No result"}</span>
-      </p>
-
+    <W3CNode id={id} label="Verify Signature" isGood={verification === "✅"}>
+      <div>{verification}</div>
       {/* Three target handles: message, signature, address */}
-      <LabeledHandle label="message" type="target" position={Position.Left} id="msg" style={{ top: "25%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
-      <LabeledHandle label="signature" type="target" position={Position.Left} id="sig" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "sig").length === 0}/>
-      <LabeledHandle label="address" type="target" position={Position.Left} id="addr" style={{ top: "75%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0}/>
-    </div>
+      <LabeledHandle label="message" type="target" side="left" position={Position.Left} id="msg" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
+      <LabeledHandle label="signature" type="target" side="left" position={Position.Left} id="sig" style={{ top: "70%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "sig").length === 0}/>
+      <LabeledHandle label="address" type="target" side="left" position={Position.Left} id="addr" style={{ top: "90%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0}/>
+    </W3CNode>
   );
 };
 

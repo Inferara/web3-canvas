@@ -10,6 +10,7 @@ import EthCrypto from "eth-crypto";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../W3CNode";
 
 interface DecryptNodeProps extends NodeProps {
   id: string;
@@ -76,42 +77,34 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
   }, [ciphertext, privateKey]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-      <div>Decrypt Node</div>
-      <p style={{ marginTop: 8 }}>
-        <strong>Decrypted Message:</strong>
-        <br />
-        <span style={{ wordWrap: "break-word" }}>
-          {plaintext || "No input"}
-        </span>
-      </p>
-      {/* Target handle for ciphertext */}
+    <W3CNode id={id} label="Decrypt" isGood={plaintext.length > 0}>
+      <div>{plaintext.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle
         type="target"
         side="left"
-        label="Ciphertext"
+        label="chipher"
         position={Position.Left}
         id="cipher"
-        style={{ top: "30%" }}
+        style={{ top: "50%" }}
         isConnectable={
           inputConnections.filter((conn) => conn.targetHandle === "cipher").length === 0
         }
       />
       {/* Target handle for private key */}
       <LabeledHandle
-        label="Private Key"
+        label="priv key"
         type="target"
         side="left"
         position={Position.Left}
         id="privKey"
-        style={{ top: "60%" }}
+        style={{ top: "80%" }}
         isConnectable={
           inputConnections.filter((conn) => conn.targetHandle === "privKey").length === 0
         }
       />
       {/* Source handle for decrypted plaintext */}
       <LabeledHandle label="out" side="right" type="source" position={Position.Right} id="output" />
-    </div>
+    </W3CNode>
   );
 };
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
@@ -10,6 +9,7 @@ import {
 import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 export interface KeyPairNodeProps extends NodeProps {
   id: string;
@@ -25,11 +25,11 @@ export interface KeyPairNodeProps extends NodeProps {
 
 const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
-  
+
   // Detect input connections (e.g., receiving a private key from another node)
   const inputConnections = useNodeConnections({ handleType: 'target' });
   const nodesData = useNodesData(inputConnections[0]?.source);
-  
+
   // Detect output connections (which nodes are connected to which handles)
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
@@ -42,38 +42,43 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
     const pubOut = Utf8DataTransfer.encodeString(publicKey);
     const addrOut = Utf8DataTransfer.encodeString(address);
     updateNodeData(id, { ...data, out: { privateKey: pkOut, publicKey: pubOut, address: addrOut } });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, outputConnections.length]);
 
   return (
-    <W3CNode label="KeyPair">
-      <p style={{ marginTop: 8 }}>
-        <strong>Public Address:</strong>
-        <br />
-        <span>{publicKey || "Generating..."}</span>
-      </p>
-      <p style={{ marginTop: 8 }}>
-        <strong>Private Key:</strong>
-        <br />
-        <span>{privateKey || "Generating..."}</span>
-      </p>
+    <W3CNode id={id} label="KeyPair" isGood={publicKey.length > 0} style={{ width: 300 }}>
+      <div>{publicKey.substring(0, 20) + "..." || "..."}</div>
+      <div>{address.substring(0, 20) + "..." || "..."}</div>
 
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+      <LabeledHandle
+        label="in"
+        side="left"
+        type="target"
+        position={Position.Left}
+        id="input"
+        isConnectable={inputConnections.length === 0}
+      />
 
-      <Handle
+      <LabeledHandle
+        label="pub key"
         type="source"
+        side="right"
         position={Position.Right}
         id="publicKey"
-        style={{ top: "30%" }}
+        style={{ top: "50%" }}
       />
-      <Handle
+      <LabeledHandle
+        label="priv key"
         type="source"
+        side="right"
         position={Position.Right}
         id="privateKey"
-        style={{ top: "60%" }}
+        style={{ top: "70%" }}
       />
-      <Handle
+      <LabeledHandle
+        label="address"
         type="source"
+        side="right"
         position={Position.Right}
         id="address"
         style={{ top: "90%" }}

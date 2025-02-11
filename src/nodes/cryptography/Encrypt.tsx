@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     NodeProps,
-    Handle,
     Position,
     useReactFlow,
     useNodeConnections,
@@ -11,6 +10,7 @@ import EthCrypto from "eth-crypto";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../W3CNode";
 
 interface EncryptNodeProps extends NodeProps {
     id: string;
@@ -47,7 +47,6 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
         : "";
 
     const [ciphertext, setCiphertext] = useState<string>("");
-    let ecnryptionError = "";
 
     async function encrypt() {
         if (!message || !publicKey) {
@@ -60,7 +59,7 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
             setCiphertext(strEncrypted);
             updateNodeData(id, { out: Utf8DataTransfer.encodeString(strEncrypted) });
         } catch (error) {
-            ecnryptionError = String(error);
+            console.error(error);
         }
     }
 
@@ -70,40 +69,33 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
     }, [message, publicKey]);
 
     return (
-        <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-            <div>Encrypt Node</div>
-            <p style={{ marginTop: 8 }}>
-                <strong>Ciphertext:</strong>
-                <br />
-                <span style={{ wordWrap: "break-word" }}>
-                    {(ciphertext || ecnryptionError) || "No input"}
-                </span>
-            </p>
-            {/* Target handle for plaintext message */}
+        <W3CNode id={id} label="Encrypt" isGood={ciphertext.length > 0}>
+            <div>{ciphertext.substring(0, 25) + "..." || "..."}</div>
+            <div>{ciphertext ? ("Chipertext length: " + ciphertext.length) : ""}</div>            
             <LabeledHandle
-                label="Message"
+                label="msg"
                 type="target"
+                side="left"
                 position={Position.Left}
                 id="msg"
-                style={{ top: "30%" }}
+                style={{ top: "50%" }}
                 isConnectable={
                     inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0
                 }
             />
-            {/* Target handle for public key */}
             <LabeledHandle
-                label="Public Key"
+                label="pub key"
                 type="target"
+                side="left"
                 position={Position.Left}
                 id="pubKey"
-                style={{ top: "60%" }}
+                style={{ top: "80%" }}
                 isConnectable={
                     inputConnections.filter((conn) => conn.targetHandle === "pubKey").length === 0
                 }
             />
-            {/* Source handle for encrypted ciphertext */}
-            <Handle type="source" position={Position.Right} id="output" />
-        </div>
+            <LabeledHandle label="out" type="source" side="right" position={Position.Right} id="output" isConnectable={true} />
+        </W3CNode>
     );
 };
 

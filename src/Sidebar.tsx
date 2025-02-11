@@ -1,7 +1,12 @@
 import React from 'react';
 import { useW3C } from './W3CContext';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+    onSave: () => void;
+    onRestore: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({onSave, onRestore}) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, setType] = useW3C();
 
@@ -13,7 +18,10 @@ const Sidebar: React.FC = () => {
     return (
         <aside>
             <div className='appname'>Web3 キャンバス</div>
-
+            <div>
+        <button onClick={onSave}>save</button>
+        <button onClick={onRestore}>restore</button>
+      </div>
             <div className='description'>Cryptography</div>
             <hr />
             <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>

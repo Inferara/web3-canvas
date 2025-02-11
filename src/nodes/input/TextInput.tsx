@@ -24,7 +24,7 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     const [text, setText] = useState<string>(data.out ? Utf8DataTransfer.decodeString(data.out) : "");
     
     return (
-        <W3CNode label="Text Input" isGood={text.length > 0} isRezieable={true}>
+        <W3CNode id={id} label="Text Input" isGood={text.length > 0} isRezieable={true}>
           <textarea
             value={text}
             onChange={onChange}
@@ -36,5 +36,4 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
     };
     
 
-const MemoizedTextInputNode = React.memo(TextInputNode);
-export default MemoizedTextInputNode;
+export default TextInputNode;
