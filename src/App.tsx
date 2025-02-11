@@ -1,11 +1,12 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Controls,
   Background,
   addEdge,
   Connection,
-  Edge, Node,
+  Edge,
+  Node,
   useReactFlow,
   useNodesState,
   useEdgesState,
@@ -78,7 +79,71 @@ const getId = () => `w3cnode_${id++}`;
 const defaultData: { [key: string]: { in: string; out: string } } = {
   'textInput': { in: '', out: Utf8DataTransfer.encodeString('Web3 キャンバス') },
   'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(0) },
-}
+};
+
+// ─── COPY/PASTE CUSTOM HOOK ────────────────────────────────────────────────
+const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
+  // onCopy: get selected nodes and also auto-select edges connecting them
+  const onCopy = useCallback((event: ClipboardEvent) => {
+    event.preventDefault();
+    if (!rfInstance) return;
+    const selectedNodes = rfInstance.getNodes().filter((n) => n.selected);
+    const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
+    // Copy edges if both source and target are in the selected nodes.
+    const selectedEdges = rfInstance
+      .getEdges()
+      .filter((e) => selectedNodeIds.has(e.source) && selectedNodeIds.has(e.target));
+    const dataToCopy = { nodes: selectedNodes, edges: selectedEdges };
+    event.clipboardData?.setData('application/json', JSON.stringify(dataToCopy));
+  }, [rfInstance]);
+
+  // onPaste: create new nodes/edges with new IDs and update edge references accordingly.
+  const onPaste = useCallback((event: ClipboardEvent) => {
+    event.preventDefault();
+    if (!rfInstance) return;
+    const clipboardData = event.clipboardData?.getData('application/json');
+    if (!clipboardData) return;
+    try {
+      const { nodes: copiedNodes, edges: copiedEdges } = JSON.parse(clipboardData);
+      const oldToNewMap = new Map<string, string>();
+      const newNodes: Node[] = copiedNodes.map((node: Node) => {
+        const newId = getId();
+        oldToNewMap.set(node.id, newId);
+        return {
+          ...node,
+          id: newId,
+          selected: true,
+          position: { x: node.position.x + 20, y: node.position.y + 20 },
+        };
+      });
+      const newEdges: Edge[] = copiedEdges.map((edge: Edge) => {
+        return {
+          ...edge,
+          id: getId(),
+          selected: true,
+          source: oldToNewMap.get(edge.source) || edge.source,
+          target: oldToNewMap.get(edge.target) || edge.target,
+        };
+      });
+      const updatedNodes = rfInstance.getNodes().map((n) => ({ ...n, selected: false }));
+      const updatedEdges = rfInstance.getEdges().map((e) => ({ ...e, selected: false }));
+      rfInstance.setNodes([...updatedNodes, ...newNodes]);
+      rfInstance.setEdges([...updatedEdges, ...newEdges]);
+    } catch (err) {
+      console.error('Error parsing clipboard data:', err);
+    }
+  }, [rfInstance]);
+
+  useEffect(() => {
+    window.addEventListener('copy', onCopy);
+    window.addEventListener('paste', onPaste);
+    return () => {
+      window.removeEventListener('copy', onCopy);
+      window.removeEventListener('paste', onPaste);
+    };
+  }, [onCopy, onPaste]);
+};
+// ───────────────────────────────────────────────────────────────────────────
 
 const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -87,6 +152,9 @@ const W3CFlow: React.FC = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
+
+  // Initialize copy–paste functionality (now with edges too)
+  useCopyPaste(rfInstance);
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
@@ -102,7 +170,7 @@ const W3CFlow: React.FC = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      // check if the dropped element is valid
+      // Check if the dropped element is valid
       if (!type) {
         return;
       }
@@ -131,15 +199,12 @@ const W3CFlow: React.FC = () => {
         const id = getId();
         const { clientX, clientY } =
           "changedTouches" in event ? event.changedTouches[0] : event;
-  
-        // Ensure the handle is a string.
-        // If connectionState.fromHandle is an object, extract its 'id' property.
+
         const sourceHandle =
           typeof connectionState.fromHandle === "object"
             ? connectionState.fromHandle?.id
             : connectionState.fromHandle;
-  
-        // Create a new node that binds its input to the output of the source node.
+
         const newNode: Node = {
           id,
           type: "textView",
@@ -147,27 +212,24 @@ const W3CFlow: React.FC = () => {
           data: {
             binding: {
               sourceId: connectionState.fromNode?.id,
-              sourceField: sourceHandle, // e.g., "publicKey", "privateKey", or "address"
+              sourceField: sourceHandle,
             },
             in: "",
             out: "",
           },
         };
-  
-        // Create the edge with the properly extracted source handle.
+
         const newEdge: Edge = {
           id,
           source: connectionState.fromNode?.id as string,
-          sourceHandle: sourceHandle, // now a string
+          sourceHandle: sourceHandle,
           target: id,
-          targetHandle: "input", // adjust if your target handle differs
-          // binding: true,
+          targetHandle: "input",
         };
-  
+
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) => eds.concat(newEdge));
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition]
@@ -179,11 +241,12 @@ const W3CFlow: React.FC = () => {
       localStorage.setItem(flowKey, JSON.stringify(flow));
     }
   }, [rfInstance]);
- 
+
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
-      const flow = localStorage.getItem(flowKey) ? JSON.parse(localStorage.getItem(flowKey) as string) : null;
- 
+      const flow = localStorage.getItem(flowKey)
+        ? JSON.parse(localStorage.getItem(flowKey) as string)
+        : null;
       if (flow) {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);
@@ -191,10 +254,8 @@ const W3CFlow: React.FC = () => {
         rfInstance?.setViewport({ x, y, zoom });
       }
     };
- 
     restoreFlow();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setNodes, screenToFlowPosition]);
+  }, [setNodes, rfInstance, setEdges]);
 
   return (
     <div className="w3cflow">

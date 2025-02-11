@@ -154,6 +154,25 @@ body {
   align-items: center;
   cursor: grab;
 }
+.saveRestoreButtonsContainer {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.saveRestoreButtonsContainer button {
+  width: 4rem;
+  height: 20px;
+  border: 1px solid #EDEDED;
+  border-color: #C5C5C5;
+  border-radius: 8px;
+  box-shadow: 3.54px 4.55px 0px #00000005, 
+      0px 3.54px 4.55px 0px #0000000D, 
+      0px 0.51px 1.01px 0px #0000001A;
+}
 
 .w3cflow .selectall {
   margin-top: 10px;
@@ -161,6 +180,7 @@ body {
 
 .w3cflow aside .description {
   margin-bottom: 10px;
+  font-size: medium;
 }
 
 .react-flow__node .w3cflownode {
@@ -183,7 +203,6 @@ body {
   }
  
   .w3cflow aside {
-    width: 20%;
     max-width: 250px;
   }
 }

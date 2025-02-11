@@ -18,10 +18,10 @@ const Sidebar: React.FC<SidebarProps> = ({onSave, onRestore}) => {
     return (
         <aside>
             <div className='appname'>Web3 キャンバス</div>
-            <div>
-        <button onClick={onSave}>save</button>
-        <button onClick={onRestore}>restore</button>
-      </div>
+            <div className="saveRestoreButtonsContainer">
+                <button onClick={onSave}>save</button>
+                <button onClick={onRestore}>restore</button>
+            </div>
             <div className='description'>Cryptography</div>
             <hr />
             <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
