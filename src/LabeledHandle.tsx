@@ -3,7 +3,6 @@ import React from 'react';
 
 interface LabeledHandleProps {
     label: string;
-    side: string;
     type: HandleType;
     position: Position;
     id: string;
@@ -11,9 +10,17 @@ interface LabeledHandleProps {
     isConnectable?: boolean;
 }
 
-const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, position, id, style = {}, isConnectable = true }) => {
-    let className = `handleLabel-${side}`;
-    if (side === "right") {
+const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, type, position, id, style = {}, isConnectable = true }) => {
+    let className = `handleLabel`;
+    if (position == Position.Left) {
+        className += "-left";
+    } else if (position == Position.Right) {
+        className += "-right";
+    } else if (position == Position.Bottom) {
+        className += "-bottom";
+    }
+
+    if (position == Position.Right) {
         className += "-" + (label.length > 3 ? "45" : "20");
     }
     return (

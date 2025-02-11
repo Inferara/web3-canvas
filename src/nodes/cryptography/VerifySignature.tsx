@@ -65,9 +65,9 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({id}) => {
     <W3CNode id={id} label="Verify Signature" isGood={verification === "✅"}>
       <div>{verification}</div>
       {/* Three target handles: message, signature, address */}
-      <LabeledHandle label="message" type="target" side="left" position={Position.Left} id="msg" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
-      <LabeledHandle label="signature" type="target" side="left" position={Position.Left} id="sig" style={{ top: "70%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "sig").length === 0}/>
-      <LabeledHandle label="address" type="target" side="left" position={Position.Left} id="addr" style={{ top: "90%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0}/>
+      <LabeledHandle label="message" type="target" position={Position.Left} id="msg" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />
+      <LabeledHandle label="signature" type="target" position={Position.Left} id="sig" style={{ top: "70%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "sig").length === 0}/>
+      <LabeledHandle label="address" type="target" position={Position.Left} id="addr" style={{ top: "90%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0}/>
     </W3CNode>
   );
 };

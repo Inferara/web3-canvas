@@ -73,7 +73,6 @@ const nodeTypes = {
 };
 
 let id = 0;
-const flowKey = 'w3cflow';
 const getId = () => `w3cnode_${id++}`;
 
 const defaultData: { [key: string]: { in: string; out: string } } = {
@@ -81,7 +80,6 @@ const defaultData: { [key: string]: { in: string; out: string } } = {
   'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(0) },
 };
 
-// ─── COPY/PASTE CUSTOM HOOK (nodes & edges) ────────────────────────────────
 const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
   const onCopy = useCallback((event: ClipboardEvent) => {
     event.preventDefault();
@@ -138,86 +136,7 @@ const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
     };
   }, [onCopy, onPaste]);
 };
-// ───────────────────────────────────────────────────────────────────────────
 
-// ─── SAVED STATE ITEM COMPONENT ──────────────────────────────────────────────
-type SavedState = {
-  id: number;
-  timestamp: string;
-  name: string;
-  flow: any;
-};
-
-type SavedInstanceItemProps = {
-  savedState: SavedState;
-  index: number;
-  totalCount: number;
-  onUpdateName: (id: number, newName: string) => void;
-  onRestore: (flow: any) => void;
-  onDelete: (id: number) => void;
-  onMoveUp: (index: number) => void;
-  onMoveDown: (index: number) => void;
-};
-
-const SavedInstanceItem: React.FC<SavedInstanceItemProps> = ({
-  savedState,
-  index,
-  totalCount,
-  onUpdateName,
-  onRestore,
-  onDelete,
-  onMoveUp,
-  onMoveDown,
-}) => {
-  const [editing, setEditing] = useState(false);
-  const [name, setName] = useState(savedState.name);
-
-  const handleEditClick = () => setEditing(true);
-  const handleConfirmClick = () => {
-    onUpdateName(savedState.id, name);
-    setEditing(false);
-  };
-
-  return (
-    <li style={{ marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
-      {editing ? (
-        <>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginRight: '5px' }}
-          />
-          <button onClick={handleConfirmClick}>✔️</button>
-        </>
-      ) : (
-        <>
-          <span style={{ marginRight: '5px' }}>{savedState.name}</span>
-          <button onClick={handleEditClick}>✏️</button>
-        </>
-      )}
-      <button onClick={() => onDelete(savedState.id)} style={{ marginLeft: '5px' }}>
-        🗑️
-      </button>
-      <button onClick={() => onMoveUp(index)} disabled={index === 0} style={{ marginLeft: '5px' }}>
-        ⬆️
-      </button>
-      <button
-        onClick={() => onMoveDown(index)}
-        disabled={index === totalCount - 1}
-        style={{ marginLeft: '5px' }}
-      >
-        ⬇️
-      </button>
-      <button onClick={() => onRestore(savedState.flow)} style={{ marginLeft: '10px' }}>
-        Restore
-      </button>
-    </li>
-  );
-};
-// ───────────────────────────────────────────────────────────────────────────
-
-// ─── SAVE/RESTORE STACK & FILE UPLOAD ─────────────────────────────────────────
 const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -225,8 +144,6 @@ const W3CFlow: React.FC = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
-  const [savedStates, setSavedStates] = useState<SavedState[]>([]);
-  const [panelVisible, setPanelVisible] = useState(false); // Panel collapsed by default
 
   // Initialize copy–paste functionality
   useCopyPaste(rfInstance);
@@ -295,108 +212,9 @@ const W3CFlow: React.FC = () => {
         setEdges((eds) => eds.concat(newEdge));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition]
   );
-
-  // ─── SAVE STATE: DOWNLOAD FILE & SAVE TO STACK (new states on top) ─────
-  const handleSaveState = useCallback(() => {
-    if (rfInstance) {
-      const flow = rfInstance.toObject();
-      const timestamp = new Date().toISOString();
-      const newSavedState: SavedState = {
-        id: Date.now(),
-        timestamp,
-        name: timestamp, // default name
-        flow,
-      };
-      setSavedStates((prev) => [newSavedState, ...prev]);
-
-      // Download file
-      const flowString = JSON.stringify(flow, null, 2);
-      const blob = new Blob([flowString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `flow_${timestamp}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  }, [rfInstance]);
-
-  // ─── RESTORE STATE FROM FLOW OBJECT ──────────────────────────────────────
-  const restoreState = useCallback((flow: any) => {
-    if (flow) {
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      rfInstance?.setViewport({ x, y, zoom });
-    }
-  }, [rfInstance, setNodes, setEdges]);
-
-  // ─── UPLOAD STATE FROM FILE ──────────────────────────────────────────────
-  const handleUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const flow = JSON.parse(reader.result as string);
-        restoreState(flow);
-      } catch (err) {
-        console.error("Failed to parse uploaded file:", err);
-      }
-    };
-    reader.readAsText(file);
-  }, [restoreState]);
-
-  // ─── SAVE & RESTORE TO LOCAL STORAGE (existing functions) ──────────────
-  const onSave = useCallback(() => {
-    if (rfInstance) {
-      const flow = rfInstance.toObject();
-      localStorage.setItem(flowKey, JSON.stringify(flow));
-    }
-  }, [rfInstance]);
- 
-  const onRestore = useCallback(() => {
-    const flow = localStorage.getItem(flowKey)
-      ? JSON.parse(localStorage.getItem(flowKey) as string)
-      : null;
-    if (flow) {
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      rfInstance?.setViewport({ x, y, zoom });
-    }
-  }, [setNodes, screenToFlowPosition, rfInstance, setEdges]);
-
-  // ─── FUNCTIONS TO MANAGE SAVED STATES ─────────────────────────────────────
-  const updateStateName = useCallback((id: number, newName: string) => {
-    setSavedStates((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, name: newName } : s))
-    );
-  }, []);
-
-  const deleteState = useCallback((id: number) => {
-    setSavedStates((prev) => prev.filter((s) => s.id !== id));
-  }, []);
-
-  const moveStateUp = useCallback((index: number) => {
-    setSavedStates((prev) => {
-      if (index <= 0) return prev;
-      const newArray = [...prev];
-      [newArray[index - 1], newArray[index]] = [newArray[index], newArray[index - 1]];
-      return newArray;
-    });
-  }, []);
-
-  const moveStateDown = useCallback((index: number) => {
-    setSavedStates((prev) => {
-      if (index >= prev.length - 1) return prev;
-      const newArray = [...prev];
-      [newArray[index], newArray[index + 1]] = [newArray[index + 1], newArray[index]];
-      return newArray;
-    });
-  }, []);
 
   return (
     <div className="w3cflow">
@@ -419,43 +237,11 @@ const W3CFlow: React.FC = () => {
           <Background />
         </ReactFlow>
       </div>
-      <Sidebar onSave={onSave} onRestore={onRestore} />
-
-      {/* Toggle Button for the Save-Restore Panel */}
-      <div style={{ marginTop: '10px' }}>
-        <button onClick={() => setPanelVisible((prev) => !prev)}>
-          {panelVisible ? 'Hide Save/Restore Panel' : 'Show Save/Restore Panel'}
-        </button>
-      </div>
-
-      {/* Save-Restore Panel (conditionally rendered) */}
-      {panelVisible && (
-        <div style={{ padding: '10px', background: '#eee', marginTop: '10px' }}>
-          <button onClick={handleSaveState}>Save & Download Flow</button>
-          <input
-            type="file"
-            accept="application/json"
-            onChange={handleUpload}
-            style={{ marginLeft: '10px' }}
-          />
-          <h3>Saved States</h3>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {savedStates.map((state, index) => (
-              <SavedInstanceItem
-                key={state.id}
-                savedState={state}
-                index={index}
-                totalCount={savedStates.length}
-                onUpdateName={updateStateName}
-                onRestore={restoreState}
-                onDelete={deleteState}
-                onMoveUp={moveStateUp}
-                onMoveDown={moveStateDown}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
+      <Sidebar
+        rfInstance={rfInstance}
+        setNodes={setNodes}
+        setEdges={setEdges}
+      />
     </div>
   );
 };

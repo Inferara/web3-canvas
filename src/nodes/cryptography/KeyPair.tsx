@@ -52,7 +52,6 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
 
       <LabeledHandle
         label="in"
-        side="left"
         type="target"
         position={Position.Left}
         id="input"
@@ -62,7 +61,6 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
       <LabeledHandle
         label="pub key"
         type="source"
-        side="right"
         position={Position.Right}
         id="publicKey"
         style={{ top: "50%" }}
@@ -70,7 +68,6 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
       <LabeledHandle
         label="priv key"
         type="source"
-        side="right"
         position={Position.Right}
         id="privateKey"
         style={{ top: "70%" }}
@@ -78,7 +75,6 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
       <LabeledHandle
         label="address"
         type="source"
-        side="right"
         position={Position.Right}
         id="address"
         style={{ top: "90%" }}
@@ -87,5 +83,4 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   );
 };
 
-const MemoizedKeyPairNode = React.memo(KeyPairNode);
-export default MemoizedKeyPairNode;
+export default KeyPairNode;

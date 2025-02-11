@@ -1,12 +1,13 @@
 import React, { ChangeEvent, useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
 } from "@xyflow/react";
 import { ethers } from "ethers";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface FileInputNodeProps extends NodeProps {
   id: string;
@@ -39,25 +40,19 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   const [fileSize, setFileSize] = useState<number>(0);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
+    <W3CNode id={id} label="File Input" isGood={fileSize > 0}>
+      <label htmlFor="file-upload" style={{fontSize: 'x-large'}}>📂</label>
       <input
-        type="file"
-        onChange={handleFileChange}
-        style={{ marginTop: 8 }}
-        className="nodrag"
+          id="file-upload"
+          type="file"
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+          className="nodrag"
       />
-      {/* Show some info about the current file data */}
-      <div style={{ marginTop: 8 }}>
-        {(fileSize > 0)
-          ? <small>{fileSize} bytes</small>
-          : "No file selected."}
-      </div>
-      {/* Source handle so other nodes can read the file content */}
-      <Handle type="source" position={Position.Bottom} id="output" />
-    </div>
+      <div>File size: {fileSize}</div>
+      <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+    </W3CNode>
   );
 };
 
-const MemoizedFileInputNode = React.memo(FileInputNode);
-export default MemoizedFileInputNode;
-
+export default FileInputNode;

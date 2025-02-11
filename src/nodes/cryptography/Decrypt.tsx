@@ -81,7 +81,6 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       <div>{plaintext.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle
         type="target"
-        side="left"
         label="chipher"
         position={Position.Left}
         id="cipher"
@@ -94,7 +93,6 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       <LabeledHandle
         label="priv key"
         type="target"
-        side="left"
         position={Position.Left}
         id="privKey"
         style={{ top: "80%" }}
@@ -103,7 +101,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
         }
       />
       {/* Source handle for decrypted plaintext */}
-      <LabeledHandle label="out" side="right" type="source" position={Position.Right} id="output" />
+      <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
     </W3CNode>
   );
 };

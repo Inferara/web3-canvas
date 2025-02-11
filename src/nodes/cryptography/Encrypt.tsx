@@ -75,7 +75,6 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
             <LabeledHandle
                 label="msg"
                 type="target"
-                side="left"
                 position={Position.Left}
                 id="msg"
                 style={{ top: "50%" }}
@@ -86,7 +85,6 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
             <LabeledHandle
                 label="pub key"
                 type="target"
-                side="left"
                 position={Position.Left}
                 id="pubKey"
                 style={{ top: "80%" }}
@@ -94,7 +92,7 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
                     inputConnections.filter((conn) => conn.targetHandle === "pubKey").length === 0
                 }
             />
-            <LabeledHandle label="out" type="source" side="right" position={Position.Right} id="output" isConnectable={true} />
+            <LabeledHandle label="out" type="source" position={Position.Right} id="output" isConnectable={true} />
         </W3CNode>
     );
 };

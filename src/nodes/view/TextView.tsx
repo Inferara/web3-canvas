@@ -18,7 +18,7 @@ interface TextViewNodeProps extends NodeProps {
   };
 }
 
-const TextViewNode: React.FC<TextViewNodeProps> = () => {
+const TextViewNode: React.FC<TextViewNodeProps> = ({id}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
@@ -33,15 +33,10 @@ const TextViewNode: React.FC<TextViewNodeProps> = () => {
   }
 
   return (
-    <W3CNode label="Text" isRezieable={true} isGood={text.length > 0}>
-      <div style={{ marginTop: 8 }}>
-        {text || "No input connected"}
-      </div>
-      {/* Single handle for accepting input */}
+    <W3CNode id={id} label="Text" isRezieable={true} isGood={text.length > 0}>
+      <textarea value={text || "..."} readOnly={true}/>
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
-      <div>
-        <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
-      </div>
+      <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
     </W3CNode>
   );
 };

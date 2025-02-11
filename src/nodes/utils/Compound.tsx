@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  Handle,
   NodeProps,
   Position,
   useNodeConnections,
@@ -9,6 +8,8 @@ import {
 } from '@xyflow/react';
 import { Utf8DataTransfer } from '../../Utf8DataTransfer';
 import { KeyPairNodeProps } from '../cryptography/KeyPair';
+import W3CNode from '../../W3CNode';
+import LabeledHandle from '../../LabeledHandle';
 
 interface CompoundNodeProps extends NodeProps {
   id: string;
@@ -43,15 +44,11 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
   }, [combinedData]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc" }}>
-      <div>COMPOUND</div>
-      <div>{nodesData.length === 0 ? "No input" : ""}</div>
-      {/* Single handle to accept multiple connections */}
-      <Handle type="target" position={Position.Left} id="input" />
-
-      {/* One source handle for the combined output */}
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+    <W3CNode label="Compound" id={id} isGood={combinedData.length > 0}>
+      <div>{combinedData.substring(0, 25) + "..." || "..."}</div>
+      <LabeledHandle label="in" type="target" position={Position.Left} id="input" />
+      <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
+    </W3CNode>
   );
 };
 

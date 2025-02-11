@@ -54,7 +54,6 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
         label="msg"
         type="target"
         position={Position.Left}
-        side="left"
         id="msg"
         style={{ top: "50%" }}
         isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0}
@@ -63,7 +62,6 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
         label="priv key"
         type="target"
         position={Position.Left}
-        side="left"
         id="privKey"
         style={{ top: "80%" }}
         isConnectable={inputConnections.filter((conn) => { conn.targetHandle === "privKey" }).length === 0}
@@ -72,7 +70,6 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
         label="sig"
         type="source"
         position={Position.Right}
-        side="right"
         id="output"
       />
     </W3CNode>

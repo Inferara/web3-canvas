@@ -136,6 +136,10 @@ body {
   padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .w3cflow .w3cflownodeMenuItem {
@@ -161,6 +165,22 @@ body {
   flex-direction: row;
   justify-content: center;
   gap: 1rem;
+}
+
+.saveRestoreButtonsContainer label {
+  font-size: 15px;
+  width: 4rem;
+  height: 20px;
+  border: 1px solid #EDEDED;
+  border-color: #C5C5C5;
+  border-radius: 8px;
+  box-shadow: 3.54px 4.55px 0px #00000005, 
+      0px 3.54px 4.55px 0px #0000000D, 
+      0px 0.51px 1.01px 0px #0000001A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #efefef;
 }
 
 .saveRestoreButtonsContainer button {
@@ -202,9 +222,14 @@ body {
     flex-direction: row;
   }
  
-  .w3cflow aside {
+  /* .w3cflow aside {
     max-width: 250px;
-  }
+  } */
+}
+
+.handleLabel-bottom {
+  transform: translate(-100%, -100%);
+  pointer-events: none;
 }
 
 .handleLabel-left {
@@ -223,4 +248,19 @@ body {
 .handleLabel-right-45 {
   transform: translate(-45px, -35%);
   pointer-events: none;
+}
+
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.custom-file-upload:hover {
+  background-color: #0056b3;
 }

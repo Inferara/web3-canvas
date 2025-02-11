@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Handle, NodeProps, Position, useReactFlow } from '@xyflow/react';
+import { NodeProps, Position, useReactFlow } from '@xyflow/react';
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from '../../W3CNode';
+import LabeledHandle from '../../LabeledHandle';
 
 interface TextInputNodeProps extends NodeProps {
     id: string;
@@ -30,7 +31,7 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({ id, data}) => {
             onChange={onChange}
             className="nodrag"
           />
-          <Handle type="source" position={Position.Right} id="output" />
+          <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
         </W3CNode>
       );
     };

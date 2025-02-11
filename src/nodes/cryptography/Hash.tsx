@@ -48,9 +48,9 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
       <div>{computedHash.substring(0, 25) + "..." || "..."}</div>
       <div>{computedHash ? ("Hash length: " + computedHash.length) : ""}</div>
       {/* Single target handle that can accept multiple connections */}
-      <LabeledHandle label="in" side="left" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+      <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       {/* Source handle to expose the computed hash */}
-      <LabeledHandle label="out" side="right" type="source" position={Position.Right} id="output" isConnectable={true}/>
+      <LabeledHandle label="out" type="source" position={Position.Right} id="output" isConnectable={true}/>
     </W3CNode>
   );
 };

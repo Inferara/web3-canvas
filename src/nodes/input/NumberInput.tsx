@@ -1,11 +1,12 @@
 import React, {  useState,  useCallback } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
 } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface NumberInputNodeProps extends NodeProps {
   id: string;
@@ -28,7 +29,7 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
 
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
+    <W3CNode id={id} label="Number Input" isGood={true}>
       <div>Number Input Node</div>
       <input
         type="number"
@@ -38,10 +39,9 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
         className="nodrag"
       />
       {/* Source handle so other nodes can consume this numeric output */}
-      <Handle type="source" position={Position.Bottom} id="output" />
-    </div>
+      <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+    </W3CNode>
   );
 };
 
-const MemoizedNumberInputNode = React.memo(NumberInputNode);
-export default MemoizedNumberInputNode;
+export default NumberInputNode;

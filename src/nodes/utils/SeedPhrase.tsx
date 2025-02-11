@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
 } from "@xyflow/react";
@@ -10,6 +9,8 @@ import {
 // npm install random-words
 import { generate } from "random-words";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface SeedPhraseNodeProps extends NodeProps {
   id: string;
@@ -35,19 +36,11 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   };
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 200 }}>
-      <button onClick={handleGenerate} style={{ marginTop: 8 }}>
-        Generate Seed
-      </button>
-
-      {/* Display the seed phrase (or a message if none) */}
-      <div style={{ marginTop: 8 }}>
-        {seedPhrase || "No seed phrase generated yet."}
-      </div>
-
-      {/* Only a source handle, since this node just outputs data */}
-      <Handle type="source" position={Position.Bottom} id="output" />
-    </div>
+    <W3CNode id={id} label="Seed Phrase" isGood={seedPhrase.length > 0} isRezieable={true}>
+      <button onClick={handleGenerate} style={{marginTop: '10px'}}>Generate</button>
+      <textarea value={seedPhrase || "..."} readOnly={true}/>
+      <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+    </W3CNode>
   );
 };
 
