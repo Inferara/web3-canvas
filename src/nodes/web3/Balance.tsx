@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     NodeProps,
-    Handle,
     Position,
     useReactFlow,
     useNodeConnections,
@@ -11,6 +10,7 @@ import { ethers } from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
+import W3CNode from "../../W3CNode";
 
 interface EthBalanceNodeProps extends NodeProps {
     id: string;
@@ -77,44 +77,35 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     };
 
     return (
-        <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-            <div>Balance Node</div>
-            <p style={{ marginTop: 8 }}>
-                <strong>Balance:</strong>
-                <br />
-                <span>{balance || "No balance"}</span>
-                <button onClick={onRefreshButtonClick}>Refresh</button>
-            </p>
+        <W3CNode id={id} label="ETH Balance" isGood={balance !== "Error" && !isNaN(Number(balance))}>
+            <div>{balance || "..."}</div>
+            <button onClick={onRefreshButtonClick}>Refresh</button>
 
-            {/* Target handle for the blockchain address */}
             <LabeledHandle
                 label="address"
                 type="target"
                 position={Position.Left}
                 id="addr"
-                style={{ top: "30%" }}
+                style={{ top: "50%" }}
                 isConnectable={
-                    inputConnections.filter((conn) => conn.targetHandle === "addr")
-                        .length === 0
+                    inputConnections.filter((conn) => conn.targetHandle === "addr").length === 0
                 }
             />
 
-            {/* Target handle for the blockchain provider URL */}
             <LabeledHandle
                 label="provider utl"
                 type="target"
                 position={Position.Left}
                 id="url"
-                style={{ top: "60%" }}
+                style={{ top: "80%" }}
                 isConnectable={
                     inputConnections.filter((conn) => conn.targetHandle === "url")
                         .length === 0
                 }
             />
 
-            {/* Source handle to output the balance */}
-            <Handle type="source" position={Position.Right} id="output" />
-        </div>
+            <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
+        </W3CNode>
     );
 };
 

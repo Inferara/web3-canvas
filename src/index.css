@@ -102,6 +102,7 @@ body {
 
 .w3cflownode {
   height: 70%;
+  margin-top: 8px;
   display: flex;
   justify-content: center;
   align-items: center;

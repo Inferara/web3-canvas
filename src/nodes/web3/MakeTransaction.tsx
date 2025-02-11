@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     NodeProps,
-    Handle,
     Position,
     useReactFlow,
     useNodeConnections,
@@ -11,6 +10,7 @@ import { ethers } from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
+import W3CNode from "../../W3CNode";
 
 interface MakeTransactionNodeProps extends NodeProps {
     id: string;
@@ -82,45 +82,38 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
     }, [privateKey, fromAddress, toAddress, amtStr]);
 
     return (
-        <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-            <div>Make Transaction Node</div>
-            <p style={{ marginTop: 8 }}>
-                <strong>Signed Transaction:</strong>
-                <br />
-                <span style={{ wordWrap: "break-word" }}>{signedTx || "Not ready"}</span>
-            </p>
-
-            {/* Target handle for private key input */}
+        <W3CNode id={id} label="Make Transaction" isGood={signedTx !== "" && signedTx !== "Error"}>
+            <div>{signedTx.substring(0, 10) + "..." || "..."}</div>
 
             <LabeledHandle
-                label="privKey"
+                label="priv key"
                 type="target"
                 position={Position.Left}
                 id="privKey"
-                style={{ top: "15%" }}
+                style={{ top: "40%" }}
                 isConnectable={inputConnections.filter((conn) => conn.targetHandle === "privKey").length === 0}
             />
-            {/* Target handle for "from" address */}
+
             <LabeledHandle
-                label="From"
+                label="from"
                 type="target"
                 position={Position.Left}
                 id="from"
-                style={{ top: "35%" }}
+                style={{ top: "52%" }}
                 isConnectable={inputConnections.filter((conn) => conn.targetHandle === "from").length === 0}
             />
-            {/* Target handle for "to" address */}
+
             <LabeledHandle
-                label="To"
+                label="to"
                 type="target"
                 position={Position.Left}
                 id="to"
-                style={{ top: "55%" }}
+                style={{ top: "62%" }}
                 isConnectable={inputConnections.filter((conn) => conn.targetHandle === "to").length === 0}
             />
-            {/* Target handle for transfer amount (ETH) */}
+            
             <LabeledHandle
-                label="Amount"
+                label="amount"
                 type="target"
                 position={Position.Left}
                 id="amt"
@@ -135,9 +128,9 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
                 style={{ top: "90%" }}
                 isConnectable={inputConnections.filter((conn) => conn.targetHandle === "gasPrice").length === 0}
             />
-            {/* Source handle to output the signed transaction */}
-            <Handle type="source" position={Position.Right} id="output" />
-        </div>
+
+            <LabeledHandle label="tx hash" type="source" position={Position.Right} id="output" />
+        </W3CNode>
     );
 };
 

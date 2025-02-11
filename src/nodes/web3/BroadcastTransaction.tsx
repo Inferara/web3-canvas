@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
@@ -10,6 +9,7 @@ import {
 import { ethers } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../W3CNode";
 
 interface BroadcastTransactionNodeProps extends NodeProps {
   id: string;
@@ -64,38 +64,30 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
   };
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-      <div>Broadcast Transaction Node</div>
-      <p style={{ marginTop: 8 }}>
-        <strong>Tx Hash:</strong>
-        <br />
-        <span style={{ wordWrap: "break-word" }}>{txHash || "No transaction broadcasted"}</span>
-      </p>
+    <W3CNode id={id} label="Broadcast Transaction" isGood={txHash.length > 0}>
+      <div>{txHash.substring(0, 25) + "..." || "..."}</div>
       <button onClick={handleBroadcast} disabled={broadcasting || !providerUrl || !signedTx}>
-        {broadcasting ? "Broadcasting..." : "Broadcast Transaction"}
+        {broadcasting ? "Broadcasting..." : "Broadcast"}
       </button>
 
-      {/* Target handle for the blockchain provider URL */}
       <LabeledHandle
-        label="Provider URL"
+        label="provider"
         type="target"
         position={Position.Left}
         id="provider"
-        style={{ top: "40%" }}
+        style={{ top: "50%" }}
         isConnectable={inputConnections.filter((conn) => conn.targetHandle === "provider").length === 0}
       />
-      {/* Target handle for the signed transaction */}
       <LabeledHandle
-        label="Transaction"
+        label="transaction"
         type="target"
         position={Position.Left}
         id="tx"
-        style={{ top: "70%" }}
+        style={{ top: "75%" }}
         isConnectable={inputConnections.filter((conn) => conn.targetHandle === "tx").length === 0}
       />
-      {/* Source handle to output the transaction hash */}
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+      <LabeledHandle label="tx hash" type="source" position={Position.Right} id="output" />
+    </W3CNode>
   );
 };
 

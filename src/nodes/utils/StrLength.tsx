@@ -42,7 +42,7 @@ const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id }) => {
 
   return (
     <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-      <div style={{ marginTop: 8 }}>{lengthValue || "No input connected"}</div>
+      <div>{lengthValue || "No input connected"}</div>
       {/* Single handle to accept input; no output since it's just displaying a value */}
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
       <Handle type="source" position={Position.Right} id="output" />

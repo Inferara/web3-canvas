@@ -80,24 +80,36 @@ const defaultData: { [key: string]: { in: string; out: string } } = {
   'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(0) },
 };
 
+const customMimeType = 'application/x-xyflow';
+
 const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
   const onCopy = useCallback((event: ClipboardEvent) => {
-    event.preventDefault();
     if (!rfInstance) return;
+    // Only intercept if there are selected nodes (i.e. our custom copy scenario)
     const selectedNodes = rfInstance.getNodes().filter((n) => n.selected);
+    if (selectedNodes.length === 0) {
+      // No nodes selected: allow default copy behavior
+      return;
+    }
+    event.preventDefault();
     const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
     const selectedEdges = rfInstance
       .getEdges()
       .filter((e) => selectedNodeIds.has(e.source) && selectedNodeIds.has(e.target));
     const dataToCopy = { nodes: selectedNodes, edges: selectedEdges };
-    event.clipboardData?.setData('application/json', JSON.stringify(dataToCopy));
+    // Use a custom MIME type to avoid interfering with normal text copy-paste
+    event.clipboardData?.setData(customMimeType, JSON.stringify(dataToCopy));
   }, [rfInstance]);
 
   const onPaste = useCallback((event: ClipboardEvent) => {
-    event.preventDefault();
     if (!rfInstance) return;
-    const clipboardData = event.clipboardData?.getData('application/json');
-    if (!clipboardData) return;
+    // Check if our custom data exists in the clipboard
+    const clipboardData = event.clipboardData?.getData(customMimeType);
+    if (!clipboardData) {
+      // No custom data: allow default paste behavior
+      return;
+    }
+    event.preventDefault();
     try {
       const { nodes: copiedNodes, edges: copiedEdges } = JSON.parse(clipboardData);
       const oldToNewMap = new Map<string, string>();

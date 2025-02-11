@@ -35,7 +35,6 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
         type="number"
         value={numberValue}
         onChange={onChange}
-        style={{ marginTop: 8 }}
         className="nodrag"
       />
       {/* Source handle so other nodes can consume this numeric output */}

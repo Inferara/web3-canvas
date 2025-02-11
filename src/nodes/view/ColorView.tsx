@@ -1,11 +1,12 @@
 import React from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface ColorViewNodeProps extends NodeProps {
   id: string;
@@ -15,7 +16,7 @@ interface ColorViewNodeProps extends NodeProps {
   };
 }
 
-const ColorViewNode: React.FC<ColorViewNodeProps> = () => {
+const ColorViewNode: React.FC<ColorViewNodeProps> = ({id}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
@@ -42,13 +43,13 @@ const ColorViewNode: React.FC<ColorViewNodeProps> = () => {
   color = `#${color}`;
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150, backgroundColor: color }}>
-      <div style={{ marginTop: 8 }}>
+    <W3CNode id={id} label="Color" isGood={true}>
+      <div style={{ width: "80%", height: "40px", backgroundColor: color }}/>
+      <div>
         {color}
       </div>
-      {/* One handle for input, no output handle since it just displays data */}
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
-    </div>
+      <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+    </W3CNode>
   );
 };
 

@@ -68,7 +68,6 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
         min={0}
         value={startPos}
         onChange={onStartPosChange}
-        style={{ marginTop: 8 }}
         className="nodrag"
         id="start"
       />
@@ -78,7 +77,6 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
         value={endPos}
         max={inputStr ? inputStr.length : 0}
         onChange={onEndPosChange}
-        style={{ marginTop: 8 }}
         className="nodrag"
         id="end"
       />

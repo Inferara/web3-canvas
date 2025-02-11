@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface EthToUsdNodeProps extends NodeProps {
   id: string;
@@ -78,16 +79,10 @@ const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id }) => {
   }, [ethValue]);
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 250 }}>
-      <div>EthToUsd Node</div>
-      <p style={{ marginTop: 8 }}>
-        <strong>USD Value:</strong>
-        <br />
-        <span>{usdValue || "No input"}</span>
-      </p>
-
-      {/* Target handle: expects the ETH amount as a floating point number */}
-      <Handle
+    <W3CNode id={id} label="ETH to USD" isGood={usdValue !== "Error" && !isNaN(Number(usdValue))}>
+      <div>{usdValue || "..."}</div>
+      <LabeledHandle
+        label="ETH"
         type="target"
         position={Position.Left}
         id="input"
@@ -97,9 +92,8 @@ const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id }) => {
         }
       />
 
-      {/* Source handle: outputs the USD value */}
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+      <LabeledHandle label="usd" type="source" position={Position.Right} id="output" />
+    </W3CNode>
   );
 };
 
