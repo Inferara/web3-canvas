@@ -25,13 +25,16 @@ body {
   height: 100%;
 }
 
+:root {
+  --nodeheaderheight: 30px;
+}
 
 .w3cflownodeheader {
   position: absolute; /* Allow precise positioning at the top */
   top: 0; /* Position it at the very top */
   left: 0; /* Align it to the left edge */
   right: 0; /* Stretch to fill the width */
-  height: 30px; /* Define a fixed height for the header (optional) */
+  height: var(--nodeheaderheight); /* Define a fixed height for the header (optional) */
   line-height: 30px; /* Vertically center the text within the header */
   text-align: center; /* Center-align the text */
   font-weight: bold; /* Make the header text bold */
@@ -47,13 +50,29 @@ body {
 }
 
 .w3cflownode {
-  display: flex; /* Flexbox for centering content */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  flex-direction: column; /* Keep hash and handles in a single line */
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   text-align: center;
+  padding-top: var(--nodeheaderheight);
   max-width: -webkit-fill-available;
   max-width: -moz-available;
+}
+
+.w3cflownode textarea {
+  width: 100%; /* Make the textarea span the full width of the node */
+  height: 100%; /* Allow the textarea to fill the available height */
+  resize: none; /* Disable default textarea resize */
+  border: none; /* Remove default border */
+  outline: none; /* Remove focus outline */
+  background: transparent; /* Ensure the background blends with the node */
+  font-size: 16px; /* Adjust text size */
+  box-sizing: border-box; /* Include padding in the width and height */
+  overflow: hidden;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .w3cflow .reactflow-wrapper {

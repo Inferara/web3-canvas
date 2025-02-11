@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
@@ -89,6 +88,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       {/* Target handle for ciphertext */}
       <LabeledHandle
         type="target"
+        side="left"
         label="Ciphertext"
         position={Position.Left}
         id="cipher"
@@ -101,6 +101,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
       <LabeledHandle
         label="Private Key"
         type="target"
+        side="left"
         position={Position.Left}
         id="privKey"
         style={{ top: "60%" }}
@@ -109,7 +110,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
         }
       />
       {/* Source handle for decrypted plaintext */}
-      <Handle type="source" position={Position.Right} id="output" />
+      <LabeledHandle label="out" side="right" type="source" position={Position.Right} id="output" />
     </div>
   );
 };

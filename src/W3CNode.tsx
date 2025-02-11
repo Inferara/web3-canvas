@@ -13,7 +13,7 @@ const W3CNode: React.FC<W3CNodeProps> = ({ label, isRezieable = false, isGood = 
 
     const headerStyle = isGood ? "w3cflownodeheader good" : "w3cflownodeheader";
     return (
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", height: "100%" }}>
             {isRezieable && (
                 <NodeResizeControl minWidth={250} minHeight={100}>
                     <ResizeIcon />

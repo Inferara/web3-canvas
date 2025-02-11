@@ -7,11 +7,11 @@ interface LabeledHandleProps {
     type: HandleType;
     position: Position;
     id: string;
-    style: React.CSSProperties;
-    isConnectable: boolean;
+    style?: React.CSSProperties;
+    isConnectable?: boolean;
 }
 
-const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, position, id, style, isConnectable }) => {
+const LabeledHandle: React.FC<LabeledHandleProps> = ({ label, side, type, position, id, style = {}, isConnectable = true }) => {
     const className = `handleLabel-${side}`;
     return (
         <Handle
