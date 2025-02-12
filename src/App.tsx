@@ -80,6 +80,12 @@ const defaultData: { [key: string]: { in: string; out: string } } = {
   'numberInput': { in: '', out: Utf8DataTransfer.encodeNumber(0) },
 };
 
+type FlowSnapshot = {
+  nodes: Node[];
+  edges: Edge[];
+  viewport: { x: number; y: number; zoom: number };
+};
+
 const customMimeType = 'application/x-xyflow';
 
 const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
@@ -156,6 +162,46 @@ const W3CFlow: React.FC = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
+  const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
+  const [redoStack, setRedoStack] = useState<FlowSnapshot[]>([]);
+
+  // Undo: Pop snapshot from undo stack, push current state onto redo stack,
+  // then restore the snapshot.
+  const undo = useCallback(() => {
+    if (!rfInstance || undoStack.length === 0) return;
+    const snapshot = undoStack[undoStack.length - 1];
+    setUndoStack((prev) => prev.slice(0, prev.length - 1));
+    // Push current state to redo stack
+    const currentFlow = rfInstance.toObject();
+    const currentSnapshot: FlowSnapshot = {
+      nodes: currentFlow.nodes,
+      edges: currentFlow.edges,
+      viewport: currentFlow.viewport,
+    };
+    setRedoStack((prev) => [...prev, currentSnapshot]);
+    // Restore snapshot
+    setNodes(snapshot.nodes);
+    setEdges(snapshot.edges);
+    rfInstance.setViewport(snapshot.viewport);
+  }, [rfInstance, undoStack, setNodes, setEdges]);
+
+  // Redo: Pop snapshot from redo stack, push current state onto undo stack,
+  // then restore snapshot.
+  const redo = useCallback(() => {
+    if (!rfInstance || redoStack.length === 0) return;
+    const snapshot = redoStack[redoStack.length - 1];
+    setRedoStack((prev) => prev.slice(0, prev.length - 1));
+    const currentFlow = rfInstance.toObject();
+    const currentSnapshot: FlowSnapshot = {
+      nodes: currentFlow.nodes,
+      edges: currentFlow.edges,
+      viewport: currentFlow.viewport,
+    };
+    setUndoStack((prev) => [...prev, currentSnapshot]);
+    setNodes(snapshot.nodes);
+    setEdges(snapshot.edges);
+    rfInstance.setViewport(snapshot.viewport);
+  }, [rfInstance, redoStack, setNodes, setEdges]);
 
   // Initialize copy–paste functionality
   useCopyPaste(rfInstance);
@@ -168,6 +214,7 @@ const W3CFlow: React.FC = () => {
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDrop = useCallback(
@@ -186,9 +233,44 @@ const W3CFlow: React.FC = () => {
         data: data,
       };
       setNodes((nds) => nds.concat(newNode));
+      pushSnapshot();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition, setNodes, type]
   );
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Avoid interfering with default behavior if focus is in an input
+      if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') {
+        return;
+      }
+      if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        undo();
+      } else if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo]);
+
+  // Helper: Capture current flow state as a snapshot
+  function pushSnapshot() {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      const snapshot: FlowSnapshot = {
+        nodes: flow.nodes,
+        edges: flow.edges,
+        viewport: flow.viewport,
+      };
+      setUndoStack((prev) => [...prev, snapshot]);
+      // Clear redo stack on new action
+      setRedoStack([]);
+    }
+  }
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
@@ -222,6 +304,7 @@ const W3CFlow: React.FC = () => {
         };
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) => eds.concat(newEdge));
+        pushSnapshot();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -241,7 +324,9 @@ const W3CFlow: React.FC = () => {
           onConnectEnd={onConnectEnd}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          onChange={pushSnapshot}
           onInit={setRfInstance}
+          onNodeDragStop={pushSnapshot}
           fitView
           style={{ backgroundColor: "#F7F9FB" }}
         >
