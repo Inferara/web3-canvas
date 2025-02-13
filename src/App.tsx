@@ -216,7 +216,6 @@ const W3CFlow: React.FC = () => {
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDrop = useCallback(

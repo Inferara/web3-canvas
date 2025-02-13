@@ -32,7 +32,6 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
 
   const handleGenerate = () => {
     setSeedPhrase(generate({ exactly: 20, join: " " }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   return (

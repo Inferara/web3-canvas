@@ -35,6 +35,8 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     } else {
       hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: TS2339
     computedHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashInput));
   }
   useEffect(() => {
