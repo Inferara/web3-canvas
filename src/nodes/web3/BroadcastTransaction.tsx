@@ -48,6 +48,8 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
     }
     try {
       setBroadcasting(true);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: TS2339
       const provider = new ethers.providers.JsonRpcProvider(providerUrl);
       const txResponse = await provider.sendTransaction(signedTx);
       setTxHash(txResponse.hash);

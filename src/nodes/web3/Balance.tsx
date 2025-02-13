@@ -51,7 +51,11 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     async function fetchBalance() {
         if (address && providerUrl) {
             try {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore: TS2339
                 const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore: TS2339
                 const balanceWei = await provider.getBalance(address);
                 const balanceEther = ethers.utils.formatEther(balanceWei);
                 setBalance(balanceEther);

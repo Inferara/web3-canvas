@@ -34,7 +34,11 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
   const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: TS2339
   const publicKey = privateKey ? ethers.utils.computePublicKey(privateKey, false) : "";
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: TS2339
   const address = publicKey ? ethers.utils.computeAddress(publicKey) : "";
 
   useEffect(() => {

@@ -18,7 +18,7 @@ interface FileInputNodeProps extends NodeProps {
 }
 
 const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
-  
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -29,6 +29,8 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
       const base64 = reader.result?.toString();
       if (base64) {
         setFileSize(base64.length);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore: TS2339
         const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(base64 as string));
         const dataOut = Utf8DataTransfer.encodeString(hash);
         updateNodeData(id, { ...data, out: dataOut });
@@ -41,13 +43,13 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
 
   return (
     <W3CNode id={id} label="File Input" isGood={fileSize > 0}>
-      <label htmlFor="file-upload" style={{fontSize: 'x-large'}}>📂</label>
+      <label htmlFor="file-upload" style={{ fontSize: 'x-large' }}>📂</label>
       <input
-          id="file-upload"
-          type="file"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-          className="nodrag"
+        id="file-upload"
+        type="file"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+        className="nodrag"
       />
       <div>File size: {fileSize}</div>
       <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
