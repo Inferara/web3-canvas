@@ -1,0 +1,45 @@
+name: Build and Deploy Without Registry
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t w3c:latest .
+
+      - name: Save Docker image as tarball
+        run: |
+          docker save w3c:latest | gzip > w3c.tar.gz
+
+      - name: Transfer image tarball to remote server via SCP
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          source: "w3c.tar.gz"
+          target: "~/deploy/"
+
+      - name: Load image and restart container on remote server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          script: |
+            # Load the transferred image tarball
+            gunzip -c ~/deploy/w3c.tar.gz | docker load
+            # Optionally, stop and remove the current container
+            docker stop w3c || true
+            docker rm w3c || true
+            # Run the container (adjust ports as needed)
+            docker run -d --name w3c -p 80:80 w3c:latest
