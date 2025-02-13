@@ -57,6 +57,8 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore: TS2339
                 const balanceWei = await provider.getBalance(address);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore: TS2339
                 const balanceEther = ethers.utils.formatEther(balanceWei);
                 setBalance(balanceEther);
                 updateNodeData(id, {

@@ -60,6 +60,8 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore: TS2339
                     const nonce = await provider.getTransactionCount(wallet.address);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore: TS2339
                     const transaction: ethers.providers.TransactionRequest = {
                         from: fromAddress,
                         to: toAddress,
