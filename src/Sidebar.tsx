@@ -118,13 +118,6 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                         style={{ display: 'none' }}
                         onChange={handleUpload}
                     />
-                    {/* <input
-                        type="file"
-                        accept="application/json"
-                        onChange={handleUpload}
-                        style={{ marginLeft: '10px' }}
-                    /> */}
-                    {/* <button onClick={handleUpload}>📂</button> */}
                     <button onClick={() => setPanelVisible((prev) => !prev)}>
                         {panelVisible ? '📕' : '📖'}
                     </button>
@@ -202,6 +195,9 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "seed")} draggable>
                     Seed Phrase
+                </div>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "incrementDecrement")} draggable>
+                    Increment Decrement
                 </div>
             </div>
             {panelVisible && (

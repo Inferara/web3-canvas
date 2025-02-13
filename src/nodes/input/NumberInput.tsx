@@ -17,16 +17,15 @@ interface NumberInputNodeProps extends NodeProps {
 }
 
 const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
-    const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseInt(evt.target.value);
-        setNumber(newValue);
-        const newData = Utf8DataTransfer.encodeNumber(newValue);
-        updateNodeData(id, { ...data, out: newData });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    const { updateNodeData } = useReactFlow();
-    const [numberValue, setNumber] = useState<number>(data.out ? Utf8DataTransfer.decodeNumber(data.out?.[0]) : 5);
-
+  const { updateNodeData } = useReactFlow();
+  const [numberValue, setNumber] = useState<number>(data.out ? Utf8DataTransfer.decodeNumber(data.out?.[0]) : 5);
+  const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = parseInt(evt.target.value);
+      setNumber(newValue);
+      const newData = Utf8DataTransfer.encodeNumber(newValue);
+      updateNodeData(id, { ...data, out: newData });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <W3CNode id={id} label="Number Input" isGood={true}>

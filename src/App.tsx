@@ -43,6 +43,7 @@ import Compound from './nodes/utils/Compound';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
+import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
 
 const nodeTypes = {
   // cryptography
@@ -70,6 +71,7 @@ const nodeTypes = {
   substring: Substring,
   length: StrLengthNode,
   seed: SeedPhraseNode,
+  incrementDecrement: IncrementDecrementNode,
 };
 
 let id = 0;
