@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { NodeProps, Position, useNodeConnections, useNodesData, useReactFlow } from "@xyflow/react";
-import W3CNode from "../../W3CNode";
-import LabeledHandle from "../../LabeledHandle";
+import { NodeProps, useNodeConnections, useNodesData, useReactFlow } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 
-// A simple function to simulate generating an address from an input string.
-function generateAddress(input: string): string {
-    let hash = 0;
-    for (let i = 0; i < input.length; i++) {
-        hash = ((hash << 5) - hash) + input.charCodeAt(i);
-        hash |= 0; // Convert to 32bit integer
-    }
-    const hex = (hash >>> 0).toString(16).padStart(8, "0");
-    return "0x" + hex;
-}
 
 interface ActorNodeProps extends NodeProps {
     id: string;
@@ -30,7 +18,6 @@ const ActorNode: React.FC<ActorNodeProps> = ({ id, data }) => {
     const [actorName, setActorName] = useState<string>("actor");
     const [editable, setEditable] = useState<boolean>(true);
     const [balance, setBalance] = useState<number>(100);
-    const address = generateAddress(actorName);
 
     const inputConnections = useNodeConnections({ handleType: 'target' });
     const nodeData = useNodesData(inputConnections[0]?.source);
