@@ -187,6 +187,9 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                     Compound
                 </div>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "group")} draggable>
+                    Group
+                </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "substring")} draggable>
                     Substring
                 </div>
@@ -198,6 +201,15 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "incrementDecrement")} draggable>
                     Increment Decrement
+                </div>
+
+                <div className='description'>Actors</div>
+                <hr />
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "actor")} draggable>
+                    Actor
+                </div>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "makeActorMessage")} draggable>
+                    Make Actor Message
                 </div>
             </div>
             {panelVisible && (

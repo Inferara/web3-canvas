@@ -12,38 +12,43 @@ import {
   useEdgesState,
   ReactFlowProvider,
   FinalConnectionState,
-  ReactFlowInstance
+  ReactFlowInstance,
+  MiniMap
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
-
+// cryptography
 import Decrypt from './nodes/cryptography/Decrypt';
 import Encrypt from './nodes/cryptography/Encrypt';
 import Hash from './nodes/cryptography/Hash';
 import KeyPairNode from './nodes/cryptography/KeyPair';
 import SignMessageNode from './nodes/cryptography/SignMessage';
 import VerifySignatureNode from './nodes/cryptography/VerifySignature';
-
+// input
 import TextInputNode from './nodes/input/TextInput';
 import NumberInputNode from './nodes/input/NumberInput';
 import FileInputNode from './nodes/input/FileInput';
-
+// view
 import TextViewNode from './nodes/view/TextView';
 import QRCode from './nodes/view/QRCode';
 import ColorViewNode from './nodes/view/ColorView';
-
+// web3
 import EthBalanceNode from './nodes/web3/Balance';
 import EthToUsdNode from './nodes/web3/EthToUsd';
 import MakeTransactionNode from './nodes/web3/MakeTransaction';
 import BroadcastTransactionNode from './nodes/web3/BroadcastTransaction';
-
+// utils
 import Compound from './nodes/utils/Compound';
+import Group from './nodes/utils/Group';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
 import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
+// actors
+import ActorNode from './nodes/actors/Actor';
+import MakeActorMessage from './nodes/actors/MakeActorMessage';
 
 const nodeTypes = {
   // cryptography
@@ -68,10 +73,14 @@ const nodeTypes = {
   broadcastTrascation: BroadcastTransactionNode,
   // utils
   compound: Compound,
+  group: Group,
   substring: Substring,
   length: StrLengthNode,
   seed: SeedPhraseNode,
   incrementDecrement: IncrementDecrementNode,
+  // actors
+  actor: ActorNode,
+  makeActorMessage: MakeActorMessage,
 };
 
 let id = 0;
@@ -161,7 +170,7 @@ const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { getIntersectingNodes, screenToFlowPosition } = useReactFlow();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
   const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
@@ -239,6 +248,42 @@ const W3CFlow: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition, setNodes, type]
   );
+
+  //FIXME: I should be able to drop a group after other nodes and then drop nodes inside the group
+  // probably need to reorder the nodes array if on drop a group is dropped
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+  const onNodeDragStop = (_event: any, draggedNode: Node, _draggedNodes: Node[]) => {
+    let computedAbsolutePos = draggedNode.position;
+    if (draggedNode.parentId) {
+      // If the node is inside a group, add the parent's absolute position
+      const parent = nodes.find((n) => n.id === draggedNode.parentId);
+      if (parent) {
+        computedAbsolutePos = {
+          x: parent.position.x + draggedNode.position.x,
+          y: parent.position.y + draggedNode.position.y,
+        };
+      }
+    } else if (draggedNode.positionAbsolute) {
+      computedAbsolutePos = draggedNode.positionAbsolute;
+    }
+    const intersections: Node[] = getIntersectingNodes(draggedNode).filter((n) => n.type === 'group');
+    if (intersections.length > 0) {
+      for (let i = 0; i < intersections.length; i++) {
+        const targetGroup = intersections[i];
+        draggedNode.parentId = targetGroup.id;
+        draggedNode.position = {
+          x: computedAbsolutePos.x - targetGroup.position.x,
+          y: computedAbsolutePos.y - targetGroup.position.y,
+        };
+      }
+    } else {
+      draggedNode.parentId = undefined;
+      draggedNode.position = computedAbsolutePos;
+    }
+    setNodes((nds) => nds.map((n) => (n.id === draggedNode.id ? draggedNode : n)));
+    pushSnapshot();
+  };
+
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -327,10 +372,11 @@ const W3CFlow: React.FC = () => {
           onDragOver={onDragOver}
           onChange={pushSnapshot}
           onInit={setRfInstance}
-          onNodeDragStop={pushSnapshot}
+          onNodeDragStop={onNodeDragStop}
           fitView
           style={{ backgroundColor: "#F7F9FB" }}
         >
+          <MiniMap />
           <Controls />
           <Background />
         </ReactFlow>
