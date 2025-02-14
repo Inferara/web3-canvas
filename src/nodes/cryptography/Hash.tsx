@@ -6,7 +6,7 @@ import {
   useNodesData,
   useReactFlow,
 } from '@xyflow/react';
-import { ethers } from 'ethers';
+import { keccak256, toUtf8Bytes } from 'ethers';
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from './KeyPair';
@@ -35,9 +35,7 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     } else {
       hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: TS2339
-    computedHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashInput));
+    computedHash = keccak256(toUtf8Bytes(hashInput));
   }
   useEffect(() => {
     const newOut = Utf8DataTransfer.encodeString(computedHash);

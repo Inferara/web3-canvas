@@ -4,7 +4,7 @@ import {
   Position,
   useReactFlow,
 } from "@xyflow/react";
-import { ethers } from "ethers";
+import { keccak256, toUtf8Bytes } from "ethers";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
@@ -29,9 +29,7 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
       const base64 = reader.result?.toString();
       if (base64) {
         setFileSize(base64.length);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore: TS2339
-        const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(base64 as string));
+        const hash = keccak256(toUtf8Bytes(base64 as string));
         const dataOut = Utf8DataTransfer.encodeString(hash);
         updateNodeData(id, { ...data, out: dataOut });
       }

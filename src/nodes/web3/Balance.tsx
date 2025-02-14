@@ -6,7 +6,7 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import { ethers } from "ethers";
+import { JsonRpcProvider, formatEther } from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
@@ -51,15 +51,9 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     async function fetchBalance() {
         if (address && providerUrl) {
             try {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore: TS2339
-                const provider = new ethers.providers.JsonRpcProvider(providerUrl);
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore: TS2339
+                const provider = new JsonRpcProvider(providerUrl);
                 const balanceWei = await provider.getBalance(address);
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore: TS2339
-                const balanceEther = ethers.utils.formatEther(balanceWei);
+                const balanceEther = formatEther(balanceWei);
                 setBalance(balanceEther);
                 updateNodeData(id, {
                     out: Utf8DataTransfer.encodeString(balanceEther),

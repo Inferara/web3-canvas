@@ -6,7 +6,7 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import { ethers } from "ethers";
+import { JsonRpcProvider, Wallet, TransactionRequest, parseEther, hexlify, parseUnits }  from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
@@ -51,29 +51,15 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
         async function createSignedTransaction() {
             if (privateKey && fromAddress && toAddress && !isNaN(amount)) {
                 try {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore: TS2339
-                    const provider = new ethers.providers.JsonRpcProvider("https://linea.drpc.org");
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore: TS2339
-                    const wallet = new ethers.Wallet(privateKey);
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore: TS2339
+                    const provider = new JsonRpcProvider("https://linea.drpc.org");
+                    const wallet = new Wallet(privateKey);
                     const nonce = await provider.getTransactionCount(wallet.address);
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore: TS2339
-                    const transaction: ethers.providers.TransactionRequest = {
+                    const transaction: TransactionRequest = {
                         from: fromAddress,
                         to: toAddress,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore: TS2339
-                        value: ethers.utils.parseEther(amtStr),
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore: TS2339
-                        gasLimit: ethers.utils.hexlify(21000),
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore: TS2339
-                        gasPrice: ethers.utils.parseUnits(gasPriceStr, 'gwei'),
+                        value: parseEther(amtStr),
+                        gasLimit: hexlify("201000"),
+                        gasPrice: parseUnits(gasPriceStr, 'gwei'),
                         nonce: nonce,
                         chainId: 59144,  // Linea
                     };

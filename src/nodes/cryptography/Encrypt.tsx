@@ -6,7 +6,7 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import EthCrypto from "eth-crypto";
+import { encrypt, PublicKey } from "eciesjs";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 import LabeledHandle from "../../LabeledHandle";
@@ -48,23 +48,12 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
 
     const [ciphertext, setCiphertext] = useState<string>("");
 
-    async function encrypt() {
-        if (!message || !publicKey) {
-            updateNodeData(id, { out: Utf8DataTransfer.encodeString("") });
-            return;
-        }
-        try {
-            const encrypted = await EthCrypto.encryptWithPublicKey(publicKey.substring(2), message);
-            const strEncrypted = EthCrypto.cipher.stringify(encrypted);
-            setCiphertext(strEncrypted);
-            updateNodeData(id, { out: Utf8DataTransfer.encodeString(strEncrypted) });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
-        encrypt();
+        if (!message || !publicKey) return;
+        const encrypted = encrypt(PublicKey.fromHex(publicKey).toBytes(), Buffer.from(message, 'utf-8'));
+        const strEncrypted = encrypted.toString('hex');
+        setCiphertext(strEncrypted);
+        updateNodeData(id, { out: Utf8DataTransfer.encodeString(strEncrypted) });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message, publicKey]);
 

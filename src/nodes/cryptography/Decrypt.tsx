@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import EthCrypto from "eth-crypto";
+import { PrivateKey, decrypt  } from "eciesjs";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 import LabeledHandle from "../../LabeledHandle";
@@ -51,10 +51,12 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
     const decryptData = async () => {
       if (ciphertext && privateKey) {
         try {
-          const plain = await EthCrypto.decryptWithPrivateKey(privateKey, EthCrypto.cipher.parse(ciphertext));
+          let sk = PrivateKey.fromHex(privateKey);
+          let plain = decrypt(sk.secret, Buffer.from(ciphertext, 'hex'));
           if (plain) {
-            setPlaintext(plain);
-            updateNodeData(id, { out: Utf8DataTransfer.encodeString(plain) });
+            let plainStr = Buffer.from(plain).toString();
+            setPlaintext(plainStr);
+            updateNodeData(id, { out: Utf8DataTransfer.encodeString(plainStr) });
           } else {
             setPlaintext("Decryption failed");
             updateNodeData(id, {
@@ -63,8 +65,8 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
           }
         } catch (error) {
           console.error("Decryption error:", error);
-          setPlaintext("Error");
-          updateNodeData(id, { out: Utf8DataTransfer.encodeString("Error") });
+          setPlaintext("");
+          updateNodeData(id, { out: Utf8DataTransfer.encodeString("") });
         }
       } else {
         setPlaintext("");

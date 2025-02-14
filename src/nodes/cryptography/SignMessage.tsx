@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { ethers } from 'ethers';
+import { Wallet } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "./KeyPair";
 import W3CNode from "../../W3CNode";
@@ -35,7 +35,7 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
     const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
     const privateKey = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string);
-    const wallet = new ethers.Wallet(privateKey);
+    const wallet = new Wallet(privateKey);
     wallet.signMessage(message).then((signResult) => {
       if (signResult !== signature) setSignature(signResult);
     });

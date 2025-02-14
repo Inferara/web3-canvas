@@ -5,7 +5,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { ethers } from 'ethers';
+import { verifyMessage } from 'ethers';
 import { KeyPairNodeProps } from "./KeyPair";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
@@ -46,9 +46,7 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id }) => {
     }
     if (messageInput && signatureInput && addressInput) {
       try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore: TS2339
-        const recoveredAddress = ethers.utils.verifyMessage(messageInput, signatureInput);
+        const recoveredAddress = verifyMessage(messageInput, signatureInput);
         const isValid = recoveredAddress.toLowerCase() === addressInput.toLowerCase();
         verification = isValid ? "✅" : "❌";
       } catch (err) {

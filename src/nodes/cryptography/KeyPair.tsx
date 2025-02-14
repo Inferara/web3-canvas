@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { ethers } from 'ethers';
+import { computeAddress, SigningKey } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
@@ -34,12 +34,8 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
   const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: TS2339
-  const publicKey = privateKey ? ethers.utils.computePublicKey(privateKey, false) : "";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: TS2339
-  const address = publicKey ? ethers.utils.computeAddress(publicKey) : "";
+  const publicKey = privateKey ? new SigningKey(privateKey).publicKey : "";
+  const address = publicKey ? computeAddress(publicKey) : "";
 
   useEffect(() => {
     const pkOut = Utf8DataTransfer.encodeString(privateKey);

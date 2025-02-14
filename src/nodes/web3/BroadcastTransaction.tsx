@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { ethers } from 'ethers';
+import { JsonRpcProvider } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
 import W3CNode from "../../W3CNode";
@@ -48,15 +48,13 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
     }
     try {
       setBroadcasting(true);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore: TS2339
-      const provider = new ethers.providers.JsonRpcProvider(providerUrl);
-      const txResponse = await provider.sendTransaction(signedTx);
+      const provider = new JsonRpcProvider(providerUrl);
+      const txResponse = await provider.broadcastTransaction(signedTx);
       setTxHash(txResponse.hash);
       updateNodeData(id, { out: Utf8DataTransfer.encodeString(txResponse.hash) });
       const receipt = await txResponse.wait();
-      setTxHash("In block " + receipt.blockNumber);
-      updateNodeData(id, { out: Utf8DataTransfer.encodeString(receipt.blockHash) });
+      setTxHash("In block " + receipt?.blockNumber);
+      updateNodeData(id, { out: Utf8DataTransfer.encodeString(receipt?.blockHash as string) });
     } catch (error) {
       console.error("Broadcasting failed:", error);
       setTxHash("Error");
