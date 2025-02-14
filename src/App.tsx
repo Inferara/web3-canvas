@@ -263,8 +263,6 @@ const W3CFlow: React.FC = () => {
           y: parent.position.y + draggedNode.position.y,
         };
       }
-    } else if (draggedNode.positionAbsolute) {
-      computedAbsolutePos = draggedNode.positionAbsolute;
     }
     const intersections: Node[] = getIntersectingNodes(draggedNode).filter((n) => n.type === 'group');
     if (intersections.length > 0) {
