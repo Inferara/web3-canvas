@@ -29,6 +29,7 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
       const base64 = reader.result?.toString();
       if (base64) {
         setFileSize(base64.length);
+        setFileName(file.name);
         const hash = keccak256(toUtf8Bytes(base64 as string));
         const dataOut = Utf8DataTransfer.encodeString(hash);
         updateNodeData(id, { ...data, out: dataOut });
@@ -38,6 +39,7 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   };
   const { updateNodeData } = useReactFlow();
   const [fileSize, setFileSize] = useState<number>(0);
+  const [fileName, setFileName] = useState<string>("");
 
   return (
     <W3CNode id={id} label="File Input" isGood={fileSize > 0}>
@@ -49,8 +51,8 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
         onChange={handleFileChange}
         className="nodrag"
       />
-      <div>File size: {fileSize}</div>
-      <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+      <div>{fileName}: {fileSize} bytes</div>
+      <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
     </W3CNode>
   );
 };

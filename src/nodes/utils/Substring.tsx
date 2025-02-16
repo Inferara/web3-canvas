@@ -10,6 +10,8 @@ import {
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 interface SubstringNodeProps extends NodeProps {
   id: string;
@@ -23,13 +25,13 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const [startPos, setStartPos] = useState<number>(0);
   const [endPos, setEndPos] = useState<number>(0);
-  
+
   const inputConnections = useNodeConnections({ handleType: 'target' });
   const nodeData = useNodesData(inputConnections[0]?.source);
   let inputStr = "";
   if (nodeData) {
     if (nodeData?.type === "keypair") {
-      inputStr = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
+      inputStr = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[0]?.sourceHandle as string);
     } else {
       inputStr = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
@@ -60,31 +62,35 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
 
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-      <div>Substring Node</div>
+    <W3CNode id={id} label="Substring" isGood={inputConnections.length > 0}>
+      <div style={{ width: 100, display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}>
+        <label>Start: </label>
+        <input
+          type="number"
+          min={0}
+          value={startPos}
+          onChange={onStartPosChange}
+          className="nodrag"
+          id="start"
+          style={{ width: "70%" }}
+        />
+      </div>
+      <div style={{ width: 100, display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}>
+        <label>End: </label>
+        <input
+          type="number"
+          value={endPos}
+          max={inputStr ? inputStr.length : 0}
+          onChange={onEndPosChange}
+          className="nodrag"
+          id="end"
+          style={{ width: "70%" }}
+        />
+      </div>
 
-      <input
-        type="number"
-        min={0}
-        value={startPos}
-        onChange={onStartPosChange}
-        className="nodrag"
-        id="start"
-      />
-
-      <input
-        type="number"
-        value={endPos}
-        max={inputStr ? inputStr.length : 0}
-        onChange={onEndPosChange}
-        className="nodrag"
-        id="end"
-      />
-
-      {/* One input handle (target), one output handle (source) */}
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+      <LabeledHandle label="str" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
+      <LabeledHandle label="substr" type="source" position={Position.Right} id="output" />
+    </W3CNode>
   );
 };
 

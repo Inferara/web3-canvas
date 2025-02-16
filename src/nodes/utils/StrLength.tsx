@@ -10,6 +10,8 @@ import {
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
+import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../LabeledHandle";
 
 
 interface StrLengthNodeProps extends NodeProps {
@@ -41,12 +43,11 @@ const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id }) => {
 
 
   return (
-    <div style={{ padding: 8, border: "1px solid #ccc", minWidth: 150 }}>
-      <div>{lengthValue || "No input connected"}</div>
-      {/* Single handle to accept input; no output since it's just displaying a value */}
-      <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
-      <Handle type="source" position={Position.Right} id="output" />
-    </div>
+    <W3CNode id={id} label="Length" isGood={inputConnections.length > 0}>
+      <div>{lengthValue || "..."}</div>
+      <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
+      <LabeledHandle label="len" type="source" position={Position.Right} id="output" />
+    </W3CNode>
   );
 };
 

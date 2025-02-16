@@ -9,9 +9,11 @@ interface W3CNodeProps {
     style?: React.CSSProperties;
     isGood?: boolean;
     children?: React.ReactNode;
+    minWidth?: number;
+    minHeight?: number;
 }
 
-const W3CNode: React.FC<W3CNodeProps> = ({ id, label, style = {} ,isRezieable = false, isGood = false, children }) => {
+const W3CNode: React.FC<W3CNodeProps> = ({ id, label, style = {} ,isRezieable = false, isGood = false, children, minWidth = 250, minHeight=100 }) => {
     const headerStyle = isGood ? "w3cflownodeheader good" : "w3cflownodeheader";
     const popUpId = "popup-" + id;
     function togglePopup() {
@@ -21,7 +23,7 @@ const W3CNode: React.FC<W3CNodeProps> = ({ id, label, style = {} ,isRezieable = 
     return (
         <div style={{ ...style, width: "100%", height: "100%" }}>
             {isRezieable && (
-                <NodeResizeControl minWidth={250} minHeight={100}>
+                <NodeResizeControl minWidth={minWidth} minHeight={minHeight}>
                     <ResizeIcon />
                 </NodeResizeControl>
             )}

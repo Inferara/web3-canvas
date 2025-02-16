@@ -26,7 +26,7 @@ const QrCodeNode: React.FC<QrCodeNodeProps> = ({id}) => {
   const qrValue = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
 
   return (
-    <W3CNode id={id} label="QR Code" isRezieable={true} isGood={qrValue.length > 0}>
+    <W3CNode id={id} label="QR Code" isRezieable={true} isGood={qrValue.length > 0} minWidth={300} minHeight={150} >
       {qrValue ? (
         <QRCode value={qrValue} size={128} />
       ) : (

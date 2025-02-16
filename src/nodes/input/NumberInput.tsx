@@ -29,15 +29,15 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
 
   return (
     <W3CNode id={id} label="Number Input" isGood={true}>
-      <div>Number Input Node</div>
       <input
         type="number"
         value={numberValue}
         onChange={onChange}
         className="nodrag"
+        style={{ width: 100 }}
       />
       {/* Source handle so other nodes can consume this numeric output */}
-      <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+      <LabeledHandle label="out" type="source" position={Position.Right} id="output" />
     </W3CNode>
   );
 };

@@ -33,10 +33,10 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({id}) => {
   }
 
   return (
-    <W3CNode id={id} label="Text" isRezieable={true} isGood={text.length > 0}>
+    <W3CNode id={id} label="View" isRezieable={true} isGood={text.length > 0} minHeight={130}>
       <textarea value={text || "..."} readOnly={true}/>
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
-      <button onClick={() => {navigator.clipboard.writeText(text)}}>Copy</button>
+      <button onClick={() => {navigator.clipboard.writeText(text)}}>📋</button>
     </W3CNode>
   );
 };

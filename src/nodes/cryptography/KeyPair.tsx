@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { computeAddress, SigningKey } from 'ethers';
+import { computeAddress, keccak256, SigningKey, Wallet } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
@@ -33,9 +33,15 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   // Detect output connections (which nodes are connected to which handles)
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
-  const privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
-  const publicKey = privateKey ? new SigningKey(privateKey).publicKey : "";
-  const address = publicKey ? computeAddress(publicKey) : "";
+  let privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
+  if (privateKey && !privateKey.startsWith("0x")) {
+    const encoder = new TextEncoder();
+    privateKey = keccak256(encoder.encode(privateKey));
+  }
+  const wallet = privateKey ? new Wallet(privateKey) : undefined;
+  const signingKey = privateKey ? new SigningKey(privateKey) : undefined;
+  const publicKey = signingKey ? signingKey.publicKey : "";
+  const address = signingKey ? computeAddress(signingKey.publicKey) : "";
 
   useEffect(() => {
     const pkOut = Utf8DataTransfer.encodeString(privateKey);
@@ -49,6 +55,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
     <W3CNode id={id} label="KeyPair" isGood={publicKey.length > 0} style={{ width: 300 }}>
       <div>{publicKey.substring(0, 20) + "..." || "..."}</div>
       <div>{address.substring(0, 20) + "..." || "..."}</div>
+      {/* {inputConnections.length === 0 && <div><button onClick={generateKeyPair}>Generate</button></div>} */}
 
       <LabeledHandle
         label="in"

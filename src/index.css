@@ -134,6 +134,7 @@ body {
 
 .w3cflow aside {
   border-right: 1px solid #eee;
+  overflow-y: scroll;
   padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
