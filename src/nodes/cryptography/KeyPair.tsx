@@ -6,7 +6,7 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { computeAddress, keccak256, SigningKey, Wallet } from 'ethers';
+import { computeAddress, keccak256, SigningKey } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
@@ -38,7 +38,6 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
     const encoder = new TextEncoder();
     privateKey = keccak256(encoder.encode(privateKey));
   }
-  const wallet = privateKey ? new Wallet(privateKey) : undefined;
   const signingKey = privateKey ? new SigningKey(privateKey) : undefined;
   const publicKey = signingKey ? signingKey.publicKey : "";
   const address = signingKey ? computeAddress(signingKey.publicKey) : "";

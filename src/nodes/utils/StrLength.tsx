@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {
   NodeProps,
-  Handle,
   Position,
   useReactFlow,
   useNodeConnections,
