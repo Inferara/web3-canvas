@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import ReactGA from "react-ga4";
 import {
   ReactFlow,
   Controls,
@@ -49,6 +50,8 @@ import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
 // actors
 import ActorNode from './nodes/actors/Actor';
 import MakeActorMessage from './nodes/actors/MakeActorMessage';
+
+ReactGA.initialize("G-QPYSF5N8BL");
 
 const nodeTypes = {
   // cryptography
