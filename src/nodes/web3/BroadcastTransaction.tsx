@@ -33,7 +33,7 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
   // Decode the provider URL and signed transaction.
   const providerUrl = providerNodeData
     ? Utf8DataTransfer.decodeString(providerNodeData.data.out as string)
-    : "";
+    : "https://linea.drpc.org";
   const signedTx = txNodeData
     ? Utf8DataTransfer.decodeString(txNodeData.data.out as string)
     : "";
@@ -42,8 +42,8 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
   const [broadcasting, setBroadcasting] = useState<boolean>(false);
 
   const handleBroadcast = async () => {
-    if (!providerUrl || !signedTx) {
-      console.warn("Provider URL or signed transaction is missing.");
+    if (!signedTx) {
+      console.warn("Signed transaction is missing.");
       return;
     }
     try {

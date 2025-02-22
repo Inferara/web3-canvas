@@ -58,7 +58,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
                         from: fromAddress,
                         to: toAddress,
                         value: parseEther(amtStr),
-                        gasLimit: hexlify("201000"),
+                        gasLimit: "21000",
                         gasPrice: parseUnits(gasPriceStr, 'gwei'),
                         nonce: nonce,
                         chainId: 59144,  // Linea
@@ -79,7 +79,7 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
         }
         createSignedTransaction();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [privateKey, fromAddress, toAddress, amtStr]);
+    }, [privateKey, fromAddress, toAddress, amtStr, gasPriceStr]);
 
     return (
         <W3CNode id={id} label="Make Transaction" isGood={signedTx !== "" && signedTx !== "Error"}>

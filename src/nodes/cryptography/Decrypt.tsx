@@ -46,6 +46,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
     : "";
 
   const [plaintext, setPlaintext] = useState<string>("");
+  const [decrypted, setDecrypted] = useState<boolean>(false);
 
   useEffect(() => {
     const decryptData = async () => {
@@ -56,16 +57,18 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
           if (plain) {
             let plainStr = Buffer.from(plain).toString();
             setPlaintext(plainStr);
+            setDecrypted(true);
             updateNodeData(id, { out: Utf8DataTransfer.encodeString(plainStr) });
           } else {
             setPlaintext("Decryption failed");
+            setDecrypted(false);
             updateNodeData(id, {
               out: Utf8DataTransfer.encodeString("Decryption failed"),
             });
           }
         } catch (error) {
           console.error("Decryption error:", error);
-          setPlaintext("");
+          setDecrypted(false);
           updateNodeData(id, { out: Utf8DataTransfer.encodeString("") });
         }
       } else {
@@ -79,7 +82,7 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
   }, [ciphertext, privateKey]);
 
   return (
-    <W3CNode id={id} label="Decrypt" isGood={plaintext.length > 0}>
+    <W3CNode id={id} label="Decrypt" isGood={decrypted}>
       <div>{plaintext.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle
         type="target"

@@ -35,10 +35,14 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
     const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
     const privateKey = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string);
+    if (privateKey) {
     const wallet = new Wallet(privateKey);
-    wallet.signMessage(message).then((signResult) => {
-      if (signResult !== signature) setSignature(signResult);
-    });
+      wallet.signMessage(message).then((signResult) => {
+        if (signResult !== signature) setSignature(signResult);
+      });
+    } else if (signature) {
+      setSignature("");
+    }
   }
 
   useEffect(() => {
