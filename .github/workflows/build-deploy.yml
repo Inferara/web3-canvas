@@ -45,4 +45,4 @@ jobs:
             docker rm w3c || true
             # Run the container (adjust ports as needed)
             sudo fuser -k 3000/tcp || true
-            docker run -d --restart=unless-stopped -p 3000:80 w3c:latest
+            docker run -d --restart=unless-stopped -p 3000:80 w3c:latest --name w3c
