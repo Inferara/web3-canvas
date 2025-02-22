@@ -6,7 +6,7 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import { JsonRpcProvider, Wallet, TransactionRequest, parseEther, hexlify, parseUnits }  from "ethers";
+import { JsonRpcProvider, Wallet, TransactionRequest, parseEther, parseUnits }  from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from "../cryptography/KeyPair";
