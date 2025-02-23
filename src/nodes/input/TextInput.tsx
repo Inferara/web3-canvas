@@ -34,7 +34,7 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({id, data}) => {
     const [isFocused, setIsFocused] = useState(false);
 
     return (
-      <W3CNode id={id} label={headerLabel} isGood={text.length > 0} isRezieable={true}>
+      <W3CNode id={id} label={headerLabel} isGood={text.length > 0} isResizeable={true}>
           <textarea
             value={text}
             onChange={onChange}

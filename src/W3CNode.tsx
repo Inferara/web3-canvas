@@ -5,7 +5,7 @@ import {ResizeIcon} from './ResizeIcon';
 interface W3CNodeProps {
     id: string;
     label: string;
-    isRezieable?: boolean;
+    isResizeable?: boolean;
     style?: React.CSSProperties;
     isGood?: boolean;
     children?: React.ReactNode;
@@ -17,7 +17,7 @@ const W3CNode: React.FC<W3CNodeProps> = ({
                                              id,
                                              label,
                                              style = {},
-                                             isRezieable = false,
+                                             isResizeable = false,
                                              isGood = false,
                                              children,
                                              minWidth = 250,
@@ -49,7 +49,7 @@ const W3CNode: React.FC<W3CNodeProps> = ({
 
     return (
       <div style={{...style, width: '100%', height: '100%'}}>
-          {isRezieable && (
+          {isResizeable && (
             <NodeResizeControl minWidth={minWidth} minHeight={minHeight}>
                 <ResizeIcon/>
             </NodeResizeControl>

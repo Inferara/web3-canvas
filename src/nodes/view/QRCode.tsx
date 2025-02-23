@@ -32,7 +32,7 @@ const QrCodeNode: React.FC<QrCodeNodeProps> = ({id, data}) => {
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label={headerLabel} isRezieable={true} isGood={qrValue.length > 0} minWidth={300} minHeight={150} >
+    <W3CNode id={id} label={headerLabel} isResizeable={true} isGood={qrValue.length > 0} minWidth={300} minHeight={150} >
       {qrValue ? (
         <QRCode value={qrValue} size={128} />
       ) : (
