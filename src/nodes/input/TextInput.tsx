@@ -30,12 +30,18 @@ const TextInputNode: React.FC<TextInputNodeProps> = ({id, data}) => {
     // If data.label is empty (or null), use the default.
     const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
+    // Track whether the textarea is focused
+    const [isFocused, setIsFocused] = useState(false);
+
     return (
       <W3CNode id={id} label={headerLabel} isGood={text.length > 0} isRezieable={true}>
           <textarea
             value={text}
             onChange={onChange}
             className="nodrag"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            spellCheck={isFocused}
           />
           <LabeledHandle label="out" type="source" position={Position.Right} id="output"/>
       </W3CNode>
