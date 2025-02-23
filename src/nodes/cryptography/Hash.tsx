@@ -21,6 +21,10 @@ interface HashNodeProps extends NodeProps {
   };
 }
 
+const isHexEncoded = (str: string): boolean => {
+  return /^0x[0-9a-fA-F]+$/.test(str);
+};
+
 const Hash: React.FC<HashNodeProps> = ({ id }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({
@@ -35,7 +39,7 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
     } else {
       hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
-    computedHash = hashInput.startsWith("0x") ? keccak256(hashInput) : keccak256(toUtf8Bytes(hashInput));
+    computedHash = isHexEncoded(hashInput) ? keccak256(hashInput) : keccak256(toUtf8Bytes(hashInput));
   }
   useEffect(() => {
     const newOut = Utf8DataTransfer.encodeString(computedHash);
