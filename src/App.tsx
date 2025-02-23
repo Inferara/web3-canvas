@@ -334,7 +334,7 @@ const W3CFlow: React.FC = () => {
         return;
       }
 
-      if (e.key === 'Delete') {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
         if (!rfInstance) return;
 
@@ -368,8 +368,8 @@ const W3CFlow: React.FC = () => {
         redo();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [rfInstance, setNodes, setEdges, undo, redo]);
 
 
