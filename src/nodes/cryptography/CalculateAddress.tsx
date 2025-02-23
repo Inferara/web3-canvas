@@ -17,10 +17,13 @@ interface CalculateAddressNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string;
+    label?: string;
   };
 }
 
-const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Calculate Address";
+
+const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({
     handleType: 'target',
@@ -42,8 +45,11 @@ const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computedAddress]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="Calculate Address" isGood={computedAddress.length === 2 + 40}>
+    <W3CNode id={id} label={headerLabel} isGood={computedAddress.length === 2 + 40}>
       <div>{computedAddress.substring(0, 25) + "..." || "..."}</div>
       <div>{computedAddress ? ("Address length: " + computedAddress.length) : ""}</div>
       {/* Single target handle that can accept multiple connections */}

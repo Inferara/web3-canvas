@@ -9,8 +9,11 @@ interface IncrementDecrementNodeProps extends NodeProps {
     data: {
         in?: string;   // Expected numeric value as a string
         out?: string;  // The resulting value as a string
+        label?: string;
     };
 }
+
+const DEFAULT_LABEL = "In[de]crement";
 
 const IncrementDecrementNode: React.FC<IncrementDecrementNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
@@ -33,8 +36,11 @@ const IncrementDecrementNode: React.FC<IncrementDecrementNodeProps> = ({ id, dat
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputNumber, step, inc]);
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-        <W3CNode id={id} label="In[de]crement" isGood={inputConnections.length > 0}>
+        <W3CNode id={id} label={headerLabel} isGood={inputConnections.length > 0}>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "4px" }}>
                 <div>
                     <label>

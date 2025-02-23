@@ -13,8 +13,11 @@ interface NumberInputNodeProps extends NodeProps {
   data: {
     in?: string;   // Not used here, but present for consistency
     out?: string;  // We'll store the numeric value as a string in out
+    label?: string;
   };
 }
+
+const DEFAULT_LABEL = "Number Input";
 
 const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
@@ -27,8 +30,11 @@ const NumberInputNode: React.FC<NumberInputNodeProps> = ({ id, data }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="Number Input" isGood={true}>
+    <W3CNode id={id} label={headerLabel} isGood={true}>
       <input
         type="number"
         value={numberValue}

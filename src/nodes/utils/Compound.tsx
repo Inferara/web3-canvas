@@ -16,10 +16,13 @@ interface CompoundNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string;
+    label?: string;
   };
 }
 
-const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Compound";
+
+const Compound: React.FC<CompoundNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: 'target' });
   let combinedData = "";
@@ -43,8 +46,11 @@ const Compound: React.FC<CompoundNodeProps> = ({ id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combinedData]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode label="Compound" id={id} isGood={combinedData.length > 0}>
+    <W3CNode label={headerLabel} id={id} isGood={combinedData.length > 0}>
       <div>{combinedData.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle label="in" type="target" position={Position.Left} id="input" />
       <LabeledHandle label="out" type="source" position={Position.Right} id="output" />

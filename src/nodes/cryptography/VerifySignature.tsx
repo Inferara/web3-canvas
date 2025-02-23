@@ -16,10 +16,13 @@ interface VerifySignatureNodeProps extends NodeProps {
   data: {
     in?: object,
     out?: string;
+    label?: string;
   };
 }
 
-const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Verify Signature";
+
+const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id, data }) => {
   const inputConnections = useNodeConnections({ handleType: 'target' });
   let messageInput = "";
   let signatureInput = "";
@@ -61,8 +64,11 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id }) => {
     }
   }
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="Verify Signature" isGood={verification === "✅"}>
+    <W3CNode id={id} label={headerLabel} isGood={verification === "✅"}>
       <div>{verification}</div>
       {/* Three target handles: message, signature, address */}
       <LabeledHandle label="message" type="target" position={Position.Left} id="msg" style={{ top: "50%" }} isConnectable={inputConnections.filter((conn) => conn.targetHandle === "msg").length === 0} />

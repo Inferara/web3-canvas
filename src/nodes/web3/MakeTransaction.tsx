@@ -17,10 +17,13 @@ interface MakeTransactionNodeProps extends NodeProps {
     data: {
         in?: object;
         out?: string;
+        label?: string;
     };
 }
 
-const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Make Transaction";
+
+const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
     const inputConnections = useNodeConnections({ handleType: "target" });
 
@@ -81,8 +84,11 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [privateKey, fromAddress, toAddress, amtStr, gasPriceStr]);
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-        <W3CNode id={id} label="Make Transaction" isGood={signedTx !== "" && signedTx !== "Error"}>
+        <W3CNode id={id} label={headerLabel} isGood={signedTx !== "" && signedTx !== "Error"}>
             <div>{signedTx.substring(0, 10) + "..." || "..."}</div>
 
             <LabeledHandle

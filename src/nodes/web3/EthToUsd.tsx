@@ -15,10 +15,13 @@ interface EthToUsdNodeProps extends NodeProps {
   data: {
     in?: object;
     out?: string;
+    label?: string;
   };
 }
 
-const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "ETH to USD"
+
+const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   // Get all target connections for this node.
   const inputConnections = useNodeConnections({ handleType: "target" });
@@ -78,8 +81,11 @@ const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethValue]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="ETH to USD" isGood={usdValue !== "Error" && !isNaN(Number(usdValue))}>
+    <W3CNode id={id} label={headerLabel} isGood={usdValue !== "Error" && !isNaN(Number(usdValue))}>
       <div>{usdValue || "..."}</div>
       <LabeledHandle
         label="ETH"

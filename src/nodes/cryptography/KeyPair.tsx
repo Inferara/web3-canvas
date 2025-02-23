@@ -20,8 +20,11 @@ export interface KeyPairNodeProps extends NodeProps {
       privateKey?: string;
       address?: string;
     };
+    label?: string;
   };
 }
+
+const DEFAULT_LABEL = "KeyPair";
 
 const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
@@ -50,8 +53,11 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, outputConnections.length]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="KeyPair" isGood={publicKey.length > 0} style={{ width: 300 }}>
+    <W3CNode id={id} label={headerLabel} isGood={publicKey.length > 0} style={{ width: 300 }}>
       <div>{publicKey.substring(0, 20) + "..." || "..."}</div>
       <div>{address.substring(0, 20) + "..." || "..."}</div>
       {/* {inputConnections.length === 0 && <div><button onClick={generateKeyPair}>Generate</button></div>} */}

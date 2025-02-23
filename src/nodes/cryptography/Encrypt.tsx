@@ -17,10 +17,13 @@ interface EncryptNodeProps extends NodeProps {
     data: {
         in?: object;
         out?: string;
+        label?: string;
     };
 }
 
-const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Encrypt";
+
+const Encrypt: React.FC<EncryptNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
     // Retrieve input connections.
     const inputConnections = useNodeConnections({ handleType: "target" });
@@ -57,8 +60,11 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message, publicKey]);
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-        <W3CNode id={id} label="Encrypt" isGood={ciphertext.length > 0}>
+        <W3CNode id={id} label={headerLabel} isGood={ciphertext.length > 0}>
             <div>{ciphertext.substring(0, 25) + "..." || "..."}</div>
             <div>{ciphertext ? ("Chipertext length: " + ciphertext.length) : ""}</div>            
             <LabeledHandle

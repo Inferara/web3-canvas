@@ -16,10 +16,13 @@ interface EqualstNodeProps extends NodeProps {
     data: {
         in?: string;
         out?: string;
+        label?: string;
     };
 }
 
-const Equals: React.FC<EqualstNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Equals";
+
+const Equals: React.FC<EqualstNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
     const inputConnections = useNodeConnections({ handleType: "target" });
     const leftConnection = inputConnections.find(
@@ -47,9 +50,11 @@ const Equals: React.FC<EqualstNodeProps> = ({ id }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [res]);
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
     return (
-        <W3CNode id={id} label="Equals" isGood={res}>
+        <W3CNode id={id} label={headerLabel} isGood={res}>
             <div>{res ? "👍" : "👎"}</div>
             <LabeledHandle label="left" type="target" style={{ top: "50%" }} position={Position.Left} id="left" isConnectable={inputConnections.filter((conn) => conn.targetHandle === "left").length === 0} />
             <LabeledHandle label="right" type="target" style={{ top: "80%" }} position={Position.Left} id="right" isConnectable={inputConnections.filter((conn) => conn.targetHandle === "right").length === 0} />

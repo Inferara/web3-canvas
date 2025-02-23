@@ -16,10 +16,13 @@ interface BigIntNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string;
+    label?: string;
   };
 }
 
-const BigIntNode: React.FC<BigIntNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Big Int";
+
+const BigIntNode: React.FC<BigIntNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
     const inputConnections = useNodeConnections({ handleType: 'target' });
     let bigIntValue = "";
@@ -39,10 +42,12 @@ const BigIntNode: React.FC<BigIntNodeProps> = ({ id }) => {
       updateNodeData(id, { out: newOut });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bigIntValue]);
-  
-  
+
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-      <W3CNode id={id} label="Big Int" isGood={inputConnections.length > 0}>
+      <W3CNode id={id} label={headerLabel} isGood={inputConnections.length > 0}>
         <div>{bigIntValue.substring(0, 15) + "..." || "..."}</div>
         <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
         <LabeledHandle label="big int" type="source" position={Position.Right} id="output" />
