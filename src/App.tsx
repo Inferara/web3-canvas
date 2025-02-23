@@ -337,15 +337,27 @@ const W3CFlow: React.FC = () => {
       if (e.key === 'Delete') {
         e.preventDefault();
         if (!rfInstance) return;
-        const selectedNodes = rfInstance.getNodes().filter((node) => node.selected);
-        if (selectedNodes.length > 0) {
-          // Remove selected nodes.
-          const selectedIds = new Set(selectedNodes.map((node) => node.id));
-          setNodes((nds) => nds.filter((node) => !selectedIds.has(node.id)));
-          // Optionally, also remove connected edges.
-          setEdges((eds) =>
-            eds.filter((edge) => !selectedIds.has(edge.source) && !selectedIds.has(edge.target))
+
+        // Get selected nodes and selected edges
+        const selectedNodes = rfInstance.getNodes().filter(node => node.selected);
+        const selectedEdges = rfInstance.getEdges().filter(edge => edge.selected);
+
+        // If any nodes or edges are selected, proceed with deletion
+        if (selectedNodes.length > 0 || selectedEdges.length > 0) {
+          const selectedNodeIds = new Set(selectedNodes.map(node => node.id));
+
+          // Remove nodes that are selected
+          setNodes(nds => nds.filter(node => !selectedNodeIds.has(node.id)));
+
+          // Remove edges that are either selected directly or connected to a selected node
+          setEdges(eds =>
+            eds.filter(edge =>
+              !edge.selected &&
+              !selectedNodeIds.has(edge.source) &&
+              !selectedNodeIds.has(edge.target)
+            )
           );
+
           pushSnapshot();
         }
       } else if (e.ctrlKey && e.key === 'z') {
