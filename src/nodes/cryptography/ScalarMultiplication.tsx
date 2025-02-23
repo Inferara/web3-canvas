@@ -50,7 +50,7 @@ const ScalarMultiplication: React.FC<ScalarMultiplicationNodeProps> = ({ id }) =
     return (
         <W3CNode id={id} label="Scalar Multiplication" isGood={computedPoint !== undefined}>
             <div>X:{computedPoint?.x.toString(16).substring(0, 25) + "..." || "..."}</div>
-            <div>Y:{computedPoint?.x.toString(16).substring(0, 25) + "..." || "..."}</div>
+            <div>Y:{computedPoint?.y.toString(16).substring(0, 25) + "..." || "..."}</div>
             {/* Single target handle that can accept multiple connections */}
             <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
             {/* Source handle to expose the computed hash */}
