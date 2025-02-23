@@ -41,8 +41,5 @@ jobs:
             # Load the transferred image tarball
             gunzip -c ~/deploy/w3c.tar.gz | docker load
             # Optionally, stop and remove the current container
-            docker stop w3c || true
-            docker rm w3c || true
-            # Run the container (adjust ports as needed)
-            sudo fuser -k 3000/tcp || true
+            docker stop $(docker ps -a -q)
             docker run -d --restart=unless-stopped -p 3000:80 w3c:latest
