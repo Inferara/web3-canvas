@@ -40,7 +40,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   }
   const signingKey = privateKey ? new SigningKey(privateKey) : undefined;
   const publicKey = signingKey ? signingKey.publicKey : "";
-  const address = signingKey ? computeAddress(signingKey.publicKey) : "";
+  const address = signingKey ? computeAddress(signingKey) : "";
 
   useEffect(() => {
     const pkOut = Utf8DataTransfer.encodeString(privateKey);

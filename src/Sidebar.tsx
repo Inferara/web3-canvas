@@ -124,6 +124,9 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 </div>
                 <div className='description'>Cryptography</div>
                 <hr />
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "calculateAddress")} draggable>
+                    Calculate Address
+                </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
                     Encrypt
                 </div>
@@ -135,6 +138,9 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "keypair")} draggable>
                     Key Pair
+                </div>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "scalarMultiplication")} draggable>
+                    Scalar Multiplication
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "signMessage")} draggable>
                     Sign Message
@@ -184,8 +190,14 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
 
                 <div className='description'>Utils</div>
                 <hr />
+                <div className="w3cflownodeMenuItem" onDragStart={(event) => onDragStart(event, "bigint")} draggable>
+                    Big Int
+                </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "compound")} draggable>
                     Compound
+                </div>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "equals")} draggable>
+                    Equals
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "group")} draggable>
                     Group

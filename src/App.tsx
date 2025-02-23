@@ -21,10 +21,12 @@ import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 // cryptography
+import CalculateAddress from './nodes/cryptography/CalculateAddress';
 import Decrypt from './nodes/cryptography/Decrypt';
 import Encrypt from './nodes/cryptography/Encrypt';
 import Hash from './nodes/cryptography/Hash';
 import KeyPairNode from './nodes/cryptography/KeyPair';
+import ScalarMultiplication from './nodes/cryptography/ScalarMultiplication';
 import SignMessageNode from './nodes/cryptography/SignMessage';
 import VerifySignatureNode from './nodes/cryptography/VerifySignature';
 // input
@@ -41,7 +43,9 @@ import EthToUsdNode from './nodes/web3/EthToUsd';
 import MakeTransactionNode from './nodes/web3/MakeTransaction';
 import BroadcastTransactionNode from './nodes/web3/BroadcastTransaction';
 // utils
+import BigIntNode from './nodes/utils/BigInt';
 import Compound from './nodes/utils/Compound';
+import Equals from './nodes/utils/Equals';
 import Group from './nodes/utils/Group';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
@@ -53,12 +57,16 @@ import MakeActorMessage from './nodes/actors/MakeActorMessage';
 
 ReactGA.initialize("G-QPYSF5N8BL");
 
+
+
 const nodeTypes = {
   // cryptography
+  calculateAddress: CalculateAddress,
   encrypt: Encrypt,
   decrypt: Decrypt,
   hash: Hash,
   keypair: KeyPairNode,
+  scalarMultiplication: ScalarMultiplication,
   signMessage: SignMessageNode,
   verifySignature: VerifySignatureNode,
   // input
@@ -75,7 +83,9 @@ const nodeTypes = {
   makeTransaction: MakeTransactionNode,
   broadcastTrascation: BroadcastTransactionNode,
   // utils
+  bigint: BigIntNode,
   compound: Compound,
+  equals: Equals,
   group: Group,
   substring: Substring,
   length: StrLengthNode,

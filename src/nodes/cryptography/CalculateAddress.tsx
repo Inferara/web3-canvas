@@ -6,14 +6,13 @@ import {
   useNodesData,
   useReactFlow,
 } from '@xyflow/react';
-import { keccak256, toUtf8Bytes } from 'ethers';
-
+import { keccak256 } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import { KeyPairNodeProps } from './KeyPair';
 import LabeledHandle from '../../LabeledHandle';
 import W3CNode from '../../W3CNode';
 
-interface HashNodeProps extends NodeProps {
+interface CalculateAddressNodeProps extends NodeProps {
   id: string;
   data: {
     in?: string;
@@ -21,32 +20,32 @@ interface HashNodeProps extends NodeProps {
   };
 }
 
-const Hash: React.FC<HashNodeProps> = ({ id }) => {
+const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
   const nodeData = useNodesData(inputConnections[0]?.source);
-  let computedHash  = "";
+  let computedAddress  = "";
   if (nodeData) {
-    let hashInput = "";
+    let pubKeyInput = "";
     if (nodeData?.type === "keypair") {
-      hashInput = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
+      pubKeyInput = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
     } else {
-      hashInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
+      pubKeyInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
     }
-    computedHash = hashInput.startsWith("0x") ? keccak256(hashInput) : keccak256(toUtf8Bytes(hashInput));
+    computedAddress = keccak256("0x" + pubKeyInput.substring(4)).substring(26);
   }
   useEffect(() => {
-    const newOut = Utf8DataTransfer.encodeString(computedHash);
+    const newOut = Utf8DataTransfer.encodeString(computedAddress);
     updateNodeData(id, { out: newOut });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [computedHash]);
+  }, [computedAddress]);
 
   return (
-    <W3CNode id={id} label="Hash" isGood={computedHash.length === 66}>
-      <div>{computedHash.substring(0, 25) + "..." || "..."}</div>
-      <div>{computedHash ? ("Hash length: " + computedHash.length) : ""}</div>
+    <W3CNode id={id} label="Calculate Address" isGood={computedAddress.length === 2 + 40}>
+      <div>{computedAddress.substring(0, 25) + "..." || "..."}</div>
+      <div>{computedAddress ? ("Address length: " + computedAddress.length) : ""}</div>
       {/* Single target handle that can accept multiple connections */}
       <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0} />
       {/* Source handle to expose the computed hash */}
@@ -55,4 +54,4 @@ const Hash: React.FC<HashNodeProps> = ({ id }) => {
   );
 };
 
-export default Hash;
+export default CalculateAddress;
