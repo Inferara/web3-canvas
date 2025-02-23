@@ -328,11 +328,27 @@ const W3CFlow: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Avoid interfering with default behavior if focus is in an input
-      if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') {
+      // Avoid interfering with default behavior if focus is in an input or textarea.
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') {
         return;
       }
-      if (e.ctrlKey && e.key === 'z') {
+
+      if (e.key === 'Delete') {
+        e.preventDefault();
+        if (!rfInstance) return;
+        const selectedNodes = rfInstance.getNodes().filter((node) => node.selected);
+        if (selectedNodes.length > 0) {
+          // Remove selected nodes.
+          const selectedIds = new Set(selectedNodes.map((node) => node.id));
+          setNodes((nds) => nds.filter((node) => !selectedIds.has(node.id)));
+          // Optionally, also remove connected edges.
+          setEdges((eds) =>
+            eds.filter((edge) => !selectedIds.has(edge.source) && !selectedIds.has(edge.target))
+          );
+          pushSnapshot();
+        }
+      } else if (e.ctrlKey && e.key === 'z') {
         e.preventDefault();
         undo();
       } else if (e.ctrlKey && e.key === 'y') {
@@ -342,7 +358,8 @@ const W3CFlow: React.FC = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo]);
+  }, [rfInstance, setNodes, setEdges, undo, redo]);
+
 
   // Helper: Capture current flow state as a snapshot
   function pushSnapshot() {
