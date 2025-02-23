@@ -105,12 +105,28 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
         }
     }, [rfInstance]);
 
+    const handleCopyUrl = useCallback(() => {
+        if (rfInstance) {
+          const flow = rfInstance.toObject();
+          const encodedState = encodeURIComponent(JSON.stringify(flow));
+          const shareableUrl = `${window.location.origin}${window.location.pathname}?state=${encodedState}`;
+          navigator.clipboard.writeText(shareableUrl)
+            .then(() => {
+              console.log("Shareable URL copied to clipboard:", shareableUrl);
+            })
+            .catch(err => {
+              console.error("Failed to copy URL:", err);
+            });
+        }
+      }, [rfInstance]);      
+
     return (
         <aside>
             <div>
                 <div className='appname'>Web3 キャンバス</div>
                 <div className="saveRestoreButtonsContainer">
                     <button onClick={onDownload}>💾</button>
+                    <button onClick={handleCopyUrl}>🔗</button>
                     <label htmlFor="file-upload">📂</label>
                     <input
                         id="file-upload"

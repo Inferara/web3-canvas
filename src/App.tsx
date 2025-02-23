@@ -189,6 +189,36 @@ const W3CFlow: React.FC = () => {
   const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<FlowSnapshot[]>([]);
 
+  useEffect(() => {
+    if (!rfInstance) return;
+  
+    // Check for a URL parameter "state" on initialization
+    const params = new URLSearchParams(window.location.search);
+    const stateParam = params.get("state");
+  
+    if (stateParam) {
+      try {
+        // Decode the state from the URL (assuming it was encoded via encodeURIComponent(JSON.stringify(flow)))
+        const decodedState = JSON.parse(decodeURIComponent(stateParam)) as FlowSnapshot;
+  
+        // Apply the decoded state
+        setNodes(decodedState.nodes);
+        setEdges(decodedState.edges);
+        if (decodedState.viewport) {
+          rfInstance.setViewport(decodedState.viewport);
+        }
+  
+        // Optionally, push this initial state into your undo stack so that it becomes part of your push/pop mechanism
+        pushSnapshot();
+  
+        // Optionally, remove the state parameter from the URL to prevent re-loading on subsequent renders
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (err) {
+        console.error("Failed to load canvas state from URL:", err);
+      }
+    }
+  }, [rfInstance, setNodes, setEdges]);  
+
   // Undo: Pop snapshot from undo stack, push current state onto redo stack,
   // then restore the snapshot.
   const undo = useCallback(() => {
