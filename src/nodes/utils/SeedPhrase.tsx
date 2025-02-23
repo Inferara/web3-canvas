@@ -41,7 +41,7 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label={headerLabel} isGood={seedPhrase.length > 0} isRezieable={true}>
+    <W3CNode id={id} label={headerLabel} isGood={seedPhrase.length > 0} isResizeable={true}>
       <button onClick={handleGenerate} style={{marginTop: '10px'}}>Generate</button>
       <textarea value={seedPhrase || "..."} readOnly={true}/>
       <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />

@@ -39,7 +39,7 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({id, data}) => {
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label={headerLabel} isRezieable={true} isGood={text.length > 0} minHeight={130}>
+    <W3CNode id={id} label={headerLabel} isResizeable={true} isGood={text.length > 0} minHeight={130}>
       <textarea value={text || "..."} readOnly={true} className="nodrag"/>
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
       <button onClick={() => {navigator.clipboard.writeText(text)}}>📋</button>
