@@ -17,8 +17,11 @@ interface EthBalanceNodeProps extends NodeProps {
     data: {
         in?: object;
         out?: string;
+        label?: string;
     };
 }
+
+const DEFAULT_LABEL = "ETH Balance";
 
 const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
@@ -76,8 +79,11 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
         fetchBalance();
     };
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-        <W3CNode id={id} label="ETH Balance" isGood={balance !== "Error" && !isNaN(Number(balance))}>
+        <W3CNode id={id} label={headerLabel} isGood={balance !== "Error" && !isNaN(Number(balance))}>
             <div>{balance || "..."}</div>
             <button onClick={onRefreshButtonClick}>Refresh</button>
 

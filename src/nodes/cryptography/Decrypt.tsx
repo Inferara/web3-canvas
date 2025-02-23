@@ -17,10 +17,13 @@ interface DecryptNodeProps extends NodeProps {
   data: {
     in?: object;
     out?: string;
+    label?: string;
   };
 }
 
-const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Decrypt";
+
+const Decrypt: React.FC<DecryptNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: "target" });
 
@@ -81,8 +84,11 @@ const Decrypt: React.FC<DecryptNodeProps> = ({ id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ciphertext, privateKey]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="Decrypt" isGood={decrypted}>
+    <W3CNode id={id} label={headerLabel} isGood={decrypted}>
       <div>{plaintext.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle
         type="target"

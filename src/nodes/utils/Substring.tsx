@@ -17,8 +17,11 @@ interface SubstringNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string; // substring output
+    label?: string;
   };
 }
+
+const DEFAULT_LABEL = "Substring";
 
 const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
@@ -59,9 +62,11 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputStr, startPos, endPos]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label="Substring" isGood={inputConnections.length > 0}>
+    <W3CNode id={id} label={headerLabel} isGood={inputConnections.length > 0}>
       <div style={{ width: 100, display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}>
         <label>Start: </label>
         <input

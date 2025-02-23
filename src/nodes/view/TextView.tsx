@@ -15,10 +15,13 @@ interface TextViewNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string;
+    label?: string;
   };
 }
 
-const TextViewNode: React.FC<TextViewNodeProps> = ({id}) => {
+const DEFAULT_LABEL = "View";
+
+const TextViewNode: React.FC<TextViewNodeProps> = ({id, data}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
@@ -32,8 +35,11 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({id}) => {
     }
   }
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="View" isRezieable={true} isGood={text.length > 0} minHeight={130}>
+    <W3CNode id={id} label={headerLabel} isRezieable={true} isGood={text.length > 0} minHeight={130}>
       <textarea value={text || "..."} readOnly={true} className="nodrag"/>
       <Handle type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
       <button onClick={() => {navigator.clipboard.writeText(text)}}>📋</button>

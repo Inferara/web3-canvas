@@ -14,8 +14,11 @@ interface FileInputNodeProps extends NodeProps {
   data: {
     in?: string;   // Not used here, but present for consistency
     out?: string;  // We'll store base64 or file name in out
+    label?: string;
   };
 }
+
+const DEFAULT_LABEL = "File Input";
 
 const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
 
@@ -41,8 +44,11 @@ const FileInputNode: React.FC<FileInputNodeProps> = ({ id, data }) => {
   const [fileSize, setFileSize] = useState<number>(0);
   const [fileName, setFileName] = useState<string>("");
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="File Input" isGood={fileSize > 0}>
+    <W3CNode id={id} label={headerLabel} isGood={fileSize > 0}>
       <label htmlFor="file-upload" style={{ fontSize: 'x-large' }}>📂</label>
       <input
         id="file-upload"

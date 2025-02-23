@@ -18,10 +18,13 @@ interface StrLengthNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string; // Not used here, but included for consistency
+    label?: string;
   };
 }
 
-const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Length";
+
+const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: 'target' });
   let lengthValue = 0;
@@ -40,9 +43,11 @@ const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lengthValue]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label="Length" isGood={inputConnections.length > 0}>
+    <W3CNode id={id} label={headerLabel} isGood={inputConnections.length > 0}>
       <div>{lengthValue || "..."}</div>
       <LabeledHandle label="in" type="target" position={Position.Left} id="input" isConnectable={inputConnections.length === 0}/>
       <LabeledHandle label="len" type="source" position={Position.Right} id="output" />

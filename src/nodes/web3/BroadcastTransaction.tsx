@@ -16,10 +16,13 @@ interface BroadcastTransactionNodeProps extends NodeProps {
   data: {
     in?: object;
     out?: string;
+    label?: string;
   };
 }
 
-const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id }) => {
+const DEFAULT_LABEL = "Broadcast Transaction";
+
+const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({ handleType: "target" });
 
@@ -63,8 +66,11 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id 
     }
   };
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="Broadcast Transaction" isGood={txHash.length > 0}>
+    <W3CNode id={id} label={headerLabel} isGood={txHash.length > 0}>
       <div>{txHash.substring(0, 25) + "..." || "..."}</div>
       <button onClick={handleBroadcast} disabled={broadcasting || !providerUrl || !signedTx}>
         {broadcasting ? "Broadcasting..." : "Broadcast"}

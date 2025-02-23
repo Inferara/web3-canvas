@@ -15,18 +15,24 @@ interface QrCodeNodeProps extends NodeProps {
   data: {
     in?: string;
     out?: string; // not used, but present for consistency
+    label?: string;
   };
 }
 
-const QrCodeNode: React.FC<QrCodeNodeProps> = ({id}) => {
+const DEFAULT_LABEL = "QR Code";
+
+const QrCodeNode: React.FC<QrCodeNodeProps> = ({id, data}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
   const nodesData = useNodesData(inputConnections[0]?.source);
   const qrValue = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
   return (
-    <W3CNode id={id} label="QR Code" isRezieable={true} isGood={qrValue.length > 0} minWidth={300} minHeight={150} >
+    <W3CNode id={id} label={headerLabel} isRezieable={true} isGood={qrValue.length > 0} minWidth={300} minHeight={150} >
       {qrValue ? (
         <QRCode value={qrValue} size={128} />
       ) : (

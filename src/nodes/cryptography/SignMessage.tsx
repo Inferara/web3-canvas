@@ -17,8 +17,11 @@ interface SignMessageNodeProps extends NodeProps {
   data: {
     in?: object;
     out?: string;
+    label?: string;
   };
 }
+
+const DEFAULT_LABEL = "Sign Message";
 
 const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
@@ -50,9 +53,11 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature]);
 
+  // If data.label is empty (or null), use the default.
+  const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label="Sign Message" isGood={signature.length > 0}>
+    <W3CNode id={id} label={headerLabel} isGood={signature.length > 0}>
       <div>{signature.substring(0, 25) + "..." || "..."}</div>
       <LabeledHandle
         label="msg"

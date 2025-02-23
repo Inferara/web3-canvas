@@ -17,12 +17,15 @@ interface ScalarMultiplicationNodeProps extends NodeProps {
     data: {
         in?: string;
         out?: string;
+        label?: string;
     };
 }
 
+const DEFAULT_LABEL = "Scalar Multiplication";
+
 const BASE = ProjectivePoint.BASE;
 
-const ScalarMultiplication: React.FC<ScalarMultiplicationNodeProps> = ({ id }) => {
+const ScalarMultiplication: React.FC<ScalarMultiplicationNodeProps> = ({ id, data }) => {
     const { updateNodeData } = useReactFlow();
     const inputConnections = useNodeConnections({
         handleType: 'target',
@@ -47,8 +50,11 @@ const ScalarMultiplication: React.FC<ScalarMultiplicationNodeProps> = ({ id }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [computedPointHex]);
 
+    // If data.label is empty (or null), use the default.
+    const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+
     return (
-        <W3CNode id={id} label="Scalar Multiplication" isGood={computedPoint !== undefined}>
+        <W3CNode id={id} label={headerLabel} isGood={computedPoint !== undefined}>
             <div>X:{computedPoint?.x.toString(16).substring(0, 25) + "..." || "..."}</div>
             <div>Y:{computedPoint?.y.toString(16).substring(0, 25) + "..." || "..."}</div>
             {/* Single target handle that can accept multiple connections */}
