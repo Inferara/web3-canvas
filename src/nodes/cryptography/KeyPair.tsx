@@ -36,7 +36,7 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
   // Detect output connections (which nodes are connected to which handles)
   const outputConnections = useNodeConnections({ handleType: 'source' });
 
-  let privateKey = nodesData ? Utf8DataTransfer.unpack(nodesData?.data.out as string) as string : "";
+  let privateKey = nodesData ? Utf8DataTransfer.tryDecodeString(nodesData, inputConnections[0]?.sourceHandle) : "";
   if (privateKey && !privateKey.startsWith("0x")) {
     const encoder = new TextEncoder();
     privateKey = keccak256(encoder.encode(privateKey));

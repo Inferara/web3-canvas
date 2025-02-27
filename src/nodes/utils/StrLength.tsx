@@ -29,7 +29,7 @@ const StrLengthNode: React.FC<StrLengthNodeProps> = ({ id, data }) => {
   let lengthValue = 0;
   const nodeData = useNodesData(inputConnections[0]?.source);
   if (nodeData) {
-    lengthValue = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.source).length;
+    lengthValue = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle).length;
   }
 
   useEffect(() => {

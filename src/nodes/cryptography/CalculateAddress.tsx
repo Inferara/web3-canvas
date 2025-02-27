@@ -43,7 +43,7 @@ const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id, data }) => 
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
 
   return (
-    <W3CNode id={id} label={headerLabel} isGood={computedAddress.length === 2 + 40}>
+    <W3CNode id={id} label={headerLabel} isGood={computedAddress.length === 40}>
       <div>{computedAddress.substring(0, 25) + "..." || "..."}</div>
       <div>{computedAddress ? ("Address length: " + computedAddress.length) : ""}</div>
       {/* Single target handle that can accept multiple connections */}

@@ -27,7 +27,7 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({id, data}) => {
   const nodeData = useNodesData(inputConnections[0]?.source);
   let text = "";
   if (inputConnections) {
-    text = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.source);
+    text = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
   }
 
   // If data.label is empty (or null), use the default.
