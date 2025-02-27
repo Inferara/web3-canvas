@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useW3C } from './W3CContext';
 import SavedInstanceItem, { SavedState } from './StatesPanel';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
+import LZString from 'lz-string';
 
 interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;
@@ -108,8 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
     const handleCopyUrl = useCallback(() => {
         if (rfInstance) {
           const flow = rfInstance.toObject();
-          const encodedState = encodeURIComponent(JSON.stringify(flow));
-          const shareableUrl = `${window.location.origin}${window.location.pathname}?state=${encodedState}`;
+          const jsonState = JSON.stringify(flow);
+          // Compress the state using LZ-string's URL-safe method
+          const compressedState = LZString.compressToEncodedURIComponent(jsonState);
+          const shareableUrl = `${window.location.origin}${window.location.pathname}?state=${compressedState}`;
           navigator.clipboard.writeText(shareableUrl)
             .then(() => {
               console.log("Shareable URL copied to clipboard:", shareableUrl);
@@ -118,7 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
               console.error("Failed to copy URL:", err);
             });
         }
-      }, [rfInstance]);      
+      }, [rfInstance]);     
 
     return (
         <aside>

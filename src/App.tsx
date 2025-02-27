@@ -17,6 +17,7 @@ import {
   MiniMap
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import LZString from 'lz-string';
 import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
@@ -191,33 +192,36 @@ const W3CFlow: React.FC = () => {
 
   useEffect(() => {
     if (!rfInstance) return;
-  
+
     // Check for a URL parameter "state" on initialization
     const params = new URLSearchParams(window.location.search);
-    const stateParam = params.get("state");
-  
-    if (stateParam) {
-      try {
-        // Decode the state from the URL (assuming it was encoded via encodeURIComponent(JSON.stringify(flow)))
-        const decodedState = JSON.parse(decodeURIComponent(stateParam)) as FlowSnapshot;
-  
-        // Apply the decoded state
-        setNodes(decodedState.nodes);
-        setEdges(decodedState.edges);
-        if (decodedState.viewport) {
-          rfInstance.setViewport(decodedState.viewport);
+    const compressedState = params.get("state");
+
+    if (compressedState) {
+      const jsonState = LZString.decompressFromEncodedURIComponent(compressedState);
+      if (jsonState) {
+        try {
+          // Decode the state from the URL (assuming it was encoded via encodeURIComponent(JSON.stringify(flow)))
+          const decodedState = JSON.parse(jsonState) as FlowSnapshot;
+
+          // Apply the decoded state
+          setNodes(decodedState.nodes);
+          setEdges(decodedState.edges);
+          if (decodedState.viewport) {
+            rfInstance.setViewport(decodedState.viewport);
+          }
+
+          // Optionally, push this initial state into your undo stack so that it becomes part of your push/pop mechanism
+          pushSnapshot();
+
+          // Optionally, remove the state parameter from the URL to prevent re-loading on subsequent renders
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } catch (err) {
+          console.error("Failed to load canvas state from URL:", err);
         }
-  
-        // Optionally, push this initial state into your undo stack so that it becomes part of your push/pop mechanism
-        pushSnapshot();
-  
-        // Optionally, remove the state parameter from the URL to prevent re-loading on subsequent renders
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } catch (err) {
-        console.error("Failed to load canvas state from URL:", err);
       }
     }
-  }, [rfInstance, setNodes, setEdges]);  
+  }, [rfInstance, setNodes, setEdges]);
 
   // Undo: Pop snapshot from undo stack, push current state onto redo stack,
   // then restore the snapshot.
