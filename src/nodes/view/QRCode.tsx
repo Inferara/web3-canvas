@@ -25,8 +25,11 @@ const QrCodeNode: React.FC<QrCodeNodeProps> = ({id, data}) => {
   const inputConnections = useNodeConnections({
     handleType: 'target',
   });
-  const nodesData = useNodesData(inputConnections[0]?.source);
-  const qrValue = nodesData ? Utf8DataTransfer.decodeString(nodesData?.data.out as string) : "";
+  const nodeData = useNodesData(inputConnections[0]?.source);
+  let qrValue = "";
+  if (inputConnections) {
+    qrValue = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
+  }
 
   // If data.label is empty (or null), use the default.
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;

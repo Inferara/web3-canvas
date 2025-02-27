@@ -8,7 +8,6 @@ import {
 } from "@xyflow/react";
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../cryptography/KeyPair";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
 
@@ -32,11 +31,7 @@ const SubstringNode: React.FC<SubstringNodeProps> = ({ id, data }) => {
   const nodeData = useNodesData(inputConnections[0]?.source);
   let inputStr = "";
   if (nodeData) {
-    if (nodeData?.type === "keypair") {
-      inputStr = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[0]?.sourceHandle as string);
-    } else {
-      inputStr = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
-    }
+    inputStr = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
   }
 
   const onStartPosChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {

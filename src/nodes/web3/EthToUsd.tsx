@@ -34,7 +34,7 @@ const EthToUsdNode: React.FC<EthToUsdNodeProps> = ({ id, data }) => {
 
   // Decode the ETH amount from the connected node.
   const ethValueString = inputNodeData
-    ? Utf8DataTransfer.decodeString(inputNodeData.data.out as string)
+    ? Utf8DataTransfer.tryDecodeString(inputNodeData, inputConnection?.sourceHandle)
     : "";
   const ethValue = parseFloat(ethValueString);
 

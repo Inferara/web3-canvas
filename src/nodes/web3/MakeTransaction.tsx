@@ -9,7 +9,6 @@ import {
 import { JsonRpcProvider, Wallet, TransactionRequest, parseEther, parseUnits }  from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../cryptography/KeyPair";
 import W3CNode from "../../W3CNode";
 
 interface MakeTransactionNodeProps extends NodeProps {
@@ -41,12 +40,12 @@ const MakeTransactionNode: React.FC<MakeTransactionNodeProps> = ({ id, data }) =
     const gasPriceNodeData = useNodesData(gasPriceConnection?.source as string);
 
     // Decode the inputs using Utf8DataTransfer.
-    const privateKey = privKeyNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string) : "";
-    const fromAddress = fromNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(fromNodeData as KeyPairNodeProps, fromConnection?.sourceHandle as string) : "";
-    const toAddress = toNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(toNodeData as KeyPairNodeProps, toConnection?.sourceHandle as string) : "";
-    const amtStr = amtNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(amtNodeData as KeyPairNodeProps, amtConnection?.sourceHandle as string) : "";
+    const privateKey = privKeyNodeData ? Utf8DataTransfer.tryDecodeString(privKeyNodeData, privKeyConnection?.sourceHandle) : "";
+    const fromAddress = fromNodeData ? Utf8DataTransfer.tryDecodeString(fromNodeData, fromConnection?.sourceHandle) : "";
+    const toAddress = toNodeData ? Utf8DataTransfer.tryDecodeString(toNodeData, toConnection?.sourceHandle) : "";
+    const amtStr = amtNodeData ? Utf8DataTransfer.tryDecodeString(amtNodeData, amtConnection?.sourceHandle) : "";
     const amount = parseFloat(amtStr);
-    const gasPriceStr = gasPriceNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(gasPriceNodeData as KeyPairNodeProps, gasPriceConnection?.sourceHandle as string) : "0.07";
+    const gasPriceStr = gasPriceNodeData ? Utf8DataTransfer.tryDecodeString(gasPriceNodeData, gasPriceConnection?.sourceHandle) : "0.07";
 
     const [signedTx, setSignedTx] = useState<string>("");
 

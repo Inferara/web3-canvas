@@ -8,7 +8,6 @@ import {
 } from "@xyflow/react";
 import { Wallet } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "./KeyPair";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
 
@@ -34,10 +33,10 @@ const SignMessageNode: React.FC<SignMessageNodeProps> = ({ id, data }) => {
     const nodesData = [nd1, nd2];
     const msgConnection = inputConnections.find((conn) => conn.targetHandle === "msg");
     const messageNodeData = nodesData.find((nd) => nd.id === msgConnection?.source);
-    const message = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(messageNodeData as KeyPairNodeProps, msgConnection?.sourceHandle as string);
+    const message = Utf8DataTransfer.tryDecodeString(messageNodeData, msgConnection?.sourceHandle);
     const privKeyConnection = inputConnections.find((conn) => conn.targetHandle === "privKey");
     const privKeyNodeData = nodesData.find((nd) => nd.id === privKeyConnection?.source);
-    const privateKey = Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(privKeyNodeData as KeyPairNodeProps, privKeyConnection?.sourceHandle as string);
+    const privateKey = Utf8DataTransfer.tryDecodeString(privKeyNodeData, privKeyConnection?.sourceHandle);
     if (privateKey) {
     const wallet = new Wallet(privateKey);
       wallet.signMessage(message).then((signResult) => {

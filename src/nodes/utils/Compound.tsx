@@ -7,7 +7,6 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { Utf8DataTransfer } from '../../Utf8DataTransfer';
-import { KeyPairNodeProps } from '../cryptography/KeyPair';
 import W3CNode from '../../W3CNode';
 import LabeledHandle from '../../LabeledHandle';
 
@@ -36,7 +35,7 @@ const Compound: React.FC<CompoundNodeProps> = ({ id, data }) => {
 
   for (let i = 0; i < nodesData.length; i++) {
     const nodeData = nodesData[i];
-    combinedData += Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(nodeData as KeyPairNodeProps, inputConnections[i]?.sourceHandle as string);
+    combinedData += Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[i]?.sourceHandle);
     combinedData = combinedData.replace(/\s/g, '');
   }
 

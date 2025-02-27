@@ -8,7 +8,6 @@ import {
 } from "@xyflow/react";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../cryptography/KeyPair";
 import W3CNode from "../../W3CNode";
 
 interface MakeActorMessageProps extends NodeProps {
@@ -37,9 +36,9 @@ const MakeActorMessage: React.FC<MakeActorMessageProps> = ({ id, data }) => {
     const toNodeData = useNodesData(toConnection?.source as string);
     const amtNodeData = useNodesData(amtConnection?.source as string);
 
-    const fromAddress = fromNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(fromNodeData as KeyPairNodeProps, fromConnection?.sourceHandle as string) : "";
-    const toAddress = toNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(toNodeData as KeyPairNodeProps, toConnection?.sourceHandle as string) : "";
-    const amtStr = amtNodeData ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(amtNodeData as KeyPairNodeProps, amtConnection?.sourceHandle as string) : "";
+    const fromAddress = fromNodeData ? Utf8DataTransfer.tryDecodeString(fromNodeData, fromConnection?.sourceHandle) : "";
+    const toAddress = toNodeData ? Utf8DataTransfer.tryDecodeString(toNodeData, toConnection?.sourceHandle) : "";
+    const amtStr = amtNodeData ? Utf8DataTransfer.tryDecodeString(amtNodeData, amtConnection?.sourceHandle) : "";
     const amount = parseFloat(amtStr);
 
     const [message, setMessage] = useState<ActorMessage>({ from: "", to: "", amount: 0 });

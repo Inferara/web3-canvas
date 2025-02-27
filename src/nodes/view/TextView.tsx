@@ -7,7 +7,6 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../cryptography/KeyPair";
 import W3CNode from "../../W3CNode";
 
 interface TextViewNodeProps extends NodeProps {
@@ -28,11 +27,7 @@ const TextViewNode: React.FC<TextViewNodeProps> = ({id, data}) => {
   const nodeData = useNodesData(inputConnections[0]?.source);
   let text = "";
   if (inputConnections) {
-    if (nodeData?.type === "keypair") {
-      text = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
-    } else {
-      text = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
-    }
+    text = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.source);
   }
 
   // If data.label is empty (or null), use the default.

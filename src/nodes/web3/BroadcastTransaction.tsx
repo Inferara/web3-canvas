@@ -35,10 +35,10 @@ const BroadcastTransactionNode: React.FC<BroadcastTransactionNodeProps> = ({ id,
 
   // Decode the provider URL and signed transaction.
   const providerUrl = providerNodeData
-    ? Utf8DataTransfer.decodeString(providerNodeData.data.out as string)
+    ? Utf8DataTransfer.tryDecodeString(providerNodeData.data, providerConnection?.sourceHandle)
     : "https://linea.drpc.org";
   const signedTx = txNodeData
-    ? Utf8DataTransfer.decodeString(txNodeData.data.out as string)
+    ? Utf8DataTransfer.tryDecodeString(txNodeData.data.out, txConnection?.sourceHandle)
     : "";
 
   const [txHash, setTxHash] = useState<string>("");

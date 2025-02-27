@@ -7,7 +7,6 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { Utf8DataTransfer } from '../../Utf8DataTransfer';
-import { KeyPairNodeProps } from '../cryptography/KeyPair';
 import W3CNode from '../../W3CNode';
 import LabeledHandle from '../../LabeledHandle';
 
@@ -28,12 +27,7 @@ const BigIntNode: React.FC<BigIntNodeProps> = ({ id, data }) => {
     let bigIntValue = "";
     const nodeData = useNodesData(inputConnections[0]?.source);
     if (nodeData) {
-      let nodeDataValue = "";
-      if (nodeData?.type === "keypair") {
-        nodeDataValue = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
-      } else {
-        nodeDataValue = (nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "");
-      }
+      let nodeDataValue = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
       bigIntValue = BigInt(nodeDataValue).toString();
     }
   

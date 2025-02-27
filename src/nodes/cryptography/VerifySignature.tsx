@@ -35,9 +35,11 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id, data }) =
   if (nd1 && nd2 && nd3) {
     const nodesData = [nd1, nd2, nd3];
     const msgConnection = inputConnections.find((conn) => conn.targetHandle === "msg");
-    messageInput = Utf8DataTransfer.decodeString(msgConnection ? nodesData.find((nd) => nd.id === msgConnection.source)?.data?.out as string : "");
+    const msgNodeData = nodesData.find((nd) => nd.id === msgConnection?.source);
+    messageInput = Utf8DataTransfer.tryDecodeString(msgNodeData?.data.out as string, msgConnection?.sourceHandle as string);
     const sigConnection = inputConnections.find((conn) => conn.targetHandle === "sig");
-    signatureInput = Utf8DataTransfer.decodeString(sigConnection ? nodesData.find((nd) => nd.id === sigConnection.source)?.data?.out as string : "");
+    const sigNodeData = nodesData.find((nd) => nd.id === sigConnection?.source);
+    signatureInput = Utf8DataTransfer.tryDecodeString(sigNodeData?.data.out as string, sigConnection?.sourceHandle as string);
     const addrConnection = inputConnections.find((conn) => conn.targetHandle === "addr");
     const addrNodeData = nodesData.find((nd) => nd.id === addrConnection?.source);
     if (addrConnection) {

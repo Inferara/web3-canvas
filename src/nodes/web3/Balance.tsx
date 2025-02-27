@@ -9,7 +9,6 @@ import {
 import { JsonRpcProvider, formatEther } from "ethers";
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "../cryptography/KeyPair";
 import W3CNode from "../../W3CNode";
 
 interface EthBalanceNodeProps extends NodeProps {
@@ -42,10 +41,10 @@ const EthBalanceNode: React.FC<EthBalanceNodeProps> = ({ id, data }) => {
 
     // Decode the provided address and provider URL.
     const address = addrNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(addrNodeData as KeyPairNodeProps, addrConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(addrNodeData, addrConnection?.sourceHandle)
         : "";
     const providerUrl = urlNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(urlNodeData as KeyPairNodeProps, urlConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(urlNodeData, urlConnection?.sourceHandle)
         : "https://1rpc.io/linea";
 
     // Local state to keep track of the fetched balance.

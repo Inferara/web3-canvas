@@ -76,4 +76,8 @@ export class Utf8DataTransfer {
         }
         return "";
     }
+
+    static tryDecodeString(nodeData: any | undefined, sourceHandle: string | null | undefined): string {
+        return Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(nodeData as KeyPairNodeProps, sourceHandle? sourceHandle : "");
+    }
 }

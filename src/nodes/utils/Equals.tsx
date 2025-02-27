@@ -7,7 +7,6 @@ import {
     useReactFlow,
 } from '@xyflow/react';
 import { Utf8DataTransfer } from '../../Utf8DataTransfer';
-import { KeyPairNodeProps } from '../cryptography/KeyPair';
 import W3CNode from '../../W3CNode';
 import LabeledHandle from '../../LabeledHandle';
 
@@ -38,10 +37,10 @@ const Equals: React.FC<EqualstNodeProps> = ({ id, data }) => {
 
     // Decode the incoming ciphertext and private key.
     const left = leftNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(leftNodeData as KeyPairNodeProps, leftConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(leftNodeData, leftConnection?.sourceHandle)
         : "1";
     const right = rightNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(rightNodeData as KeyPairNodeProps, rightConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(rightNodeData, rightConnection?.sourceHandle)
         : "2";
     res = left === right;
     useEffect(() => {

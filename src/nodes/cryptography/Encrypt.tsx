@@ -8,7 +8,6 @@ import {
 } from "@xyflow/react";
 import { encrypt, PublicKey } from "eciesjs";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from "./KeyPair";
 import LabeledHandle from "../../LabeledHandle";
 import W3CNode from "../../W3CNode";
 
@@ -43,10 +42,10 @@ const Encrypt: React.FC<EncryptNodeProps> = ({ id, data }) => {
 
     // Decode the incoming plaintext and public key.
     const message = msgNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(msgNodeData as KeyPairNodeProps, msgConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(msgNodeData, msgConnection?.sourceHandle)
         : "";
     const publicKey = pubKeyNodeData
-        ? Utf8DataTransfer.decodeStringFromMaybeKeyPairNode(pubKeyNodeData as KeyPairNodeProps, pubKeyConnection?.sourceHandle as string)
+        ? Utf8DataTransfer.tryDecodeString(pubKeyNodeData, pubKeyConnection?.sourceHandle)
         : "";
 
     const [ciphertext, setCiphertext] = useState<string>("");

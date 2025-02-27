@@ -8,7 +8,6 @@ import {
 } from '@xyflow/react';
 import { keccak256 } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import { KeyPairNodeProps } from './KeyPair';
 import LabeledHandle from '../../LabeledHandle';
 import W3CNode from '../../W3CNode';
 
@@ -31,12 +30,7 @@ const CalculateAddress: React.FC<CalculateAddressNodeProps> = ({ id, data }) => 
   const nodeData = useNodesData(inputConnections[0]?.source);
   let computedAddress  = "";
   if (nodeData) {
-    let pubKeyInput = "";
-    if (nodeData?.type === "keypair") {
-      pubKeyInput = Utf8DataTransfer.readStringFromKeyPairNode(nodeData as KeyPairNodeProps,  inputConnections[0]?.sourceHandle as string);
-    } else {
-      pubKeyInput = nodeData ? Utf8DataTransfer.decodeString(nodeData?.data.out as string) : "";
-    }
+    let pubKeyInput = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
     computedAddress = keccak256("0x" + pubKeyInput.substring(4)).substring(26);
   }
   useEffect(() => {
