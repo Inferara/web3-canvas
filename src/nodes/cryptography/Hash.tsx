@@ -6,7 +6,7 @@ import {
   useNodesData,
   useReactFlow,
 } from '@xyflow/react';
-import { keccak256, toUtf8Bytes } from 'ethers';
+import { keccak256, toUtf8Bytes, isHexString } from 'ethers';
 
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from '../../LabeledHandle';
@@ -23,10 +23,6 @@ interface HashNodeProps extends NodeProps {
 
 const DEFAULT_LABEL = "Hash";
 
-const isHexEncoded = (str: string): boolean => {
-  return /^0x[0-9a-fA-F]+$/.test(str);
-};
-
 const Hash: React.FC<HashNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const inputConnections = useNodeConnections({
@@ -36,7 +32,7 @@ const Hash: React.FC<HashNodeProps> = ({ id, data }) => {
   let computedHash  = "";
   if (nodeData) {
     let hashInput = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[0]?.sourceHandle);
-    computedHash = isHexEncoded(hashInput) ? keccak256(hashInput) : keccak256(toUtf8Bytes(hashInput));
+    computedHash = isHexString(hashInput) ? keccak256(hashInput) : keccak256(toUtf8Bytes(hashInput));
   }
   useEffect(() => {
     const newOut = Utf8DataTransfer.encodeString(computedHash);

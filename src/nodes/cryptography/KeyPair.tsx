@@ -5,6 +5,7 @@ import {
   useReactFlow,
   useNodeConnections,
   useNodesData,
+  DeleteElementsOptions
 } from "@xyflow/react";
 import { computeAddress, keccak256, SigningKey } from 'ethers';
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
@@ -27,7 +28,7 @@ export interface KeyPairNodeProps extends NodeProps {
 const DEFAULT_LABEL = "KeyPair";
 
 const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
-  const { updateNodeData } = useReactFlow();
+  const { updateNodeData, deleteElements } = useReactFlow();
 
   // Detect input connections (e.g., receiving a private key from another node)
   const inputConnections = useNodeConnections({ handleType: 'target' });
@@ -41,10 +42,24 @@ const KeyPairNode: React.FC<KeyPairNodeProps> = ({ id, data }) => {
     const encoder = new TextEncoder();
     privateKey = keccak256(encoder.encode(privateKey));
   }
-  const signingKey = privateKey ? new SigningKey(privateKey) : undefined;
-  const publicKey = signingKey ? signingKey.publicKey : "";
-  const address = signingKey ? computeAddress(signingKey) : "";
-
+  let signingKey = undefined;
+  let publicKey = "";
+  let address = "";
+  try { //TODO can we move this to a parent class?
+    signingKey = privateKey ? new SigningKey(privateKey) : undefined;
+    publicKey = signingKey ? signingKey.publicKey : "";
+    address = signingKey ? computeAddress(signingKey) : "";
+  } catch (e) { //TODO how can we let a user know what was the error? Can we show a popup?
+    if (inputConnections.length > 0) {
+      console.error(e);
+      const options: DeleteElementsOptions = {
+        edges: [
+          { id: inputConnections[0].edgeId }
+        ],
+      };
+      deleteElements(options);
+    }
+  }
   useEffect(() => {
     const pkOut = Utf8DataTransfer.encodeString(privateKey);
     const pubOut = Utf8DataTransfer.encodeString(publicKey);
