@@ -21,6 +21,7 @@ import LZString from 'lz-string';
 import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
+import { ToastProvider } from './ToastProvider';
 // cryptography
 import CalculateAddress from './nodes/cryptography/CalculateAddress';
 import Decrypt from './nodes/cryptography/Decrypt';
@@ -465,11 +466,13 @@ const W3CFlow: React.FC = () => {
 };
 
 const App: React.FC = () => (
+  <ToastProvider>
   <ReactFlowProvider>
     <W3CProvider>
       <W3CFlow />
     </W3CProvider>
   </ReactFlowProvider>
+  </ToastProvider>
 );
 
 export default App;
