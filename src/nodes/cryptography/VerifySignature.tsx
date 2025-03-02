@@ -6,7 +6,6 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import { verifyMessage } from 'ethers';
-import { KeyPairNodeProps } from "./KeyPair";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import LabeledHandle from "../../LabeledHandle";
 import W3CNode from "../../W3CNode";
