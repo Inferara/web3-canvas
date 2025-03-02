@@ -209,6 +209,7 @@ body {
   overflow: hidden; /* Prevent overflow of content */
   white-space: nowrap; /* Prevent text wrapping */
   text-overflow: ellipsis; /* Add '...' for overflowing text */
+  justify-content: flex-start;
 }
 
 .broken {

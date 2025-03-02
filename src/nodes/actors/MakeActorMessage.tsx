@@ -9,6 +9,7 @@ import {
 import LabeledHandle from "../../LabeledHandle";
 import { Utf8DataTransfer } from "../../Utf8DataTransfer";
 import W3CNode from "../../W3CNode";
+import { NetworkManager, Transaction } from "../../NetworkManager";
 
 interface MakeActorMessageProps extends NodeProps {
     id: string;
@@ -52,7 +53,15 @@ const MakeActorMessage: React.FC<MakeActorMessageProps> = ({ id, data }) => {
     }, [fromAddress, toAddress, amtStr]);
 
     function sendMessage() {
-
+        const networkManager = NetworkManager.getInstance();
+        const transaction: Transaction = {
+            from: "a",
+            to: "b",
+            amount: 3,
+            id: "id1",
+            timestamp: "ts"
+        };
+        networkManager.sendTransaction(transaction);
     }
 
     return (

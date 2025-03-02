@@ -55,7 +55,9 @@ import SeedPhraseNode from './nodes/utils/SeedPhrase';
 import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
 // actors
 import ActorNode from './nodes/actors/Actor';
+import Ledger from './nodes/actors/Ledger';
 import MakeActorMessage from './nodes/actors/MakeActorMessage';
+import NetworkNode from './nodes/actors/Network';
 
 ReactGA.initialize("G-QPYSF5N8BL");
 
@@ -95,7 +97,9 @@ const nodeTypes = {
   incrementDecrement: IncrementDecrementNode,
   // actors
   actor: ActorNode,
+  ledger: Ledger,
   makeActorMessage: MakeActorMessage,
+  network: NetworkNode,
 };
 
 let id = 0;

@@ -36,18 +36,14 @@ const VerifySignatureNode: React.FC<VerifySignatureNodeProps> = ({ id, data }) =
     const nodesData = [nd1, nd2, nd3];
     const msgConnection = inputConnections.find((conn) => conn.targetHandle === "msg");
     const msgNodeData = nodesData.find((nd) => nd.id === msgConnection?.source);
-    messageInput = Utf8DataTransfer.tryDecodeString(msgNodeData?.data.out as string, msgConnection?.sourceHandle as string);
+    messageInput = Utf8DataTransfer.tryDecodeString(msgNodeData, msgConnection?.sourceHandle);
     const sigConnection = inputConnections.find((conn) => conn.targetHandle === "sig");
     const sigNodeData = nodesData.find((nd) => nd.id === sigConnection?.source);
-    signatureInput = Utf8DataTransfer.tryDecodeString(sigNodeData?.data.out as string, sigConnection?.sourceHandle as string);
+    signatureInput = Utf8DataTransfer.tryDecodeString(sigNodeData, sigConnection?.sourceHandle);
     const addrConnection = inputConnections.find((conn) => conn.targetHandle === "addr");
     const addrNodeData = nodesData.find((nd) => nd.id === addrConnection?.source);
     if (addrConnection) {
-      if (addrNodeData?.type === "keypair") {
-        addressInput = Utf8DataTransfer.readStringFromKeyPairNode(addrNodeData as KeyPairNodeProps, addrConnection.sourceHandle as string);
-      } else {
-        addressInput = Utf8DataTransfer.decodeString(addrNodeData?.data.out as string);
-      }
+      addressInput = Utf8DataTransfer.tryDecodeString(addrNodeData, addrConnection?.sourceHandle);
     }
     if (messageInput && signatureInput && addressInput) {
       try {
