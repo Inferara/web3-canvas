@@ -55,7 +55,7 @@ const MakeActorMessage: React.FC<MakeActorMessageProps> = ({ id, data }) => {
     function sendMessage() {
         const networkManager = NetworkManager.getInstance();
         const transaction: Transaction = {
-            from: "a",
+            from: id,
             to: "b",
             amount: 3,
             id: "id1",

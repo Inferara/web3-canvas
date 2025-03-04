@@ -12,7 +12,7 @@ type Listener = (tx: Transaction) => void;
 
 export class NetworkManager {
     private static instance: NetworkManager;
-    private listeners: Listener[] = [];
+    private listeners = new Map<string, Listener>();
     // private messageQueue: Transaction[] = [];
     private delay: number = 0 * 2000; // Default network delay in milliseconds
     private db: W3CDatabase = W3CDatabase.getInstance();
@@ -29,13 +29,13 @@ export class NetworkManager {
     }
 
     // Subscribe to receive broadcasted transactions
-    public subscribe(listener: Listener): void {
-        this.listeners.push(listener);
+    public subscribe(id: string, listener: Listener): void {
+        this.listeners.set(id, listener);
     }
 
     // Unsubscribe from transaction broadcasts
-    public unsubscribe(listener: Listener): void {
-        this.listeners = this.listeners.filter(l => l !== listener);
+    public unsubscribe(id: string): void {
+        this.listeners.delete(id);
     }
 
     // Send a transaction with simulated network delay
