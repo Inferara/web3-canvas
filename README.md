@@ -1,1 +1,1 @@
-# Inferara OpenSouce Education Web3 Canvas
+# Web3 Canvas
