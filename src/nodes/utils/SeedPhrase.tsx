@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   NodeProps,
   Position,
+  useNodeConnections,
+  useNodesData,
   useReactFlow,
 } from "@xyflow/react";
 
@@ -26,7 +28,12 @@ const DEFAULT_LABEL = "Seed Phrase";
 const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const [seedPhrase, setSeedPhrase] = useState<string>("");
-
+  const inputConnections = useNodeConnections({ handleType: 'target' });
+  const nodeData = useNodesData(inputConnections[0]?.source);
+  if (nodeData && nodeData.data.out === 0x10321) {
+    updateNodeData(inputConnections[0].source, { ...nodeData.data, out: "" });
+    setSeedPhrase(generate({ exactly: 20, join: " " }));
+  }
   useEffect(() => {
     const outData = Utf8DataTransfer.encodeString(seedPhrase as string);
     updateNodeData(id, { ...data, out: outData });
@@ -45,6 +52,13 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
       <button onClick={handleGenerate} style={{marginTop: '10px'}}>Generate</button>
       <textarea value={seedPhrase || "..."} readOnly={true}/>
       <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
+      <LabeledHandle
+        label="trigger"
+        type="target"
+        position={Position.Left}
+        id="trigger"
+        isConnectable={inputConnections.length === 0}
+      />
     </W3CNode>
   );
 };

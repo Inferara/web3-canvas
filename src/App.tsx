@@ -55,6 +55,7 @@ import SeedPhraseNode from './nodes/utils/SeedPhrase';
 import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
 // actors
 import ActorNode from './nodes/actors/Actor';
+import Interval from './nodes/actors/Interval';
 import Ledger from './nodes/actors/Ledger';
 import MakeActorMessage from './nodes/actors/MakeActorMessage';
 import NetworkNode from './nodes/actors/Network';
@@ -97,6 +98,7 @@ const nodeTypes = {
   incrementDecrement: IncrementDecrementNode,
   // actors
   actor: ActorNode,
+  interval: Interval,
   ledger: Ledger,
   makeActorMessage: MakeActorMessage,
   network: NetworkNode,
