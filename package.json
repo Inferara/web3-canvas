@@ -1,6 +1,18 @@
 {
-  "name": "vite-react-flow-template",
+  "name": "w3c-canvas",
   "version": "0.0.0",
+  "description": "An interactive canvas for making up interactive workflows and blueprints",
+  "author": {
+    "name": "Georgii Plotnikov",
+    "email": "georgii@inferara.com",
+    "url": "https://inferara.com"
+  },
+  "contributors": [
+    {
+      "name": "Andrew D. Anderson",
+      "url":"https://www.CallMeGwei.com"
+    }
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
