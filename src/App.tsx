@@ -52,7 +52,7 @@ import Group from './nodes/utils/Group';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
-import IncrementDecrementNode from './nodes/utils/IncrementDecrement';
+import ArithmeticNode from './nodes/utils/Arithmetic';
 // actors
 import ActorNode from './nodes/actors/Actor';
 import Interval from './nodes/actors/Interval';
@@ -95,7 +95,7 @@ const nodeTypes = {
   substring: Substring,
   length: StrLengthNode,
   seed: SeedPhraseNode,
-  incrementDecrement: IncrementDecrementNode,
+  arithmetic: ArithmeticNode,
   // actors
   actor: ActorNode,
   interval: Interval,

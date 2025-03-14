@@ -230,8 +230,8 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "seed")} draggable>
                     Seed Phrase
                 </div>
-                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "incrementDecrement")} draggable>
-                    Increment Decrement
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "arithmetic")} draggable>
+                    Arithmetic
                 </div>
 
                 <div className='description'>Actors</div>
