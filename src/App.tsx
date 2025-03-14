@@ -287,23 +287,29 @@ const W3CFlow: React.FC = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
       if (!type) return;
-      const data = type in defaultData ? defaultData[type] : { in: '', out: '' };
-      const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-      const newNode: Node = {
-        id: NodeIdProvider.getId(),
-        type,
-        position,
-        data: data,
-      };
-      setNodes((nds) => nds.concat(newNode));
-      pushSnapshot();
+      createNode(type, event.clientX, event.clientY);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [screenToFlowPosition, setNodes, type]
   );
+
+  function createNode(type: string, x: number, y: number) {
+    const data = type in defaultData ? defaultData[type] : { in: '', out: '' };
+    const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+    if (!reactFlowBounds) return;
+    const position = screenToFlowPosition({
+      x: x - reactFlowBounds.left,
+      y: y - reactFlowBounds.top,
+    });
+    const newNode: Node = {
+      id: NodeIdProvider.getId(),
+      type,
+      position:position,//screenToFlowPosition({ x, y }),
+      data: data,
+    };
+    setNodes((nds) => nds.concat(newNode));
+    pushSnapshot();
+  }
 
   //FIXME: I should be able to drop a group after other nodes and then drop nodes inside the group
   // probably need to reorder the nodes array if on drop a group is dropped
@@ -337,7 +343,6 @@ const W3CFlow: React.FC = () => {
     setNodes((nds) => nds.map((n) => (n.id === draggedNode.id ? draggedNode : n)));
     pushSnapshot();
   };
-
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -468,6 +473,7 @@ const W3CFlow: React.FC = () => {
         rfInstance={rfInstance}
         setNodes={setNodes}
         setEdges={setEdges}
+        createNode={createNode}
       />
     </div>
   );

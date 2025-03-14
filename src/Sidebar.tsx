@@ -9,20 +9,36 @@ interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;
     setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+    createNode: (type: string, x: number, y: number ) => void;
 }
 
 const flowKey = 'w3cflow';
 
-const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => {
+const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, createNode }) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, setType] = useW3C();
     const [savedStates, setSavedStates] = useState<SavedState[]>([]);
     const [panelVisible, setPanelVisible] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {
         setType(nodeType);
         event.dataTransfer.effectAllowed = 'move';
+        setIsDragging(true);
     };
+
+    const onDragEnd = () => {
+        setIsDragging(false);
+    }
+
+    const handleNodeClick = useCallback((nodeType: string) => {
+        if (!isDragging) {
+            const { innerWidth, innerHeight } = window;
+            const x = (innerWidth / 2) - 420;
+            const y = (innerHeight / 2) - 100;
+            createNode(nodeType, x, y);
+        }
+    }, []);
 
     const updateStateName = useCallback((id: number, newName: string) => {
         setSavedStates((prev) =>
@@ -123,7 +139,8 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
               console.error("Failed to copy URL:", err);
             });
         }
-      }, [rfInstance]);     
+      }, [rfInstance]);
+
 
     return (
         <aside>
@@ -145,7 +162,7 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
                 </div>
                 <div className='description'>Cryptography</div>
                 <hr />
-                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "calculateAddress")} draggable>
+                <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "calculateAddress")} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick("calculateAddress")} draggable>
                     Calculate Address
                 </div>
                 <div className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, "encrypt")} draggable>
