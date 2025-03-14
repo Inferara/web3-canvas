@@ -62,8 +62,6 @@ import NetworkNode from './nodes/actors/Network';
 
 ReactGA.initialize("G-QPYSF5N8BL");
 
-
-
 const nodeTypes = {
   // cryptography
   calculateAddress: CalculateAddress,
@@ -104,8 +102,12 @@ const nodeTypes = {
   network: NetworkNode,
 };
 
-let id = 0;
-const getId = () => `w3cnode_${id++}`;
+class NodeIdProvider {
+  static id: number = 0;
+  static getId() {
+    return `w3cnode_${++NodeIdProvider.id}`;
+  }
+}
 
 const defaultData: { [key: string]: { in: string; out: string } } = {
   'textInput': { in: '', out: Utf8DataTransfer.encodeString('Web3 キャンバス') },
@@ -152,7 +154,7 @@ const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
       const { nodes: copiedNodes, edges: copiedEdges } = JSON.parse(clipboardData);
       const oldToNewMap = new Map<string, string>();
       const newNodes: Node[] = copiedNodes.map((node: Node) => {
-        const newId = getId();
+        const newId = NodeIdProvider.getId();
         oldToNewMap.set(node.id, newId);
         return {
           ...node,
@@ -163,7 +165,7 @@ const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
       });
       const newEdges: Edge[] = copiedEdges.map((edge: Edge) => ({
         ...edge,
-        id: getId(),
+        id: NodeIdProvider.getId(),
         selected: true,
         source: oldToNewMap.get(edge.source) || edge.source,
         target: oldToNewMap.get(edge.target) || edge.target,
@@ -291,7 +293,7 @@ const W3CFlow: React.FC = () => {
         y: event.clientY,
       });
       const newNode: Node = {
-        id: getId(),
+        id: NodeIdProvider.getId(),
         type,
         position,
         data: data,
@@ -402,7 +404,7 @@ const W3CFlow: React.FC = () => {
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
       if (!connectionState.isValid) {
-        const id = getId();
+        const id = NodeIdProvider.getId();
         const { clientX, clientY } =
           "changedTouches" in event ? event.changedTouches[0] : event;
         const sourceHandle =
@@ -481,4 +483,5 @@ const App: React.FC = () => (
   </ToastProvider>
 );
 
+export { NodeIdProvider };
 export default App;

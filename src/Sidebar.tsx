@@ -3,6 +3,7 @@ import { useW3C } from './W3CContext';
 import SavedInstanceItem, { SavedState } from './StatesPanel';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import LZString from 'lz-string';
+import { NodeIdProvider } from './App';
 
 interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;
@@ -58,6 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges }) => 
             setNodes(flow.nodes || []);
             setEdges(flow.edges || []);
             rfInstance?.setViewport({ x, y, zoom });
+            NodeIdProvider.id = flow.nodes.length;
         }
     }, [rfInstance, setNodes, setEdges]);
 
