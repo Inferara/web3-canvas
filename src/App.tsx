@@ -47,7 +47,7 @@ import BroadcastTransactionNode from './nodes/web3/BroadcastTransaction';
 // utils
 import BigIntNode from './nodes/utils/BigInt';
 import Compound from './nodes/utils/Compound';
-import Equals from './nodes/utils/Equals';
+import Compare from './nodes/utils/Equals';
 import Group from './nodes/utils/Group';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
@@ -88,7 +88,7 @@ const nodeTypes = {
   // utils
   bigint: BigIntNode,
   compound: Compound,
-  equals: Equals,
+  compare: Compare,
   group: Group,
   substring: Substring,
   length: StrLengthNode,

@@ -60,11 +60,11 @@ const ArithmeticNode: React.FC<ArithmeticNodeProps> = ({ id, data }) => {
                             onChange={(e) => setOperator(e.target.value as keyof typeof operatorFunctionMap)}
                             className="nodrag"
                         >
-                            <option value="add">Sum</option>
-                            <option value="sub">Sub</option>
-                            <option value="mul">Mul</option>
-                            <option value="div">Div</option>
-                            <option value="mod">Mod</option>
+                            {Object.keys(operatorFunctionMap).map((op) => (
+                                <option key={op} value={op}>
+                                    {op}
+                                </option>
+                            ))}
                         </select>
                     </label>
                 </div>
