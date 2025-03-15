@@ -22,6 +22,7 @@ import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 import { ToastProvider } from './ToastProvider';
+import NodeSearchModal, { NodeOption } from './NodeSearchModal';
 // cryptography
 import CalculateAddress from './nodes/cryptography/CalculateAddress';
 import Decrypt from './nodes/cryptography/Decrypt';
@@ -198,6 +199,7 @@ const W3CFlow: React.FC = () => {
   const [type] = useW3C();
   const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<FlowSnapshot[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (!rfInstance) return;
@@ -384,6 +386,9 @@ const W3CFlow: React.FC = () => {
       } else if (e.ctrlKey && e.key === 'y') {
         e.preventDefault();
         redo();
+      } else if (e.ctrlKey && e.code === 'Space') {
+        e.preventDefault();
+        setShowModal(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown, true);
@@ -445,6 +450,18 @@ const W3CFlow: React.FC = () => {
     [screenToFlowPosition]
   );
 
+  const handleSelectNode = useCallback(
+    (nodeType: NodeOption) => {
+      if (!rfInstance) return;
+      const { innerWidth, innerHeight } = window;
+      const x = (innerWidth / 2) - 420;
+      const y = (innerHeight / 2) - 100;
+      createNode(nodeType.type, x, y);
+      setShowModal(false);
+    },
+    [nodes, rfInstance]
+  );
+
   return (
     <div className="w3cflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -474,6 +491,11 @@ const W3CFlow: React.FC = () => {
         setNodes={setNodes}
         setEdges={setEdges}
         createNode={createNode}
+      />
+      <NodeSearchModal
+        isVisible={showModal}
+        onClose={() => setShowModal(false)}
+        onSelectNode={handleSelectNode}
       />
     </div>
   );
