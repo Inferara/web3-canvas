@@ -193,6 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
         <aside>
             <div>
                 <div className='appname'>Web3 キャンバス</div>
+                <div className='appname'>Made by <a href={"https://github.com/Inferara"}>Inferara</a>, it's <a href={"https://github.com/Inferara/web3-canvas"}>open sourced</a></div>
                 <div className="saveRestoreButtonsContainer">
                     <button onClick={onDownload}>💾</button>
                     <button onClick={handleCopyUrl}>🔗</button>
