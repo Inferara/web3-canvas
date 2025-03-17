@@ -148,6 +148,8 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
         "hash",
         "keypair",
         "scalarMultiplication",
+        "signMessage",
+        "verifySignature",
     ];
 
     const ethereumNodes = [

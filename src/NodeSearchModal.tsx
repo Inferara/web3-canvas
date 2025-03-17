@@ -20,6 +20,8 @@ const nodeOptions: NodeOption[] = [
   { type: "hash", label: "Hash" },
   { type: "keypair", label: "Keypair" },
   { type: "scalarMultiplication", label: "Scalar Multiplication" },
+  { type: "signMessage", label: "Sign Message" },
+  { type: "verifySignature", label: "Verify Signature" },
   { type: "balance", label: "Balance" },
   { type: "ethToUsd", label: "ETH to USD" },
   { type: "makeTransaction", label: "Make Transaction" },
