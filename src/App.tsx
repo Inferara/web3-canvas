@@ -50,6 +50,7 @@ import BigIntNode from './nodes/utils/BigInt';
 import Compound from './nodes/utils/Compound';
 import Compare from './nodes/utils/Equals';
 import Group from './nodes/utils/Group';
+import NodeIdNode from './nodes/utils/NodeId';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
 import SeedPhraseNode from './nodes/utils/SeedPhrase';
@@ -63,45 +64,155 @@ import NetworkNode from './nodes/actors/Network';
 
 ReactGA.initialize("G-QPYSF5N8BL");
 
-const nodeTypes = {
-  // cryptography
-  calculateAddress: CalculateAddress,
-  encrypt: Encrypt,
-  decrypt: Decrypt,
-  hash: Hash,
-  keypair: KeyPairNode,
-  scalarMultiplication: ScalarMultiplication,
-  signMessage: SignMessageNode,
-  verifySignature: VerifySignatureNode,
-  // input
-  textInput: TextInputNode,
-  numberInput: NumberInputNode,
-  fileInput: FileInputNode,
-  // view
-  textView: TextViewNode,
-  qr: QRCode,
-  color: ColorViewNode,
-  // web3
-  balance: EthBalanceNode,
-  ethToUsd: EthToUsdNode,
-  makeTransaction: MakeTransactionNode,
-  broadcastTrascation: BroadcastTransactionNode,
-  // utils
-  bigint: BigIntNode,
-  compound: Compound,
-  compare: Compare,
-  group: Group,
-  substring: Substring,
-  length: StrLengthNode,
-  seed: SeedPhraseNode,
-  arithmetic: ArithmeticNode,
-  // actors
-  actor: ActorNode,
-  interval: Interval,
-  ledger: Ledger,
-  makeActorMessage: MakeActorMessage,
-  network: NetworkNode,
+export const nodeTypesCategorized = {
+  cryptography: {
+    calculateAddress :{
+      class: CalculateAddress,
+      label: "Calculate Address",
+    },
+    encrypt: {
+      class: Encrypt,
+      label: "Encrypt",
+    },
+    decrypt: {
+      class: Decrypt,
+      label: "Decrypt",
+    },
+    hash: {
+      class: Hash,
+      label: "Hash",
+    },
+    keypair: {
+      class: KeyPairNode,
+      label: "Keypair",
+    },
+    scalarMultiplication: {
+      class: ScalarMultiplication,
+      label: "Scalar Multiplication",
+    },
+    signMessage: {
+      class: SignMessageNode,
+      label: "Sign Message",
+    },
+    verifySignature: {
+      class: VerifySignatureNode,
+      label: "Verify Signature",
+    },
+  },
+  input: {
+    textInput: {
+      class: TextInputNode,
+      label: "Text Input",
+    },
+    numberInput: {
+      class: NumberInputNode,
+      label: "Number Input",
+    },
+    fileInput: {
+      class: FileInputNode,
+      label: "File Input",
+    },
+  },
+  view: {
+    textView: {
+      class: TextViewNode,
+      label: "Text View",
+    },
+    qr: {
+      class: QRCode,
+      label: "QR",
+    },
+    color: {
+      class: ColorViewNode,
+      label: "Color",
+    },
+  },
+  ethereum: {
+    balance: {
+      class: EthBalanceNode,
+      label: "Balance",
+    },
+    ethToUsd: {
+      class: EthToUsdNode,
+      label: "ETH to USD",
+    },
+    makeTransaction: {
+      class: MakeTransactionNode,
+      label: "Make Transaction",
+    },
+    broadcastTransaction: {
+      class: BroadcastTransactionNode,
+      label: "Broadcast Transaction",
+    }
+  },
+  utils: {
+    bigint: {
+      class: BigIntNode,
+      label: "Bigint",
+    },
+    compound: {
+      class: Compound,
+      label: "Compound",
+    },
+    compare: {
+      class: Compare,
+      label: "Compare",
+    },
+    group: {
+      class: Group,
+      label: "Group",
+    },
+    nodeId: {
+      class: NodeIdNode,
+      label: "Node ID",
+    },
+    substring: {
+      class: Substring,
+      label: "Substring",
+    },
+    length: {
+      class: StrLengthNode,
+      label: "Length",
+    },
+    seed: {
+      class: SeedPhraseNode,
+      label: "Seed",
+    },
+    arithmetic: {
+      class: ArithmeticNode,
+      label: "Arithmetic",
+    }
+  },
+  actors: {
+    actor: {
+      class: ActorNode,
+      label: "Actor",
+    },
+    interval: {
+      class: Interval,
+      label: "Interval",
+    },
+    ledger: {
+      class: Ledger,
+      label: "Ledger",
+    },
+    makeActorMessage: {
+      class: MakeActorMessage,
+      label: "Make Actor Message",
+    },
+    network: {
+      class: NetworkNode,
+      label: "Network",
+    }
+  },
 };
+
+const nodeTypes = Object.values(nodeTypesCategorized).reduce((acc: { [key: string]: any }, category) => {
+  Object.entries(category).forEach(([key, value]) => {
+    acc[key] = value.class;
+  });
+  return acc;
+}, {});
 
 class NodeIdProvider {
   static id: number = 0;

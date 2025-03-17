@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, KeyboardEvent } from 'react';
+import { nodeTypesCategorized } from './App';
 
 export interface NodeOption {
   type: string;
@@ -11,48 +12,17 @@ export interface NodeSearchModalProps {
   onSelectNode: (option: NodeOption) => void;
 }
 
-// Define your available node options
-const nodeOptions: NodeOption[] = [
-  { type: 'hash', label: 'Input Node' },
-  { type: "calculateAddress", label: "Calculate Address" },
-  { type: "encrypt", label: "Encrypt" },
-  { type: "decrypt", label: "Decrypt" },
-  { type: "hash", label: "Hash" },
-  { type: "keypair", label: "Keypair" },
-  { type: "scalarMultiplication", label: "Scalar Multiplication" },
-  { type: "signMessage", label: "Sign Message" },
-  { type: "verifySignature", label: "Verify Signature" },
-  { type: "balance", label: "Balance" },
-  { type: "ethToUsd", label: "ETH to USD" },
-  { type: "makeTransaction", label: "Make Transaction" },
-  { type: "broadcastTransaction", label: "Broadcast Transaction" },
-  { type: "textInput", label: "Text Input" },
-  { type: "numberInput", label: "Number Input" },
-  { type: "fileInput", label: "File Input" },
-  { type: "textView", label: "Text View" },
-  { type: "qr", label: "QR" },
-  { type: "color", label: "Color" },
-  { type: "bigint", label: "Bigint" },
-  { type: "compound", label: "Compound" },
-  { type: "compare", label: "Compare" },
-  { type: "group", label: "Group" },
-  { type: "substring", label: "Substring" },
-  { type: "length", label: "Length" },
-  { type: "seed", label: "Seed" },
-  { type: "arithmetic", label: "Arithmetic" },
-  { type: "actor", label: "Actor" },
-  { type: "interval", label: "Interval" },
-  { type: "ledger", label: "Ledger" },
-  { type: "makeActorMessage", label: "Make Actor Message" },
-  { type: "network", label: "Network" },
-  
-  // Add additional node options as needed.
-];
-
 const NodeSearchModal: React.FC<NodeSearchModalProps> = ({ isVisible, onClose, onSelectNode }) => {
   const [search, setSearch] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const nodeOptions: NodeOption[] = [];
+  Object.entries(nodeTypesCategorized).map(([_, nodes]) => (
+    Object.entries(nodes).map(([nodeType, node]) => (
+      nodeOptions.push({ type: nodeType, label: node.label })
+    ))
+  ));
 
   // Filter node options based on search term.
   const filteredOptions = nodeOptions.filter((option) =>

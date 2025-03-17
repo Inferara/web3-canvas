@@ -3,7 +3,7 @@ import { useW3C } from './W3CContext';
 import SavedInstanceItem, { SavedState } from './StatesPanel';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import LZString from 'lz-string';
-import { NodeIdProvider } from './App';
+import { NodeIdProvider, nodeTypesCategorized } from './App';
 
 interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;
@@ -141,56 +141,6 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
         }
       }, [rfInstance]);
 
-    const cryptographyNodes = [
-        "calculateAddress",
-        "encrypt",
-        "decrypt",
-        "hash",
-        "keypair",
-        "scalarMultiplication",
-        "signMessage",
-        "verifySignature",
-    ];
-
-    const ethereumNodes = [
-        "balance",
-        "ethToUsd",
-        "makeTransaction",
-        "broadcastTransaction",
-    ];
-
-    const inputNodes = [
-        "textInput",
-        "numberInput",
-        "fileInput",
-    ];
-
-    const viewNodes = [
-        "textView",
-        "qr",
-        "color",
-    ];
-
-    const utilsNodes = [
-        "bigint",
-        "compound",
-        "compare",
-        "group",
-        "substring",
-        "length",
-        "seed",
-        "arithmetic",
-    ];
-
-    const actorsNodes = [
-        "actor",
-        "interval",
-        "ledger",
-        "makeActorMessage",
-        "network",
-    ];
-
-
     return (
         <aside>
             <div>
@@ -210,47 +160,20 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
                         {panelVisible ? '📕' : '📖'}
                     </button>
                 </div>
-                <div className='description'>Cryptography</div>
-                <hr />
-                {cryptographyNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
-                ))}
-                <div className='description'>Ethereum</div>
-                <hr />
-                {ethereumNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
-                ))}
-                <div className='description'>Inputs</div>
-                <hr />
-                {inputNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
-                ))}
-                <div className='description'>View</div>
-                <hr />
-                {viewNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
-                ))}
-                <div className='description'>Utils</div>
-                <hr />
-                {utilsNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
-                ))}
-                <div className='description'>Actors</div>
-                <hr />
-                {actorsNodes.map((nodeType) => (
-                    <div key={nodeType} className='w3cflownodeMenuItem' onDragStart={(event) => onDragStart(event, nodeType)} onDragEnd={() => onDragEnd()} onClick={() => handleNodeClick(nodeType)} draggable>
-                        {nodeType}
-                    </div>
+                {Object.entries(nodeTypesCategorized).map(([category, nodes]) => (
+                    <><div className='description'>{category.charAt(0).toUpperCase() + category.slice(1)}</div><hr />
+                    {Object.entries(nodes).map(([nodeType, node]) => (
+                        <div
+                            key={nodeType}
+                            className='w3cflownodeMenuItem'
+                            onDragStart={(event) => onDragStart(event, nodeType)}
+                            onDragEnd={onDragEnd}
+                            onClick={() => handleNodeClick(nodeType)}
+                            draggable>
+                            {node.label}
+                        </div>
+                    ))}
+                    </>
                 ))}
             </div>
             {panelVisible && (

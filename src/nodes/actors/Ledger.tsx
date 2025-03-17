@@ -1,7 +1,7 @@
 import React, {  } from "react";
 import { NodeProps } from "@xyflow/react";
 import W3CNode from "../../W3CNode";
-import { Transaction, W3CDatabase } from "../../Database";
+import { Transaction, W3CDatabase } from "../../infrastructure/Database";
 
 interface LedgerNodeProps extends NodeProps {
     id: string;
