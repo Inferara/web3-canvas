@@ -317,9 +317,11 @@ const W3CFlow: React.FC = () => {
   queue.subscribe("app", () => {
     const message = queue.peek();
     if (message.type === W3CQueueMessageType.Node) {
+      queue.dequeue();
       const node = getNode(message.to[0]);
       if (node) {
-        updateNodeData(node.id, { ...node.data, out: message.payload });
+        // updateNodeData(node.id, { ...node.data, out: Utf8DataTransfer.encodeString(message.payload) });
+        updateNodeData(node.id, { ...node.data, triggered: true });
       }
     }
   });

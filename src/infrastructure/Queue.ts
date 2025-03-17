@@ -83,13 +83,13 @@ export class W3CMessageQueue {
 }
 
 export enum W3CQueueMessageType {
-    Transaction = "transaction",
-    Message = "message",
-    Block = "block",
-    Request = "request",
-    Response = "response",
-    Log = "log",
-    Node = "node"
+    Transaction = "Transaction",
+    Message = "Tessage",
+    Block = "Block",
+    Request = "Request",
+    Response = "Response",
+    Log = "Log",
+    Node = "Node"
 }
 
 export type W3CQueueMessage = {

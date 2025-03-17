@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   NodeProps,
   Position,
-  useNodeConnections,
-  useNodesData,
   useReactFlow,
 } from "@xyflow/react";
 
@@ -20,6 +18,7 @@ interface SeedPhraseNodeProps extends NodeProps {
     in?: string;   // Not used here, included for consistency
     out?: string;  // We'll store the generated seed phrase here
     label?: string;
+    triggered?: boolean;
   };
 }
 
@@ -28,12 +27,6 @@ const DEFAULT_LABEL = "Seed Phrase";
 const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
   const { updateNodeData } = useReactFlow();
   const [seedPhrase, setSeedPhrase] = useState<string>("");
-  const inputConnections = useNodeConnections({ handleType: 'target' });
-  const nodeData = useNodesData(inputConnections[0]?.source);
-  if (nodeData && nodeData.data.out === 0x10321) {
-    updateNodeData(inputConnections[0].source, { ...nodeData.data, out: "" });
-    setSeedPhrase(generate({ exactly: 20, join: " " }));
-  }
   useEffect(() => {
     const outData = Utf8DataTransfer.encodeString(seedPhrase as string);
     updateNodeData(id, { ...data, out: outData });
@@ -50,19 +43,16 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
 
   // If data.label is empty (or null), use the default.
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;
+  if (data.triggered) {
+    handleGenerate();
+    data.triggered = false;
+  }
 
   return (
     <W3CNode id={id} label={headerLabel} isGood={seedPhrase.length > 0} isResizeable={true}>
       <button onClick={handleGenerate} style={{marginTop: '10px'}}>Generate</button>
       <textarea value={seedPhrase || "..."} readOnly={true}/>
       <LabeledHandle label="out" type="source" position={Position.Bottom} id="output" />
-      <LabeledHandle
-        label="trigger"
-        type="target"
-        position={Position.Left}
-        id="trigger"
-        isConnectable={inputConnections.length === 0}
-      />
     </W3CNode>
   );
 };
