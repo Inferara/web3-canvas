@@ -3,7 +3,7 @@
 export class W3CMessageQueue {
     private static instance: W3CMessageQueue;
     private queue: any[] = [];
-    private listeners: any[] = [];
+    private listeners: Map<string, any> = new Map();
 
     // Private constructor for singleton pattern
     private constructor() { }
@@ -45,18 +45,18 @@ export class W3CMessageQueue {
     }
 
     // Subscribe to updates to the queue
-    public subscribe(listener: any): void {
-        this.listeners.push(listener);
+    public subscribe(id: string, listener: any): void {
+        this.listeners.set(id, listener);
     }
 
     // Unsubscribe from updates to the queue
-    public unsubscribe(listener: any): void {
-        this.listeners = this.listeners.filter((l) => l !== listener);
+    public unsubscribe(id: string): void {
+        this.listeners.delete(id);
     }
 
     // Notify all listeners of an update to the queue
     private notify(): void {
-        this.listeners.forEach((l) => l());
+        this.listeners.forEach((value, _key, _map) => value());
     }
 
     // Process the next item in the queue

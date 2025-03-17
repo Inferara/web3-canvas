@@ -44,9 +44,9 @@ const SeedPhraseNode: React.FC<SeedPhraseNodeProps> = ({ id, data }) => {
     setSeedPhrase(generate({ exactly: 20, join: " " }));
   };
 
-  const triggerMessage = (payload: any) => {
-    handleGenerate();
-  };
+  // function triggerMessage(payload: any) {
+  //   handleGenerate();
+  // }
 
   // If data.label is empty (or null), use the default.
   const headerLabel = data.label && data.label.trim() ? data.label : DEFAULT_LABEL;

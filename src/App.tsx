@@ -61,6 +61,7 @@ import Interval from './nodes/actors/Interval';
 import Ledger from './nodes/actors/Ledger';
 import MakeActorMessage from './nodes/actors/MakeActorMessage';
 import NetworkNode from './nodes/actors/Network';
+import { W3CMessageQueue, W3CQueueMessage, W3CQueueMessageType } from './infrastructure/Queue';
 
 ReactGA.initialize("G-QPYSF5N8BL");
 
@@ -305,12 +306,23 @@ const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const { getIntersectingNodes, screenToFlowPosition } = useReactFlow();
+  const { getNode, updateNodeData, getIntersectingNodes, screenToFlowPosition } = useReactFlow();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<Node, Edge> | null>(null);
   const [type] = useW3C();
   const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<FlowSnapshot[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const queue: W3CMessageQueue = W3CMessageQueue.getInstance();
+  queue.subscribe("app", () => {
+    const message = queue.peek();
+    if (message.type === W3CQueueMessageType.Node) {
+      const node = getNode(message.to[0]);
+      if (node) {
+        updateNodeData(node.id, { ...node.data, out: message.payload });
+      }
+    }
+  });
 
   useEffect(() => {
     if (!rfInstance) return;
