@@ -10,6 +10,7 @@ export type Transaction = {
 export class W3CDatabase {
     private static instance: W3CDatabase;
     private transactions: Transaction[] = [];
+    private intervals: Map<string, NodeJS.Timeout> = new Map();
 
     // Private constructor for singleton pattern
     private constructor() { }
@@ -38,4 +39,21 @@ export class W3CDatabase {
     public clear(): void {
         this.transactions = [];
     }
+
+    public addInterval(id: string, interval: NodeJS.Timeout): void {
+        this.intervals.set(id, interval);
+    }
+
+    public getInterval(id: string): NodeJS.Timeout | undefined {
+        return this.intervals.get(id);
+    }
+
+    public removeInterval(id: string): void {
+        const interval = this.intervals.get(id);
+        if (interval) {
+            clearInterval(interval);
+        }
+        this.intervals.delete(id);
+    }
+
 }
