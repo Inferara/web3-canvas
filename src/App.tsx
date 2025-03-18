@@ -57,6 +57,7 @@ import Compound from './nodes/utils/Compound';
 import Compare from './nodes/utils/Equals';
 import DrawingNode from './nodes/utils/Drawing';
 import Group from './nodes/utils/Group';
+import ImageNode from './nodes/utils/Image';
 import NodeIdNode from './nodes/utils/NodeId';
 import Substring from './nodes/utils/Substring';
 import StrLengthNode from './nodes/utils/StrLength';
@@ -177,6 +178,10 @@ export const nodeTypesCategorized = {
     group: {
       class: Group,
       label: "Group",
+    },
+    image: {
+      class: ImageNode,
+      label: "Image",
     },
     nodeId: {
       class: NodeIdNode,
