@@ -51,6 +51,7 @@ import EthToUsdNode from './nodes/web3/EthToUsd';
 import MakeTransactionNode from './nodes/web3/MakeTransaction';
 import BroadcastTransactionNode from './nodes/web3/BroadcastTransaction';
 // utils
+import Annotation from './nodes/utils/Annotation';
 import BigIntNode from './nodes/utils/BigInt';
 import Compound from './nodes/utils/Compound';
 import Compare from './nodes/utils/Equals';
@@ -152,6 +153,10 @@ export const nodeTypesCategorized = {
     }
   },
   utils: {
+    annotation: {
+      class: Annotation,
+      label: "Annotation",
+    },
     bigint: {
       class: BigIntNode,
       label: "Bigint",

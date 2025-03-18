@@ -267,3 +267,29 @@ body {
 .custom-file-upload:hover {
   background-color: #0056b3;
 }
+
+.react-flow__node-annotation {
+  font-size: 16px;
+  width: 200px;
+  color: #683bfa;
+  position: absolute;
+  box-shadow: none;
+  font-family: monospace;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+}
+ 
+.react-flow__node-annotation .annotation-content {
+  padding: 10px;
+  display: flex;
+}
+ 
+.react-flow__node-annotation .annotation-level {
+  margin-right: 4px;
+}
+ 
+.react-flow__node-annotation .annotation-arrow {
+  position: absolute;
+  font-size: 24px;
+}
