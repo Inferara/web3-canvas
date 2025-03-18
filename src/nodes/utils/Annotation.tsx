@@ -1,35 +1,40 @@
+import { useReactFlow } from '@xyflow/react';
 import { memo, useState, useEffect } from 'react';
 
 interface AnnotationNodeProps {
+    id : string;
     data: {
-        level: number;
         label: string;
-        arrowStyle?: React.CSSProperties;
+        arrowRotation: number;
+        color: string;
     };
 }
 
-function AnnotationNode({ data }: AnnotationNodeProps) {
+const AnnotationNode: React.FC<AnnotationNodeProps> = ({ id, data }) => {
+    const { updateNodeData } = useReactFlow();
     const [isEditing, setIsEditing] = useState(false);
-    const [headerText, setHeaderText] = useState("Double click to edit");
-    const [rotation, setRotation] = useState(0);
-
-    // Load saved rotation state from localStorage on mount
-    useEffect(() => {
-        const savedRotation = localStorage.getItem('arrowRotation');
-        if (savedRotation) {
-            setRotation(Number(savedRotation));
-        }
-    }, []);
+    const [headerText, setHeaderText] = useState(data.label ?? "Double click to edit");
+    const [rotation, setRotation] = useState(data.arrowRotation ?? 0);
+    const [color, setColor] = useState(data.color ?? "#c02626");
 
     // Save rotation state whenever it changes
     useEffect(() => {
-        localStorage.setItem('arrowRotation', rotation.toString());
-    }, [rotation]);
+        updateNodeData(id, {
+            label: headerText,
+            arrowRotation: rotation,
+            color: color,
+        });
+    }, [rotation, headerText, color]);
 
-    // Combine the provided arrowStyle with our rotation transformation
+    // Merge the provided arrowStyle with our rotation transformation and color
     const arrowStyle = {
-        ...data.arrowStyle,
-        transform: `rotate(${rotation}deg)`
+        transform: `rotate(${rotation}deg)`,
+        color: color, // set arrow color
+    };
+
+    // Apply the selected color to the text style
+    const textStyle = {
+        color: color,
     };
 
     return (
@@ -39,10 +44,6 @@ function AnnotationNode({ data }: AnnotationNodeProps) {
                     <textarea
                         value={headerText}
                         onChange={(e) => setHeaderText(e.target.value)}
-                        //   onBlur={() => setIsEditing(false)}
-                        // onKeyDown={(e) => {
-                        //     if (e.key === 'Enter') setIsEditing(false);
-                        // }}
                         autoFocus
                     />
 
@@ -58,21 +59,32 @@ function AnnotationNode({ data }: AnnotationNodeProps) {
                         />
                         <span>{rotation}°</span>
                     </div>
+
+                    <div className="color-control nodrag">
+                        <label htmlFor="colorPicker">Select Color:</label>
+                        <input
+                            id="colorPicker"
+                            type="color"
+                            value={color}
+                            onChange={(e) => setColor(e.target.value)}
+                        />
+                    </div>
+
                     <div>
                         <button onClick={() => setIsEditing(false)}>Save</button>
                     </div>
                 </div>
             ) : (
                 <div className="annotation-content">
-                    <span onDoubleClick={() => setIsEditing(true)}>{headerText}</span>
+                    <span style={textStyle} onDoubleClick={() => setIsEditing(true)}>
+                        {headerText}
+                    </span>
                 </div>
             )}
 
             <div className="annotation-arrow" style={arrowStyle}>
                 ⤹
             </div>
-
-
         </div>
     );
 }
