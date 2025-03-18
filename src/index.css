@@ -291,5 +291,7 @@ body {
  
 .react-flow__node-annotation .annotation-arrow {
   position: absolute;
+  bottom: 0;
+  right: 0;
   font-size: 24px;
 }
