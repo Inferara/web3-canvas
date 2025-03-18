@@ -55,6 +55,7 @@ import Annotation from './nodes/utils/Annotation';
 import BigIntNode from './nodes/utils/BigInt';
 import Compound from './nodes/utils/Compound';
 import Compare from './nodes/utils/Equals';
+import DrawingNode from './nodes/utils/Drawing';
 import Group from './nodes/utils/Group';
 import NodeIdNode from './nodes/utils/NodeId';
 import Substring from './nodes/utils/Substring';
@@ -168,6 +169,10 @@ export const nodeTypesCategorized = {
     compare: {
       class: Compare,
       label: "Compare",
+    },
+    drawing: {
+      class: DrawingNode,
+      label: "Drawing",
     },
     group: {
       class: Group,
