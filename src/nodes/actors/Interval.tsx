@@ -32,7 +32,7 @@ const Interval: React.FC<IntervalClickNodeProps> = ({ id, data }) => {
   for (let i = 0; i < nodesData.length; i++) {
     const nodeData = nodesData[i];
     let inputNodeId = Utf8DataTransfer.tryDecodeString(nodeData, inputConnections[i]?.sourceHandle);
-    inputNodeId = inputNodeId ? inputNodeId : nodeData.id;
+    inputNodeId = inputNodeId.startsWith("w3cnode_") ? inputNodeId : nodeData.id;
     combinedData.push(inputNodeId);
   }
 
@@ -63,7 +63,7 @@ const Interval: React.FC<IntervalClickNodeProps> = ({ id, data }) => {
       <div>Interval: {duration}ms</div>
       <button onClick={startInterval}>Start</button>
       <button onClick={stopInterval}>Stop</button>
-      <LabeledHandle label="in" type="target" position={Position.Left} id="input" />
+      <LabeledHandle label="signal" type="target" position={Position.Left} id="input" />
     </W3CNode>
   );
 };

@@ -1,4 +1,4 @@
-import {NodeResizeControl, useReactFlow} from '@xyflow/react';
+import {Handle, NodeResizeControl, Position, useReactFlow} from '@xyflow/react';
 import React, {useState, useEffect} from 'react';
 import {ResizeIcon} from './ResizeIcon';
 
@@ -54,6 +54,10 @@ const W3CNode: React.FC<W3CNodeProps> = ({
                 <ResizeIcon/>
             </NodeResizeControl>
           )}
+          <Handle
+                type="source"
+                position={Position.Top}
+            />
           <div className={headerStyle}>
               {isEditing ? (
                 <input

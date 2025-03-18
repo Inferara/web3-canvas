@@ -25,6 +25,7 @@ import { Utf8DataTransfer } from "./Utf8DataTransfer";
 import { ToastProvider } from './ToastProvider';
 import NodeSearchModal, { NodeOption } from './NodeSearchModal';
 import ConnectionLine from './ConnectionLine';
+import { SignalEdge } from './SignalEdge';
 
 
 // cryptography
@@ -71,7 +72,7 @@ ReactGA.initialize("G-QPYSF5N8BL");
 
 export const nodeTypesCategorized = {
   cryptography: {
-    calculateAddress :{
+    calculateAddress: {
       class: CalculateAddress,
       label: "Calculate Address",
     },
@@ -218,6 +219,10 @@ const nodeTypes = Object.values(nodeTypesCategorized).reduce((acc: { [key: strin
   });
   return acc;
 }, {});
+
+const edgeTypes = {
+  signal: SignalEdge,
+};
 
 class NodeIdProvider {
   static id: number = 0;
@@ -411,12 +416,15 @@ const W3CFlow: React.FC = () => {
   useCopyPaste(rfInstance);
 
   const onConnect = useCallback(
-      (params: Connection) => {
+    (params: Connection) => {
       let newEdge: Edge;
-      if (getNode(params.source)?.type === "interval" || getNode(params.target)?.type === "interval") {
-          newEdge = { id: params.target + params.source, ...params, animated: true, style: { stroke: "#F57DBD" }, label: "Node ID" };
+      let sourceNode = getNode(params.source);
+      let targetNode = getNode(params.target);
+      if (sourceNode?.type === "interval" || targetNode?.type === "interval") {
+        newEdge = { id: params.target + params.source, ...params, type: "signal" };
+        // newEdge = { id: params.target + params.source, ...params, animated: true, style: { stroke: "#F57DBD" }, label: "Node ID" };
       } else {
-          newEdge = { id: params.target + params.source, ...params, markerEnd: { type: MarkerType.Arrow } };
+        newEdge = { id: params.target + params.source, ...params, markerEnd: { type: MarkerType.ArrowClosed } };
       }
       setEdges((eds) => addEdge(newEdge, eds));
     },
@@ -449,7 +457,7 @@ const W3CFlow: React.FC = () => {
     const newNode: Node = {
       id: NodeIdProvider.getId(),
       type,
-      position:position,//screenToFlowPosition({ x, y }),
+      position: position,//screenToFlowPosition({ x, y }),
       data: data,
     };
     setNodes((nds) => nds.concat(newNode));
@@ -611,6 +619,7 @@ const W3CFlow: React.FC = () => {
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           nodes={nodes}
           edges={edges}
           connectionLineComponent={ConnectionLine}
@@ -648,11 +657,11 @@ const W3CFlow: React.FC = () => {
 
 const App: React.FC = () => (
   <ToastProvider>
-  <ReactFlowProvider>
-    <W3CProvider>
-      <W3CFlow />
-    </W3CProvider>
-  </ReactFlowProvider>
+    <ReactFlowProvider>
+      <W3CProvider>
+        <W3CFlow />
+      </W3CProvider>
+    </ReactFlowProvider>
   </ToastProvider>
 );
 
