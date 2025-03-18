@@ -1,4 +1,4 @@
-import { useReactFlow } from '@xyflow/react';
+import { NodeResizer, useReactFlow } from '@xyflow/react';
 import { memo, useState, useEffect } from 'react';
 
 interface AnnotationNodeProps {
@@ -41,6 +41,7 @@ const AnnotationNode: React.FC<AnnotationNodeProps> = ({ id, data }) => {
         <div>
             {isEditing ? (
                 <div>
+                    <NodeResizer minWidth={10} minHeight={10} />
                     <textarea
                         value={headerText}
                         onChange={(e) => setHeaderText(e.target.value)}

@@ -429,7 +429,7 @@ const W3CFlow: React.FC = () => {
         newEdge = { id: params.target + params.source, ...params, type: "signal" };
         // newEdge = { id: params.target + params.source, ...params, animated: true, style: { stroke: "#F57DBD" }, label: "Node ID" };
       } else {
-        newEdge = { id: params.target + params.source, ...params, markerEnd: { type: MarkerType.ArrowClosed } };
+        newEdge = { id: params.target + params.source, ...params, markerEnd: { type: MarkerType.ArrowClosed }, type: "smoothstep" };
       }
       setEdges((eds) => addEdge(newEdge, eds));
     },
@@ -569,7 +569,7 @@ const W3CFlow: React.FC = () => {
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
-      if (!connectionState.isValid && connectionState.fromNode?.type !== "textView") {
+      if (!connectionState.isValid) {
         const id = NodeIdProvider.getId();
         const { clientX, clientY } =
           "changedTouches" in event ? event.changedTouches[0] : event;
@@ -577,9 +577,16 @@ const W3CFlow: React.FC = () => {
           typeof connectionState.fromHandle === "object"
             ? connectionState.fromHandle?.id
             : connectionState.fromHandle;
+        let nodeType = "";
+        if (connectionState.fromHandle?.id?.endsWith("__id")) {
+          nodeType = "nodeId";
+        }
+        else if (connectionState.fromNode?.type !== "textView") {
+          nodeType = "textView";
+        }
         const newNode: Node = {
           id,
-          type: "textView",
+          type: nodeType,
           position: screenToFlowPosition({ x: clientX, y: clientY }),
           data: {
             binding: {
@@ -589,13 +596,14 @@ const W3CFlow: React.FC = () => {
             in: "",
             out: "",
           },
-        };
+        }
         const newEdge: Edge = {
           id,
           source: connectionState.fromNode?.id as string,
           sourceHandle: sourceHandle,
           target: id,
           targetHandle: "input",
+          type: "smoothstep",
           markerEnd: { type: MarkerType.Arrow },
         };
         setNodes((nds) => nds.concat(newNode));

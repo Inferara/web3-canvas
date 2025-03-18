@@ -56,6 +56,8 @@ const W3CNode: React.FC<W3CNodeProps> = ({
           )}
           <Handle
                 type="source"
+                id={id + '__id'}
+                style={{ zIndex: 3}}
                 position={Position.Top}
             />
           <div className={headerStyle}>
