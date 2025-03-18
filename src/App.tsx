@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, useCallback, useEffect, useRef, useState } from 'react';
 import ReactGA from "react-ga4";
 import {
   ReactFlow,
@@ -14,7 +14,8 @@ import {
   ReactFlowProvider,
   FinalConnectionState,
   ReactFlowInstance,
-  MiniMap
+  MiniMap,
+  MarkerType
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import LZString from 'lz-string';
@@ -23,6 +24,9 @@ import Sidebar from './Sidebar';
 import { Utf8DataTransfer } from "./Utf8DataTransfer";
 import { ToastProvider } from './ToastProvider';
 import NodeSearchModal, { NodeOption } from './NodeSearchModal';
+import ConnectionLine from './ConnectionLine';
+
+
 // cryptography
 import CalculateAddress from './nodes/cryptography/CalculateAddress';
 import Decrypt from './nodes/cryptography/Decrypt';
@@ -315,7 +319,7 @@ const W3CFlow: React.FC = () => {
 
   const queue: W3CMessageQueue = W3CMessageQueue.getInstance();
   queue.subscribe("app", () => {
-    const message = queue.peek();
+    const message: W3CQueueMessage = queue.peek();
     if (message.type === W3CQueueMessageType.Node) {
       queue.dequeue();
       for (let i = 0; i < message.to.length; i++) {
@@ -407,7 +411,15 @@ const W3CFlow: React.FC = () => {
   useCopyPaste(rfInstance);
 
   const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
+      (params: Connection) => {
+      let newEdge: Edge;
+      if (getNode(params.source)?.type === "interval" || getNode(params.target)?.type === "interval") {
+          newEdge = { id: params.target + params.source, ...params, animated: true, style: { stroke: "#F57DBD" }, label: "Node ID" };
+      } else {
+          newEdge = { id: params.target + params.source, ...params, markerEnd: { type: MarkerType.Arrow } };
+      }
+      setEdges((eds) => addEdge(newEdge, eds));
+    },
     [setEdges]
   );
 
@@ -544,7 +556,7 @@ const W3CFlow: React.FC = () => {
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
-      if (!connectionState.isValid) {
+      if (!connectionState.isValid && connectionState.fromNode?.type !== "textView") {
         const id = NodeIdProvider.getId();
         const { clientX, clientY } =
           "changedTouches" in event ? event.changedTouches[0] : event;
@@ -571,6 +583,7 @@ const W3CFlow: React.FC = () => {
           sourceHandle: sourceHandle,
           target: id,
           targetHandle: "input",
+          markerEnd: { type: MarkerType.Arrow },
         };
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) => eds.concat(newEdge));
@@ -600,6 +613,7 @@ const W3CFlow: React.FC = () => {
           nodeTypes={nodeTypes}
           nodes={nodes}
           edges={edges}
+          connectionLineComponent={ConnectionLine}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
