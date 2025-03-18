@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { NodeProps, Position, useNodeConnections, useNodesData, useReactFlow } from "@xyflow/react";
+import React from "react";
+import { NodeProps, Position, useNodeConnections, useNodesData } from "@xyflow/react";
 import W3CNode from "../../W3CNode";
 import LabeledHandle from "../../LabeledHandle";
 import { W3CMessageQueue, W3CQueueMessageType } from "../../infrastructure/Queue";
