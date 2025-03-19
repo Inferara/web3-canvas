@@ -1,4 +1,4 @@
-import { BaseEdge, getSmoothStepPath, getBezierPath, type EdgeProps } from '@xyflow/react';
+import { BaseEdge, getBezierPath, type EdgeProps } from '@xyflow/react';
  
 export function SignalEdge({
   id,
@@ -8,7 +8,6 @@ export function SignalEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  pathOptions,
 }: EdgeProps) {
   const [edgePath] = getBezierPath({
     sourceX,
