@@ -8,9 +8,9 @@ import {
 // If you haven't already, install random-words:
 // npm install random-words
 import { generate } from "random-words";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import W3CNode from "../../W3CNode";
-import LabeledHandle from "../../LabeledHandle";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import W3CNode from "../../common/W3CNode";
+import LabeledHandle from "../../common/LabeledHandle";
 
 interface SeedPhraseNodeProps extends NodeProps {
   id: string;

@@ -7,11 +7,11 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { keccak256 } from 'ethers';
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import LabeledHandle from '../../LabeledHandle';
-import W3CNode from '../../W3CNode';
-import { useToast, ToastTypes, ToastType } from "../../ToastProvider";
-import { normalizeEthereumAddress } from '../../Utils';
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import LabeledHandle from '../../common/LabeledHandle';
+import W3CNode from '../../common/W3CNode';
+import { useToast, ToastTypes, ToastType } from "../../common/ToastProvider";
+import { normalizeEthereumAddress } from '../../utils/Utils';
 
 // IN ORDER A NODE WORKS SMOOTHLY AND FAILUE FREE, IT MUST FOLLOW THE FOLLOWING PATTERN:
 

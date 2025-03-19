@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { useW3C } from './W3CContext';
+import { useW3C } from '../W3CContext';
 import SavedInstanceItem, { SavedState } from './StatesPanel';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import LZString from 'lz-string';
-import { NodeIdProvider, nodeTypesCategorized } from './App';
+import { NodeIdProvider, nodeTypesCategorized } from '../App';
 
 interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;

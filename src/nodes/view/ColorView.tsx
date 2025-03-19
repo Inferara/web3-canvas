@@ -5,8 +5,8 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import W3CNode from "../../W3CNode";
-import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../common/W3CNode";
+import LabeledHandle from "../../common/LabeledHandle";
 
 interface ColorViewNodeProps extends NodeProps {
   id: string;

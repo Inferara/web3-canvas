@@ -7,9 +7,9 @@ import {
   useNodesData,
 } from "@xyflow/react";
 import { JsonRpcProvider } from 'ethers';
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import LabeledHandle from "../../LabeledHandle";
-import W3CNode from "../../W3CNode";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import LabeledHandle from "../../common/LabeledHandle";
+import W3CNode from "../../common/W3CNode";
 
 interface BroadcastTransactionNodeProps extends NodeProps {
   id: string;

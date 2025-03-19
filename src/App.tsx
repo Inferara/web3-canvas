@@ -20,12 +20,12 @@ import {
 import '@xyflow/react/dist/style.css';
 import LZString from 'lz-string';
 import { W3CProvider, useW3C } from './W3CContext';
-import Sidebar from './Sidebar';
-import { Utf8DataTransfer } from "./Utf8DataTransfer";
-import { ToastProvider } from './ToastProvider';
-import NodeSearchModal, { NodeOption } from './NodeSearchModal';
-import ConnectionLine from './ConnectionLine';
-import { SignalEdge } from './SignalEdge';
+import Sidebar from './common/Sidebar';
+import { Utf8DataTransfer } from "./utils/Utf8DataTransfer";
+import { ToastProvider } from './common/ToastProvider';
+import NodeSearchModal, { NodeOption } from './common/NodeSearchModal';
+import ConnectionLine from './common/ConnectionLine';
+import { SignalEdge } from './common/SignalEdge';
 
 
 // cryptography

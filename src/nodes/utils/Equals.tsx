@@ -6,9 +6,9 @@ import {
     useNodesData,
     useReactFlow,
 } from '@xyflow/react';
-import { Utf8DataTransfer } from '../../Utf8DataTransfer';
-import W3CNode from '../../W3CNode';
-import LabeledHandle from '../../LabeledHandle';
+import { Utf8DataTransfer } from '../../utils/Utf8DataTransfer';
+import W3CNode from '../../common/W3CNode';
+import LabeledHandle from '../../common/LabeledHandle';
 
 interface CompareNodeProps extends NodeProps {
     id: string;

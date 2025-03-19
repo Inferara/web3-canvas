@@ -1,9 +1,9 @@
 import React from "react";
 import { NodeProps, Position, useNodeConnections, useNodesData } from "@xyflow/react";
-import W3CNode from "../../W3CNode";
-import LabeledHandle from "../../LabeledHandle";
+import W3CNode from "../../common/W3CNode";
+import LabeledHandle from "../../common/LabeledHandle";
 import { W3CMessageQueue, W3CQueueMessageType } from "../../infrastructure/Queue";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
 import { W3CDatabase } from "../../infrastructure/Database";
 
 interface IntervalClickNodeProps extends NodeProps {

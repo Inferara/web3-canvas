@@ -6,8 +6,8 @@ import {
   useNodeConnections,
   useNodesData,
 } from "@xyflow/react";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import W3CNode from "../../W3CNode";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import W3CNode from "../../common/W3CNode";
 
 interface TextViewNodeProps extends NodeProps {
   id: string;

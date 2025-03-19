@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NodeProps, useNodeConnections, useNodesData, useReactFlow } from "@xyflow/react";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
 
 
 interface ActorNodeProps extends NodeProps {

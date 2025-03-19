@@ -8,10 +8,10 @@ import {
   DeleteElementsOptions
 } from "@xyflow/react";
 import { computeAddress, keccak256, SigningKey } from 'ethers';
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import W3CNode from "../../W3CNode";
-import LabeledHandle from "../../LabeledHandle";
-import { useToast, ToastTypes, ToastType } from "../../ToastProvider";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import W3CNode from "../../common/W3CNode";
+import LabeledHandle from "../../common/LabeledHandle";
+import { useToast, ToastTypes, ToastType } from "../../common/ToastProvider";
 
 export interface KeyPairNodeProps extends NodeProps {
   id: string;

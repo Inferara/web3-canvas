@@ -7,9 +7,9 @@ import {
     useReactFlow,
 } from '@xyflow/react';
 import { ProjectivePoint } from '@noble/secp256k1';
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import LabeledHandle from '../../LabeledHandle';
-import W3CNode from '../../W3CNode';
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import LabeledHandle from '../../common/LabeledHandle';
+import W3CNode from '../../common/W3CNode';
 
 interface ScalarMultiplicationNodeProps extends NodeProps {
     id: string;

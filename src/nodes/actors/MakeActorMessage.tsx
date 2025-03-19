@@ -5,9 +5,9 @@ import {
     useNodeConnections,
     useNodesData,
 } from "@xyflow/react";
-import LabeledHandle from "../../LabeledHandle";
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import W3CNode from "../../W3CNode";
+import LabeledHandle from "../../common/LabeledHandle";
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import W3CNode from "../../common/W3CNode";
 import { W3CMessageQueue, W3CQueueMessage, W3CQueueMessageType } from "../../infrastructure/Queue";
 
 interface MakeActorMessageProps extends NodeProps {

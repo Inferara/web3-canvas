@@ -8,9 +8,9 @@ import {
 } from '@xyflow/react';
 import { keccak256, toUtf8Bytes, isHexString } from 'ethers';
 
-import { Utf8DataTransfer } from "../../Utf8DataTransfer";
-import LabeledHandle from '../../LabeledHandle';
-import W3CNode from '../../W3CNode';
+import { Utf8DataTransfer } from "../../utils/Utf8DataTransfer";
+import LabeledHandle from '../../common/LabeledHandle';
+import W3CNode from '../../common/W3CNode';
 
 interface HashNodeProps extends NodeProps {
   id: string;
