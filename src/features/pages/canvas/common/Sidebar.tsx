@@ -3,7 +3,7 @@ import { useW3C } from '../W3CContext';
 import SavedInstanceItem, { SavedState } from './StatesPanel';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import LZString from 'lz-string';
-import { NodeIdProvider, nodeTypesCategorized } from '../App';
+import { NodeIdProvider, nodeTypesCategorized } from '../canvas';
 
 interface SidebarProps {
     rfInstance?: ReactFlowInstance<Node, Edge> | null;
@@ -144,8 +144,6 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
     return (
         <aside>
             <div>
-                <div className='appname'>Web3 キャンバス</div>
-                <div className='appname'>Made by <a href={"https://github.com/Inferara"}>Inferara</a>, it's <a href={"https://github.com/Inferara/web3-canvas"}>open sourced</a></div>
                 <div className="saveRestoreButtonsContainer">
                     <button onClick={onDownload}>💾</button>
                     <button onClick={handleCopyUrl}>🔗</button>

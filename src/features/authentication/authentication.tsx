@@ -27,9 +27,9 @@ export const Authentication: FC<Props> = (props: Props) => {
   const [password, setPassword] = useState('');
   const uiSettings = useAppSelector(selectUiSettings);
 
-  const handleSsoLogin = async () => {
+  const handleSsoLogin = async (provider: string) => {
     const signinRedirectArgs = {
-      acr_values: `microsoft`,
+      acr_values: provider,
     };
     await auth.signinRedirect(signinRedirectArgs);
   };
@@ -96,12 +96,13 @@ export const Authentication: FC<Props> = (props: Props) => {
                   Login
                 </Button>
               </CardActions>
-              {uiSettings.useMicrosoftSso ? <Divider>OR</Divider> : <></>}
+              {(uiSettings.useMicrosoftSso || uiSettings.useGoogleSso)? <Divider>OR</Divider> : <></>}
             </>
             ) : (
               <></>
             )}            
-            {uiSettings.useMicrosoftSso ? <Button className="microsoftSsoButton" onClick={handleSsoLogin} /> : <></>}
+            {uiSettings.useMicrosoftSso ? <Button className="microsoftSsoButton" onClick={() => handleSsoLogin(`microsoft`)} /> : <></>}
+            {uiSettings.useGoogleSso ? <Button className="googleSsoButton" onClick={() => handleSsoLogin(`google`)} /> : <></>}
           </Card>
         </form>
       </div>

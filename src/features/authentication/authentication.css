@@ -61,3 +61,19 @@
     border-width: 0 !important;
     border-radius: 0px !important;
 }
+
+.googleSsoButton:hover {
+    background-image: url(/static/images/web_dark_sq_SI.svg);
+}
+
+.googleSsoButton {
+    margin: 0 auto !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    width: 215px;
+    height: 41px;
+    background-image: url(/static/images/web_light_sq_SI.svg);
+    border-width: 0 !important;
+    border-radius: 0px !important;
+}

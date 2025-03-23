@@ -23,6 +23,7 @@ const initialState: UiConfigState = {
     pageTitle: '',
     useSearchTab: false,
     useMicrosoftSso: false,
+    useGoogleSso: false,
     useInternalUsers: false,
   },
 };

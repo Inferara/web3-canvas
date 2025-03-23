@@ -17,6 +17,6 @@ export class CreateUserItem extends EditUserItem {
 
 export class UserItem extends CreateUserItem {
     loginId: number = 0;
-    loginType: LoginType = LoginType.MicrosoftSSO;
+    loginType: LoginType = LoginType.GoogleSso;
     tokensSpent?: number = 0;
 }

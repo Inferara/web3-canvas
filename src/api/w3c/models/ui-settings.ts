@@ -12,6 +12,7 @@ export interface UiSettings {
   pageTitle: string;
   useSearchTab: boolean;
   useMicrosoftSso: boolean;
+  useGoogleSso: boolean;
   useInternalUsers: boolean;
 }
 

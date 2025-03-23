@@ -3,6 +3,7 @@ import { NodeProps } from "@xyflow/react";
 import W3CNode from "../../common/W3CNode";
 import { NetworkManager } from "../../infrastructure/NetworkManager";
 
+
 interface NetworkNodeProps extends NodeProps {
     id: string;
     data: {

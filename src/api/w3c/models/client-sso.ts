@@ -8,6 +8,7 @@ export class ClientSsoItem {
 export enum LoginType {
     Password = 'Password',
     MicrosoftSSO = 'SsoMicrosoft',
+    GoogleSso = 'SsoGoogle',
 }
 
 export class ClientSsoSettingItem {
@@ -19,7 +20,7 @@ export class ClientSsoSettingItem {
 
 export const ClientSsoSettings = [
     {
-        loginType: LoginType.MicrosoftSSO,
+        loginType: LoginType.GoogleSso,
         settings: [
             {
                 parameterId: 0,

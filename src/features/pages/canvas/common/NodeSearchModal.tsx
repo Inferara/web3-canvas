@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, KeyboardEvent } from 'react';
-import { nodeTypesCategorized } from '../App';
+import { nodeTypesCategorized } from '../canvas';
 
 export interface NodeOption {
   type: string;

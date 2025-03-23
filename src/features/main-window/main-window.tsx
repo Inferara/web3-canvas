@@ -1,7 +1,8 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
-import { Grid, Menu, MenuItem } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { Grid2, Link, Menu, MenuItem } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,7 +16,6 @@ import { useAuth } from 'react-oidc-context';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { LeftMenu } from '../left-menu/left-menu';
-import { ListEmails } from '../pages/list-view/list-emails';
 import { NoPage } from '../pages/no-page/no-page';
 import './main-window.css';
 import { selectCurrentPage } from './current-page-slice';
@@ -28,6 +28,11 @@ import { EditUser } from '../pages/user-management/users/edit-item/edit-user';
 import { ListSsoClients } from '../pages/user-management/sso-client/list-view/list-sso-clients';
 import { AddSsoClient } from '../pages/user-management/sso-client/add-item/add-sso-client';
 import { EditSsoClient } from '../pages/user-management/sso-client/edit-item/edit-sso-client';
+import { W3CFlow } from '../pages/canvas/canvas';
+import { W3CProvider } from '../pages/canvas/W3CContext';
+import { ReactFlowProvider } from '@xyflow/react';
+import { ToastProvider } from '../pages/canvas/common/ToastProvider';
+
 
 const drawerWidth = 240;
 const drawerMarginLeft = 24;
@@ -113,14 +118,20 @@ export const MainWindow: FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Grid container spacing={1}>
-            <Grid item>
+          <Grid2 container spacing={1}>
+            <Grid2>
               <Typography variant="h5" noWrap component="div">
                 {currentPage.pageName}
               </Typography>
-            </Grid>
-          </Grid>
-          <Typography noWrap component="div" sx={{ overflow: 'unset', marginRight: '20px' }}>
+            </Grid2>
+          </Grid2>
+            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'center', flexGrow: 1 }}>
+            Web3 キャンバス by{' '}
+            <Link href="https://github.com/inferara" underline="none" color="inherit">
+              Inferara
+            </Link>
+            </Typography>
+          <Typography noWrap component="div" sx={{ overflow: 'unset', marginRight: '20px', marginLeft: 'auto' }}>
             {auth.user?.profile.name}
           </Typography>
           <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleUserMenuClick}>
@@ -130,8 +141,10 @@ export const MainWindow: FC = () => {
               anchorEl={anchorEl}
               open={open}
               onClose={handleUserMenuClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
+              slotProps={{
+                list: {
+                  'aria-labelledby': 'basic-button',
+                },
               }}
             >
               <MenuItem onClick={handleUserMenuItemProfileClick}>My Profile</MenuItem>
@@ -150,18 +163,18 @@ export const MainWindow: FC = () => {
           anchor="left"
           open={leftMenuOpen}
         >
-          <IconButton onClick={() => setLeftMenuOpen(false)} sx={{ width: 40, alignSelf: 'center' }}>
+          <IconButton onClick={() => setLeftMenuOpen(false)} sx={{ width: 40, alignSelf: 'center', marginLeft: 'auto' }}>
             <ChevronLeftIcon />
           </IconButton>
           <LeftMenu />
         </Drawer>
       </Box>
-      <Main leftMenuOpen={leftMenuOpen} className="mainWindowMain">
-        <DrawerHeader />
+      <Main leftMenuOpen={leftMenuOpen} className="mainWindowMain" sx={ currentPage.pageName !== "Canvas" ? { marginTop: '24px' } : {}}>
+        {currentPage.pageName !== "Canvas" && <DrawerHeader />}
         <Routes>
           <Route path="/myprofile" element={<MyProfile />} />
-          <Route path="/" element={<ListEmails />} />
-
+          {/* <Route path="/" element={<ListEmails />} /> */}
+          <Route path="/" element={<ToastProvider><ReactFlowProvider><W3CProvider><W3CFlow /></W3CProvider></ReactFlowProvider></ToastProvider>} />
           <Route path="/userManagement/users" element={<UserManagement />} />
           <Route path="/userManagement/users/add" element={<AddUser />} />
           <Route path="/userManagement/users/edit" element={<EditUser />} />

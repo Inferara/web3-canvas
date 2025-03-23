@@ -11,7 +11,6 @@ import {
   useReactFlow,
   useNodesState,
   useEdgesState,
-  ReactFlowProvider,
   FinalConnectionState,
   ReactFlowInstance,
   MiniMap,
@@ -19,14 +18,11 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import LZString from 'lz-string';
-import { W3CProvider, useW3C } from './W3CContext';
 import Sidebar from './common/Sidebar';
 import { Utf8DataTransfer } from "./utils/Utf8DataTransfer";
-import { ToastProvider } from './common/ToastProvider';
 import NodeSearchModal, { NodeOption } from './common/NodeSearchModal';
 import ConnectionLine from './common/ConnectionLine';
 import { SignalEdge } from './common/SignalEdge';
-
 
 // cryptography
 import CalculateAddress from './nodes/cryptography/CalculateAddress';
@@ -70,7 +66,9 @@ import Ledger from './nodes/actors/Ledger';
 import MakeActorMessage from './nodes/actors/MakeActorMessage';
 import NetworkNode from './nodes/actors/Network';
 import { W3CMessageQueue, W3CQueueMessage, W3CQueueMessageType } from './infrastructure/Queue';
-
+import { useW3C } from './W3CContext';
+import { useCanvas } from './hooks/canvas.hook';
+import { CurrentPageState } from '../../main-window/current-page-slice';
 ReactGA.initialize("G-QPYSF5N8BL");
 
 export const nodeTypesCategorized = {
@@ -326,7 +324,7 @@ const useCopyPaste = (rfInstance: ReactFlowInstance<Node, Edge> | null) => {
   }, [onCopy, onPaste]);
 };
 
-const W3CFlow: React.FC = () => {
+export const W3CFlow: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -336,6 +334,15 @@ const W3CFlow: React.FC = () => {
   const [undoStack, setUndoStack] = useState<FlowSnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<FlowSnapshot[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const currentPageState: CurrentPageState = {
+    pageName: 'Canvas',
+    pageCode: 'canvas',
+    pageUrl:  window.location.pathname,
+    routePath: 'canvas',
+  }
+
+  useCanvas({ currentPageState });
 
   const queue: W3CMessageQueue = W3CMessageQueue.getInstance();
   queue.subscribe("app", () => {
@@ -678,15 +685,4 @@ const W3CFlow: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
-  <ToastProvider>
-    <ReactFlowProvider>
-      <W3CProvider>
-        <W3CFlow />
-      </W3CProvider>
-    </ReactFlowProvider>
-  </ToastProvider>
-);
-
 export { NodeIdProvider };
-export default App;

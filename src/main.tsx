@@ -27,6 +27,7 @@ const oidcConfig = {
   client_id: environment.clientId,
   redirect_uri: `${window.location.origin}/callback`,
   scope: 'openid offline_access',
+  response_type: 'code',
   automaticSilentRenew: true,
   post_logout_redirect_uri: window.location.origin,
 };

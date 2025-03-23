@@ -1,4 +1,3 @@
-import FolderIcon from '@mui/icons-material/Folder';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Divider from '@mui/material/Divider';
@@ -13,7 +12,7 @@ import { AuthContextProps, useAuth } from 'react-oidc-context';
 import { Role } from '../../api/w3c/models/role';
 import { selectUiSettings } from '../config/ui-config-slice';
 import { useAppSelector } from '../../app/hooks';
-
+import AppsIcon from '@mui/icons-material/Apps';
 
 export const LeftMenu: FC = () => {
   const navigate = useNavigate();
@@ -25,8 +24,8 @@ export const LeftMenu: FC = () => {
 
   const menuStructure = [
     {
-      label: 'Emails',
-      icon: <FolderIcon />,
+      label: 'Canvas',
+      icon: <AppsIcon />,
       path: '',
       visible: true,
     },
