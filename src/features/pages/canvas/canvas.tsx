@@ -17,6 +17,7 @@ import {
   MarkerType
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import './canvas.css';
 import LZString from 'lz-string';
 import Sidebar from './common/Sidebar';
 import { Utf8DataTransfer } from "./utils/Utf8DataTransfer";

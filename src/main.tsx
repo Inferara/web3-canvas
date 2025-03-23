@@ -1,9 +1,9 @@
+import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from 'react-oidc-context';
 import { Provider, useDispatch } from 'react-redux';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Buffer } from 'buffer';
 
 import { useAppSelector } from './app/hooks';
 import { selectUiSettings } from './features/config/ui-config-slice';
@@ -12,13 +12,10 @@ import { setSessionInfo } from './features/authentication/session-info-slice';
 import { store } from './app/store';
 import { UiConfigLoader } from './features/config/ui-config-loader';
 import { MainWindow } from './features/main-window/main-window';
-// import App from './App';
 
 import { environment } from './environments/environment';
 
-import './index.css';
-import { useEffect } from 'react';
-
+import { Buffer } from 'buffer';
 window.Buffer = Buffer;
 
 const oidcConfig = {
@@ -31,15 +28,6 @@ const oidcConfig = {
   automaticSilentRenew: true,
   post_logout_redirect_uri: window.location.origin,
 };
-
-
-// const container = document.querySelector('#app');
-// if (container) {
-//   const root = createRoot(container);
-//   root.render(<App />);
-// } else {
-//   console.error('Failed to find the app container');
-// }
 
 export function AppWrapper() {
   const navigate = useNavigate();

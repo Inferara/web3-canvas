@@ -1,0 +1,299 @@
+@import url('./xy-theme.css');
+
+#app {
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .appname {
+    text-align: center;
+    font-size: medium;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .w3cflow {
+    flex-direction: row;
+    display: flex;
+    flex-grow: 1;
+    height: 100vh;
+  }
+  
+  :root {
+    --nodeheaderheight: 30px;
+  }
+  
+  .w3cflownodeheader {
+    position: absolute; /* Allow precise positioning at the top */
+    top: 0; /* Position it at the very top */
+    left: 0; /* Align it to the left edge */
+    right: 0; /* Stretch to fill the width */
+    height: var(--nodeheaderheight); /* Define a fixed height for the header (optional) */
+    line-height: 30px; /* Vertically center the text within the header */
+    text-align: center; /* Center-align the text */
+    font-weight: bold; /* Make the header text bold */
+    background-color: #f0f0f0; /* Optional background color for the header */
+    border-bottom: 1px solid #ddd; /* Optional separator between header and content */
+    z-index: 2; /* Ensure the header stays above other content */
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+  }
+  
+  .w3cflownodeheader.good {
+    background-color: #a4eda8;
+  }
+  
+  .question-icon {
+    font-size: 5px;
+    color: #ff0071;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 0.1px solid #ff0071;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    right: 2px;
+    top: 1px;
+  }
+  
+  .popup {
+    font-size: xx-small;
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: -85px;
+    right: -155px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ddd;
+    width: 150px;
+    z-index: 3;
+  }
+  
+  /* Show pop-up */
+  .popup.show {
+    display: block;
+  }
+  
+  /* Pop-up Content */
+  .popup-content {
+    text-align: right;
+  }
+  
+  .popup-content button {
+    font-size: xx-small;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #ff0071;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .w3cflownode {
+    height: 70%;
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding-top: var(--nodeheaderheight);
+    max-width: -webkit-fill-available;
+    max-width: -moz-available;
+  }
+  
+  .w3cflownode textarea {
+    width: 100%; /* Make the textarea span the full width of the node */
+    height: 100%; /* Allow the textarea to fill the available height */
+    resize: none; /* Disable default textarea resize */
+    border: none; /* Remove default border */
+    outline: none; /* Remove focus outline */
+    background: transparent; /* Ensure the background blends with the node */
+    font-size: 16px; /* Adjust text size */
+    box-sizing: border-box; /* Include padding in the width and height */
+    overflow: hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .w3cflow .reactflow-wrapper {
+    flex-grow: 1;
+    height: 100%;
+  }
+  
+  .w3cflow aside {
+    border-right: 1px solid #eee;
+    overflow-y: scroll;
+    padding: 15px 10px;
+    font-size: 12px;
+    background: #fcfcfc;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-height: 100vh;
+  }
+  
+  .w3cflow .w3cflownodeMenuItem {
+    width: 8rem;
+    height: 20px;
+    /* padding: 4px; */
+    border: 1px solid #EDEDED;
+    border-color: #C5C5C5;
+    border-radius: 8px;
+    box-shadow: 3.54px 4.55px 0px #00000005, 
+        0px 3.54px 4.55px 0px #0000000D, 
+        0px 0.51px 1.01px 0px #0000001A;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+  }
+  
+  .saveRestoreButtonsContainer {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .saveRestoreButtonsContainer label {
+    font-size: 15px;
+    width: 4rem;
+    height: 20px;
+    border: 1px solid #EDEDED;
+    border-color: #C5C5C5;
+    border-radius: 8px;
+    box-shadow: 3.54px 4.55px 0px #00000005, 
+        0px 3.54px 4.55px 0px #0000000D, 
+        0px 0.51px 1.01px 0px #0000001A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #efefef;
+  }
+  
+  .saveRestoreButtonsContainer button {
+    width: 4rem;
+    height: 20px;
+    border: 1px solid #EDEDED;
+    border-color: #C5C5C5;
+    border-radius: 8px;
+    box-shadow: 3.54px 4.55px 0px #00000005, 
+        0px 3.54px 4.55px 0px #0000000D, 
+        0px 0.51px 1.01px 0px #0000001A;
+  }
+  
+  .w3cflow .selectall {
+    margin-top: 10px;
+  }
+  
+  .w3cflow aside .description {
+    margin-bottom: 10px;
+    font-size: medium;
+  }
+  
+  .react-flow__node .w3cflownode {
+    overflow: hidden; /* Prevent overflow of content */
+    white-space: nowrap; /* Prevent text wrapping */
+    text-overflow: ellipsis; /* Add '...' for overflowing text */
+    justify-content: flex-start;
+  }
+  
+  .broken {
+    background-color: rgb(236, 69, 69);
+  }
+  
+  .need-improve {
+    background-color: rgb(255, 255, 0);
+  }
+  /* flex-direction: row; */
+  @media screen and (min-width: 600px) {
+    .w3cflow {
+      margin-top: 64px;
+      padding-bottom: 64px;
+    }
+  }
+  
+  /* @media (min-width: 0px) {
+    @media (orientation: landscape) {
+        .w3cflow {
+            margin-top: 48px;
+        }
+    }
+  } */
+  
+  .handleLabel-bottom {
+    transform: translate(-100%, -100%);
+    pointer-events: none;
+  }
+  
+  .handleLabel-left {
+    /* position: relative; */
+    /* width: 200px; */
+    transform: translate(10px, -35%);
+    /* font-size: 12px; */
+    pointer-events: none;
+  }
+  
+  .handleLabel-right-20 {
+    transform: translate(-20px, -35%);
+    pointer-events: none;
+  }
+  
+  .handleLabel-right-45 {
+    transform: translate(-45px, -35%);
+    pointer-events: none;
+  }
+  
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #0056b3;
+  }
+  
+  .react-flow__node-annotation {
+    font-size: 16px;
+    width: 200px;
+    color: #683bfa;
+    position: absolute;
+    box-shadow: none;
+    font-family: monospace;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+  }
+   
+  .react-flow__node-annotation .annotation-content {
+    padding: 10px;
+    display: flex;
+  }
+   
+  .react-flow__node-annotation .annotation-level {
+    margin-right: 4px;
+  }
+   
+  .react-flow__node-annotation .annotation-arrow {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 24px;
+  }
+  
