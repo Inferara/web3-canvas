@@ -215,13 +215,14 @@
   .need-improve {
     background-color: rgb(255, 255, 0);
   }
-  /* flex-direction: row; */
+
+  /* flex-direction: row;
   @media screen and (min-width: 600px) {
     .w3cflow {
       margin-top: 64px;
       padding-bottom: 64px;
     }
-  }
+  } */
   
   /* @media (min-width: 0px) {
     @media (orientation: landscape) {

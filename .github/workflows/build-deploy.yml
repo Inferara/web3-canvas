@@ -12,7 +12,7 @@ jobs:
         with:
           branch: main
 
-      - name: Build Docker image
+      - name: Build UI Docker image
         run: |
           docker build . -t w3c:latest
 

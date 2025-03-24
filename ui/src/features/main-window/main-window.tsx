@@ -31,6 +31,7 @@ import { W3CFlow } from '../pages/canvas/canvas';
 import { W3CProvider } from '../pages/canvas/W3CContext';
 import { ReactFlowProvider } from '@xyflow/react';
 import { ToastProvider } from '../pages/canvas/common/ToastProvider';
+import React from 'react';
 
 
 const drawerWidth = 240;
@@ -168,8 +169,8 @@ export const MainWindow: FC = () => {
           <LeftMenu />
         </Drawer>
       </Box>
-      <Main leftMenuOpen={leftMenuOpen} className="mainWindowMain" sx={ currentPage.pageName !== "Canvas" ? { marginTop: '24px' } : {}}>
-        {currentPage.pageName !== "Canvas" && <DrawerHeader />}
+      <Main leftMenuOpen={leftMenuOpen} className="mainWindowMain">
+        <DrawerHeader />
         <Routes>
           <Route path="/myprofile" element={<MyProfile />} />
           {/* <Route path="/" element={<ListEmails />} /> */}

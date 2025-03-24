@@ -4,7 +4,7 @@ import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from 'react-oidc-context';
 import { Provider, useDispatch } from 'react-redux';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import ReactGA from "react-ga4";
 import { useAppSelector } from './app/hooks';
 import { selectUiSettings } from './features/config/ui-config-slice';
 import { Authentication } from './features/authentication/authentication';
@@ -16,7 +16,10 @@ import { MainWindow } from './features/main-window/main-window';
 import { environment } from './environments/environment';
 
 import { Buffer } from 'buffer';
+import React from 'react';
 window.Buffer = Buffer;
+
+ReactGA.initialize((window as any).env.G4_TOKEN!);
 
 const oidcConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

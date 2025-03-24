@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+api/W3CApi/bin/Debug/net9.0/appsettings.Development.json
+ui/env.js

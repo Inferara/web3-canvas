@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactGA from "react-ga4";
 import {
   ReactFlow,
   Controls,
@@ -70,7 +69,7 @@ import { W3CMessageQueue, W3CQueueMessage, W3CQueueMessageType } from './infrast
 import { useW3C } from './W3CContext';
 import { useCanvas } from './hooks/canvas.hook';
 import { CurrentPageState } from '../../main-window/current-page-slice';
-ReactGA.initialize("G-QPYSF5N8BL");
+import React from 'react';
 
 export const nodeTypesCategorized = {
   cryptography: {

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import './authentication.css';
 import { useAuth } from 'react-oidc-context';
-import { environment } from './../../environments/environment';
+import { environment } from '../../environments/environment';
 import { selectUiSettings } from '../config/ui-config-slice';
 import { useAppSelector } from '../../app/hooks';
 

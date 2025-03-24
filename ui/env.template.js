@@ -3,7 +3,8 @@
   
     // Environment variables
     window['env'] = {
-        API_URL: 'http://localhost:5004',
-        CLIENT_ID: 'W3C'
+        API_URL: '$APIURL',
+        CLIENT_ID: 'ProjectName',
+        G4_TOKEN: ''
     };
-  })(this);
+  })(this);  

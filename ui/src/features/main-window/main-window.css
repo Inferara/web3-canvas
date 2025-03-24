@@ -6,9 +6,12 @@
     padding: 10px;
 
 }
+.mainWindowMain > .w3cflow {
+    margin: 0px!important;
+}
 
 .mainWindowMain {
     position: relative;
     padding: 0 !important;
-    /* margin: 24px; */
+    margin: 24px;
 }
