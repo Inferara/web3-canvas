@@ -4,7 +4,7 @@
     // Environment variables
     window['env'] = {
         API_URL: '$APIURL',
-        CLIENT_ID: 'ProjectName',
-        G4_TOKEN: ''
+        CLIENT_ID: 'W3C',
+        G4_TOKEN: '$G4TOKEN'
     };
   })(this);  

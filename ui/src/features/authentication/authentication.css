@@ -21,7 +21,7 @@
 }
 
 .authFormWrapper {
-    width: 100vw;
+    /* width: 100vw; */
     margin-top: 3%;
 }
 
@@ -55,7 +55,7 @@
     margin-top: 10px !important;
     margin-bottom: 20px !important;
     display: block !important;
-    width: 215px;
+    width: 175;
     height: 41px;
     background-image: url(/static/images/mssigninlight.svg);
     border-width: 0 !important;
@@ -71,7 +71,7 @@
     margin-top: 10px !important;
     margin-bottom: 20px !important;
     display: block !important;
-    width: 215px;
+    width: 175px;
     height: 41px;
     background-image: url(/static/images/web_light_sq_SI.svg);
     border-width: 0 !important;

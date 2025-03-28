@@ -15,6 +15,7 @@ import { useAuth } from 'react-oidc-context';
 import { environment } from '../../environments/environment';
 import { selectUiSettings } from '../config/ui-config-slice';
 import { useAppSelector } from '../../app/hooks';
+import React from 'react';
 
 interface Props {
   errorText: string;
