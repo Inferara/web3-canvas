@@ -1,0 +1,79 @@
+.authLogo {
+    max-width: 300px !important;
+    margin: 0px;
+    object-fit: fill !important;
+}
+
+.authLogoPlaceholder{
+    min-height: 250px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.authForm {
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 330px;
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.authFormWrapper {
+    /* width: 100vw; */
+    margin-top: 3%;
+}
+
+.spinner {
+    right: 25px;
+    top: 25px;
+    position: absolute;
+}
+
+.authFormCard {
+    box-shadow: none !important;
+} 
+
+.errorText {
+    color: #f44336;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.authButton {
+  padding: 20px;
+}
+
+.microsoftSsoButton:hover {
+    background-image: url(/static/images/mssignindark.svg);
+}
+
+.microsoftSsoButton {
+    margin: 0 auto !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    width: 175;
+    height: 41px;
+    background-image: url(/static/images/mssigninlight.svg);
+    border-width: 0 !important;
+    border-radius: 0px !important;
+}
+
+.googleSsoButton:hover {
+    background-image: url(/static/images/web_dark_sq_SI.svg);
+}
+
+.googleSsoButton {
+    margin: 0 auto !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    width: 175px;
+    height: 41px;
+    background-image: url(/static/images/web_light_sq_SI.svg);
+    border-width: 0 !important;
+    border-radius: 0px !important;
+}

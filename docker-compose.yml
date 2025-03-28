@@ -1,0 +1,127 @@
+services:
+  ui:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+    pull_policy: build
+    restart: always
+    container_name: w3c-ui
+    environment:
+      - APIURL=http://localhost:7878
+      - G4TOKEN=${G4TOKEN}
+    ports:
+      - "7880:80"
+    networks:
+      - w3c-network
+  w3c-api:
+    build:
+      context: api
+      dockerfile: AiCoreApi/Dockerfile
+    pull_policy: build
+    restart: always
+    container_name: w3c-api
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - AUTOCOMPACTLARGEOBJECTHEAP=true  
+      - DBSERVER=w3c-db
+      - DBPORT=5432
+      - DBNAME=w3c
+      - DBUSER=${POSTGRES_USER}
+      - DBPASSWORD=${POSTGRES_PASSWORD}
+      - DBTIMEOUT=30000
+      - DBPGPOOLSIZE=30
+      - DBCONNECTIONTIMEOUT=300
+      - QDRANTURL=http://host.docker.internal:6338
+      - FILEINGESTIONURL=http://host.docker.internal:7880
+      - INGESTIONDELAY=10
+      - MAXTASKHISTORY=48
+      - MAXFILESIZE=209715200
+      - MAXPARALLELFILEINGESTIONREQUESTS=5
+      - FILEINGESTIONREQUESTTIMEOUT=10
+      - MAXHISTORYLENGTH=10
+      - TOKENEXPIRATIONTIMEMINUTES=60
+      - PROXY=
+      - NOINFORMATIONFOUNDTEXT=No relevant information found
+      - MAXTOKENSPERUSERPERDAYGPT35=100000
+      - MAXTOKENSPERUSERPERDAYGPT40=100000
+      - MAXTOKENSPERUSERPERDAYOTHER=100000
+      - AUTHISSUER=W3C
+      - AUTHAUDIENCE=${AUTHAUDIENCE}
+      - AUTHSECURITYKEY=${AUTHSECURITYKEY}
+      - APPURL=${APPURL}
+      - LOGOURL=/static/images/logo.png
+      - MAINCOLOR=#1976d2
+      - MAINTEXTCOLOR=#000000
+      - SECONDARYTEXTCOLOR=#213547
+      - CONTRASTTEXTCOLOR=#ffffff
+      - MENUBACKCOLOR1=#ffffff
+      - MENUBACKCOLOR2=#f7f7f7
+      - BACKGROUNDCOLOR=#ffffff
+      - PAGETITLE=Web3 キャンバス by Inferara
+      - ENABLEDLLMS=1,2,3,4,5
+      - JIRAAUTHURL=
+      - USEINTERNALUSERS=True
+      - FEATURE_TAGGING=True
+      - FEATURE_SETTINGS=True
+      - FEATURE_SPENTMANAGEMENT=True
+      - LOGLEVEL=Debug
+      - DISTRIBUTEDCACHEURL=w3c-cache:6379
+      - DISTRIBUTEDCACHEPASSWORD=${REDIS_PASSWORD}
+      - USEGOOGLESSO=true
+      - GOOGLECLIENTID=${GOOGLECLIENTID}
+      - GOOGLECLIENTSECRET=${GOOGLECLIENTSECRET}
+      - USEMICROSOFTSSO=false
+      - CLIENT_ID=
+      - CLIENT_SECRET=
+      - USEINTERNALUSERS=true
+    ports:
+      - "7878:80"
+    networks:
+      - w3c-network
+    depends_on:
+      - w3c-db
+      - w3c-cache
+
+  w3c-db:
+    container_name: w3c-db
+    image: postgres:16.1
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=w3c
+      - PGDATA=/data/postgres
+    command:
+      - -c
+      - work_mem=32MB
+      - -c
+      - maintenance_work_mem=256MB
+      - -c
+      - shared_buffers=1GB
+    volumes:
+      - w3c-db-volume:/data/postgres
+      - w3c-default-db-volume:/var/lib/postgresql/data
+    shm_size: 1gb
+    ports:
+      - "5439:5432"
+    networks:
+      - w3c-network
+      
+  w3c-cache:
+    image: redis:latest
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_USERNAME=${REDIS_USER}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - w3c-network
+
+volumes:
+  w3c-db-volume:
+  w3c-default-db-volume:
+
+networks:
+  w3c-network:
+    driver: bridge
