@@ -48,7 +48,7 @@ services:
       - AUTHISSUER=W3C
       - AUTHAUDIENCE=${AUTHAUDIENCE}
       - AUTHSECURITYKEY=${AUTHSECURITYKEY}
-      - APPURL=http://localhost:7878/api/v1
+      - APPURL=${APPURL}
       - LOGOURL=/static/images/logo.png
       - MAINCOLOR=#1976d2
       - MAINTEXTCOLOR=#000000
