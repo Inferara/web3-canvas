@@ -111,6 +111,10 @@ const Sidebar: React.FC<SidebarProps> = ({ rfInstance, setNodes, setEdges, creat
     const onDownload = useCallback(() => {
         if (rfInstance) {
             const flow = rfInstance.toObject();
+            flow.nodes = flow.nodes.map(node => ({
+                ...node,
+                data: node.data
+              }));        
             localStorage.setItem(flowKey, JSON.stringify(flow));
             const flowString = JSON.stringify(flow, null, 2);
             const blob = new Blob([flowString], { type: 'application/json' });
