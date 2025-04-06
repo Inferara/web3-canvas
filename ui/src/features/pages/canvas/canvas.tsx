@@ -17,13 +17,15 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import './canvas.css';
+import 'monaco-editor/min/vs/editor/editor.main.css';
 import LZString from 'lz-string';
 import Sidebar from './common/Sidebar';
 import { Utf8DataTransfer } from "./utils/Utf8DataTransfer";
 import NodeSearchModal, { NodeOption } from './common/NodeSearchModal';
 import ConnectionLine from './common/ConnectionLine';
 import { SignalEdge } from './common/SignalEdge';
-
+// agents
+import CodeAgent from './nodes/agents/CodeAgent';
 // cryptography
 import CalculateAddress from './nodes/cryptography/CalculateAddress';
 import Decrypt from './nodes/cryptography/Decrypt';
@@ -34,7 +36,9 @@ import ScalarMultiplication from './nodes/cryptography/ScalarMultiplication';
 import SignMessageNode from './nodes/cryptography/SignMessage';
 import VerifySignatureNode from './nodes/cryptography/VerifySignature';
 // input
+import CodeEditorNode from './nodes/input/CodeEditor';
 import TextInputNode from './nodes/input/TextInput';
+import MicrophoneRecorderNode from './nodes/input/MicrophoneRecorder';
 import NumberInputNode from './nodes/input/NumberInput';
 import FileInputNode from './nodes/input/FileInput';
 // view
@@ -72,6 +76,12 @@ import { CurrentPageState } from '../../main-window/current-page-slice';
 import React from 'react';
 
 export const nodeTypesCategorized = {
+  agents: {
+    codeAgent: {
+      class: CodeAgent,
+      label: "Code Agent",
+    },
+  },
   cryptography: {
     calculateAddress: {
       class: CalculateAddress,
@@ -107,9 +117,17 @@ export const nodeTypesCategorized = {
     },
   },
   input: {
+    codeEditor : {
+      class: CodeEditorNode,
+      label: "Code Editor",
+    },
     textInput: {
       class: TextInputNode,
       label: "Text Input",
+    },
+    microphoneRecorder: {
+      class: MicrophoneRecorderNode,
+      label: "Microphone Recorder",
     },
     numberInput: {
       class: NumberInputNode,

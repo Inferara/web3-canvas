@@ -5,7 +5,7 @@ import { SettingsItem } from './models/settings';
 import { UiSettings } from './models/ui-settings';
 import { ClientSsoItem } from './models/client-sso';
 import { CreateUserItem, EditUserItem, UserItem } from './models/user';
-import { EmailItem } from './models/email-item';
+import { AgentItem } from './models/agent';
 
 // --- SETTINGS ---
 export const rebootCall = async (): Promise<void> => {
@@ -98,11 +98,24 @@ export const editUserCall = async (loginId: number, userItem: EditUserItem): Pro
     return response.data as boolean;
 }
 
-// --- EMAILS ---
-export const getEmailsListDataCall = async (): Promise<EmailItem[]> => {
+// --- AGENTS ---
+export const getAgentListDataCall = async (): Promise<any[]> => {
     const client = await getRestClient();
-    const response = await client.request('api/v1/email', 'GET');
-    return response.data as EmailItem[];
+    const response = await client.request('api/v1/agents', 'GET');
+    return response.data as any[];
+};
+export const agentEnabledCall = async (agentId: number): Promise<void> => {
+    const client = await getRestClient();
+    await client.request(`api/v1/agents/${agentId}/enable`, 'POST');
+};
+export const agentDisableCall = async (agentId: number): Promise<void> => {
+    const client = await getRestClient();
+    await client.request(`api/v1/agents/${agentId}/disable`, 'POST');
+};
+export const createAgentCall = async (agentData: AgentItem): Promise<boolean> => {
+    const client = await getRestClient();
+    const response = await client.request('api/v1/agents', 'POST', agentData);
+    return response.data as boolean;
 };
 
 // Rest client

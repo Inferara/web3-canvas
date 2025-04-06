@@ -5,6 +5,6 @@
     window['env'] = {
         API_URL: 'http://localhost:7878',
         CLIENT_ID: 'W3C',
-        G4_TOKEN: ''
+        G4_TOKEN: 'AAAAAAAA'
     };
   })(this);

@@ -48,44 +48,44 @@ const W3CNode: React.FC<W3CNodeProps> = ({
     };
 
     return (
-      <div style={{...style, width: '100%', height: '100%'}}>
-          {isResizeable && (
-            <NodeResizeControl minWidth={minWidth} minHeight={minHeight}>
-                <ResizeIcon/>
-            </NodeResizeControl>
-          )}
-          <Handle
-                type="source"
-                id={id + '__id'}
-                style={{ zIndex: 3}}
-                position={Position.Top}
+    <div style={{...style, width: style.width || '100%', height: style.height || '100%'}}>
+        {isResizeable && (
+        <NodeResizeControl minWidth={minWidth} minHeight={minHeight}>
+            <ResizeIcon/>
+        </NodeResizeControl>
+        )}
+        <Handle
+            type="source"
+            id={id + '__id'}
+            style={{ zIndex: 3}}
+            position={Position.Top}
+        />
+        <div className={headerStyle}>
+          {isEditing ? (
+            <input
+            value={headerText}
+            onChange={(e) => setHeaderText(e.target.value)}
+            onBlur={finishEditing}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') finishEditing();
+            }}
+            autoFocus
             />
-          <div className={headerStyle}>
-              {isEditing ? (
-                <input
-                  value={headerText}
-                  onChange={(e) => setHeaderText(e.target.value)}
-                  onBlur={finishEditing}
-                  onKeyDown={(e) => {
-                      if (e.key === 'Enter') finishEditing();
-                  }}
-                  autoFocus
-                />
-              ) : (
-                <span onDoubleClick={() => setIsEditing(true)}>{headerText}</span>
-              )}
-              <span className="question-icon" onClick={togglePopup}>?</span>
+          ) : (
+            <span onDoubleClick={() => setIsEditing(true)}>{headerText}</span>
+          )}
+          <span className="question-icon" onClick={togglePopup}>?</span>
+        </div>
+        <div id={popUpId} className="popup">
+          <div className="popup-content" onClick={togglePopup}>
+            <p>
+                This is an input field where you can type text. The node resizes dynamically.
+            </p>
+            <button>Close</button>
           </div>
-          <div id={popUpId} className="popup">
-              <div className="popup-content" onClick={togglePopup}>
-                  <p>
-                      This is an input field where you can type text. The node resizes dynamically.
-                  </p>
-                  <button>Close</button>
-              </div>
-          </div>
-          <div className="w3cflownode">{children}</div>
-      </div>
+        </div>
+        <div className="w3cflownode">{children}</div>
+    </div>
     );
 };
 

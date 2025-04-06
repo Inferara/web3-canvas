@@ -8,6 +8,7 @@ import { UserItem } from '../../../../../api/w3c/models/user';
 import { CurrentPageState } from '../../../../main-window/current-page-slice';
 import { UserManagementMenu } from '../../user-management-menu/user-management-menu';
 import { useListUsers } from './hooks';
+import React from 'react';
 
 export const UserManagement: FC = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export const UserManagement: FC = () => {
             params.row.isEnabled = e.target.checked;
             userEnabledChange(params.row.loginId, e.target.checked);
           }}
-          inputProps={{ 'aria-label': 'controlled' }}
+          slotProps={{ input: { 'aria-label': 'controlled' } }}
         />
       ),
     },

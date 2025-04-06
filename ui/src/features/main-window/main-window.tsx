@@ -22,6 +22,7 @@ import ErrorDialog from './error-dialog';
 import { MyProfile } from '../pages/my-profile/my-profile';
 import { Settings } from '../pages/settings/settings';
 import { UserManagement } from '../pages/user-management/users/list-view/list-users';
+import { AgentManagement } from '../pages/agents-management/agents/list-view/list-agents';
 import { AddUser } from '../pages/user-management/users/add-item/add-user';
 import { EditUser } from '../pages/user-management/users/edit-item/edit-user';
 import { ListSsoClients } from '../pages/user-management/sso-client/list-view/list-sso-clients';
@@ -173,15 +174,14 @@ export const MainWindow: FC = () => {
         <DrawerHeader />
         <Routes>
           <Route path="/myprofile" element={<MyProfile />} />
-          {/* <Route path="/" element={<ListEmails />} /> */}
           <Route path="/" element={<ToastProvider><ReactFlowProvider><W3CProvider><W3CFlow /></W3CProvider></ReactFlowProvider></ToastProvider>} />
           <Route path="/userManagement/users" element={<UserManagement />} />
           <Route path="/userManagement/users/add" element={<AddUser />} />
           <Route path="/userManagement/users/edit" element={<EditUser />} />
-
           <Route path="/userManagement/ssoClients" element={<ListSsoClients />} />
           <Route path="/userManagement/ssoClient/add" element={<AddSsoClient />} />
           <Route path="/userManagement/ssoClient/edit" element={<EditSsoClient />} />
+          <Route path="/agentManagement/agents" element={<AgentManagement />} />
           
           <Route path="/settings" element={<Settings />} />
           
